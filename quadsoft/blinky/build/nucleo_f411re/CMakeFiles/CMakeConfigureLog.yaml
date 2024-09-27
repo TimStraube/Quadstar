@@ -1,0 +1,226 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake:228 (message)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/zephyr_default.cmake:138 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      The target system is: Generic - 3.6.0 - arm
+      The host system is: Linux - 6.5.0-45-generic - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/zephyr_default.cmake:138 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/bin/ld: /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/lib/libc.a(lib_a-exit.o): in function `exit':
+      exit.c:(.text.exit+0x34): undefined reference to `_exit'
+      collect2: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/zephyr_default.cmake:138 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+      
+      The C compiler identification is GNU, found in:
+        /home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/3.28.1/CompilerIdC/CMakeCCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/zephyr_default.cmake:138 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/bin/ld: /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/lib/libc.a(lib_a-exit.o): in function `exit':
+      exit.c:(.text.exit+0x34): undefined reference to `_exit'
+      collect2: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/zephyr_default.cmake:138 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-g++ 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+      
+      The CXX compiler identification is GNU, found in:
+        /home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/3.28.1/CompilerIdCXX/CMakeCXXCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake:1131 (message)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CMakeDetermineASMCompiler.cmake:131 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/kernel.cmake:134 (enable_language)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/zephyr_default.cmake:138 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "/home/tim/.zephyr_ide/external/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      arm-zephyr-eabi-gcc (Zephyr SDK 0.16.8) 12.2.0
+      Copyright (C) 2022 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2128 (check_c_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:1100 (check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2167 (zephyr_check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2143 (target_cc_option_fallback)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:123 (target_cc_option)"
+      - "/home/tim/.zephyr_ide/external/zephyr/CMakeLists.txt:458 (zephyr_cc_option)"
+    directories:
+      source: "/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-KpOcU9"
+      binary: "/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-KpOcU9"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/tim/.zephyr_ide/external/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fmacro_prefix_map__home_tim_Programme_Quadstar_Softquad_blinky_CMAKE_SOURCE_DIR_C__nostartfiles__nostdlib__isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: '/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-KpOcU9'
+        
+        Run Build Command(s): /opt/st/stm32cubeclt_1.16.0/Ninja/bin/ninja -v cmTC_8ccdf
+        [1/2] /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -Dcheck_fmacro_prefix_map__home_tim_Programme_Quadstar_Softquad_blinky_CMAKE_SOURCE_DIR_C__nostartfiles__nostdlib__isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fmacro-prefix-map=/home/tim/Programme/Quadstar/Softquad/blinky=CMAKE_SOURCE_DIR -o CMakeFiles/cmTC_8ccdf.dir/src.c.obj -c /home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-KpOcU9/src.c
+        [2/2] : && /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -nostartfiles -nostdlib -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_8ccdf.dir/src.c.obj -o cmTC_8ccdf   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2128 (check_c_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:1100 (check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2167 (zephyr_check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2143 (target_cc_option_fallback)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:123 (target_cc_option)"
+      - "/home/tim/.zephyr_ide/external/zephyr/CMakeLists.txt:459 (zephyr_cc_option)"
+    directories:
+      source: "/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-sXDJgZ"
+      binary: "/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-sXDJgZ"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/tim/.zephyr_ide/external/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fmacro_prefix_map__home_tim__zephyr_ide_external_zephyr_ZEPHYR_BASE_C__nostartfiles__nostdlib__isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: '/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-sXDJgZ'
+        
+        Run Build Command(s): /opt/st/stm32cubeclt_1.16.0/Ninja/bin/ninja -v cmTC_7ab1e
+        [1/2] /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -Dcheck_fmacro_prefix_map__home_tim__zephyr_ide_external_zephyr_ZEPHYR_BASE_C__nostartfiles__nostdlib__isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fmacro-prefix-map=/home/tim/.zephyr_ide/external/zephyr=ZEPHYR_BASE -o CMakeFiles/cmTC_7ab1e.dir/src.c.obj -c /home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-sXDJgZ/src.c
+        [2/2] : && /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -nostartfiles -nostdlib -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_7ab1e.dir/src.c.obj -o cmTC_7ab1e   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/opt/st/stm32cubeclt_1.16.0/CMake/share/cmake-3.28/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2128 (check_c_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:1100 (check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2167 (zephyr_check_compiler_flag)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:2143 (target_cc_option_fallback)"
+      - "/home/tim/.zephyr_ide/external/zephyr/cmake/modules/extensions.cmake:123 (target_cc_option)"
+      - "/home/tim/.zephyr_ide/external/zephyr/CMakeLists.txt:461 (zephyr_cc_option)"
+    directories:
+      source: "/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-oTEDMD"
+      binary: "/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-oTEDMD"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/tim/.zephyr_ide/external/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fmacro_prefix_map__home_tim__zephyr_ide_WEST_TOPDIR_C__nostartfiles__nostdlib__isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: '/home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-oTEDMD'
+        
+        Run Build Command(s): /opt/st/stm32cubeclt_1.16.0/Ninja/bin/ninja -v cmTC_0b9c4
+        [1/2] /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -Dcheck_fmacro_prefix_map__home_tim__zephyr_ide_WEST_TOPDIR_C__nostartfiles__nostdlib__isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem___home_tim__zephyr_ide_toolchains_zephyr_sdk_0_16_8_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fmacro-prefix-map=/home/tim/.zephyr_ide=WEST_TOPDIR -o CMakeFiles/cmTC_0b9c4.dir/src.c.obj -c /home/tim/Programme/Quadstar/Softquad/blinky/build/nucleo_f411re/CMakeFiles/CMakeScratch/TryCompile-oTEDMD/src.c
+        [2/2] : && /home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -nostartfiles -nostdlib -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "/home/tim/.zephyr_ide/toolchains/zephyr-sdk-0.16.8/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_0b9c4.dir/src.c.obj -o cmTC_0b9c4   && :
+        
+      exitCode: 0
+...

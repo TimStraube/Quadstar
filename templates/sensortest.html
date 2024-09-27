@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>LiveQuad</title>
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    </head>
+    <body>
+        <!-- Include Three.js from a CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+
+        <!-- Reference your external JavaScript file -->
+        <script type="module" src="{{ url_for('static', filename='js/sensortest.js') }}"></script>
+        <h1 style="top: 5px;" id="time">T = 0.00</h1>
+        <h1 style="top: 35px;" id="distance">D = 0.00</h1>
+    </body>
+    <style>
+        body {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            padding: 0%;
+            margin: 0%;
+            background-color: white;
+        }
+
+        h1 {
+            color: white;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display:block;
+        }
+    </style>
+</html>
+
+
+

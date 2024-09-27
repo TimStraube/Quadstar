@@ -1,0 +1,15 @@
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:51:9:CUSTOM_ISPU_MOTION_SENSOR_Init	64	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:144:9:CUSTOM_ISPU_MOTION_SENSOR_DeInit	24	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:170:9:CUSTOM_ISPU_MOTION_SENSOR_GetCapabilities	24	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:197:9:CUSTOM_ISPU_MOTION_SENSOR_ReadID	24	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:226:9:CUSTOM_ISPU_MOTION_SENSOR_Enable	24	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:265:9:CUSTOM_ISPU_MOTION_SENSOR_Disable	24	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:305:9:CUSTOM_ISPU_MOTION_SENSOR_GetAxes	32	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:347:9:CUSTOM_ISPU_MOTION_SENSOR_GetAxesRaw	32	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:389:9:CUSTOM_ISPU_MOTION_SENSOR_GetSensitivity	32	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:430:9:CUSTOM_ISPU_MOTION_SENSOR_GetOutputDataRate	32	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:471:9:CUSTOM_ISPU_MOTION_SENSOR_GetFullScale	32	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:512:9:CUSTOM_ISPU_MOTION_SENSOR_SetOutputDataRate	32	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:553:9:CUSTOM_ISPU_MOTION_SENSOR_SetFullScale	32	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:591:16:ISM330IS_0_Probe	88	static
+../X-CUBE-ISPU/Target/custom_ispu_motion_sensors.c:678:16:LSM6DSO16IS_0_Probe	88	static

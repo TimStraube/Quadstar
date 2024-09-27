@@ -1,0 +1,15 @@
+../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_exti.h:834:26:LL_EXTI_IsActiveFlag_0_31	1
+../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_exti.h:910:22:LL_EXTI_ClearFlag_0_31	1
+../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h:1792:26:LL_USART_IsActiveFlag_RXNE	1
+../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h:2227:26:LL_USART_IsEnabledIT_RXNE	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:49:6:NMI_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:58:6:HardFault_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:71:6:MemManage_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:84:6:BusFault_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:97:6:UsageFault_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:110:6:SVC_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:119:6:DebugMon_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:128:6:PendSV_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:137:6:SysTick_Handler	1
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:153:6:EXTI15_10_IRQHandler	2
+/home/tim/Programme/Quadstar/Quadsoft/USART_Communication_Rx_IT/Src/stm32f4xx_it.c:171:6:USART2_IRQHandler	3
