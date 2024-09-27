@@ -97,15 +97,15 @@ berechnet wird zu
 		\dot{p}_x\\
 		\dot{p}_y\\
 		\dot{p}_z\\
-		-0.5\phi q_1 - 0.5\theta q_2 - 0.5\psi q_3\\
-		+0.5\phi q_0 - 0.5\theta q_3 + 0.5\psi q_2\\
-		+0.5\phi q_3 + 0.5\theta q_0 - 0.5\psi q_1\\
-		-0.5\phi q_3 + 0.5\theta q_1 + 0.5\psi q_0\\
+		-0.5\phi q_x - 0.5\theta q_y - 0.5\psi q_z\\
+		+0.5\phi q_w - 0.5\theta q_z + 0.5\psi q_y\\
+		+0.5\phi q_z + 0.5\theta q_w - 0.5\psi q_x\\
+		-0.5\phi q_y + 0.5\theta q_x + 0.5\psi q_w\\
 		(-2 \sum_{n=1}^4{q_n}) F_G \frac{1}{m}\\
 		(+2 \sum_{n=1}^4{q_n}) F_G \frac{1}{m}\\
-		(-(q_0^2-q_1^2-q_2^2+q_3^2) F_G + mg) \frac{1}{m}\\
-		((I_{B,yy} - I_{B,zz}) \theta \psi + (T_{M1} - T_{M2} - T_{M3} + T_{M4}) l) \frac{1}{I_{B,xx}}\\
-		((I_{B,zz} - I_{B,xx}) \phi \psi + (T_{M1} + T_{M2} - T_{M3} - T_{M4}) w) \frac{1}{I_{B,yy}}\\
+		(-(q_w^2-q_x^2-q_y^2+q_z^2) F_G + mg) \frac{1}{m}\\
+		((I_{B,yy} - I_{B,zz}) \theta \psi + (T_{M1} - T_{M2} - T_{M3} + T_{M4}) w) \frac{1}{I_{B,xx}}\\
+		((I_{B,zz} - I_{B,xx}) \phi \psi + (T_{M1} + T_{M2} - T_{M3} - T_{M4}) l) \frac{1}{I_{B,yy}}\\
 		((I_{B,xx} - I_{B,yy}) \phi \theta - T_{M1} + T_{M2} - T_{M3} + T_{M4})\frac{1}{I_{Bzz}}
 	\end{pmatrix}.
 \end{align}
@@ -129,7 +129,7 @@ geschlossen werden.\\
 Auf eine ausführliche Herleitung und Beschreibung des Modells wird an dieser Stelle verzichtet da das Modell als Systemkomponente betrachtet wurde und nicht als Kernkomponente.\\
 Nicht verzichtet werden soll auf den Hinweis, dass ein Quadcopter ein sehr instabiles System ist. Selbst bei gleich verteilten Motorbefehlen mit dem Erwartungswert gleich den Schwebebefehlen fängt das System stark an zu rotieren.
 \begin{center}
-	\includegraphics[scale=0.3]{../Bilder/0047 Eulerwinkel Zufällige Aktionen.png
+	\includegraphics[scale=0.3]{../images/0047 Eulerwinkel Zufällige Aktionen.png
 	}{\\Drehageentwicklung bei zufälligen gleichverteilten Rotorbefehlen nach 5s. Je stärker der Erwartungswert absolut von den Schwebebefehlen abweicht und je größer die Varianz der Wahrscheinlichkeitsverteilung desto instabiler wird System. Im Bild kann sich der Quadcopter aufgrund seiner Trägheit für circa 5e-1s stabil halten das ist nicht der Regelfall.}
 \end{center}
 
@@ -167,7 +167,7 @@ Ein intuitiver Ansatz für das Design eines Quadcopterlage- und -geschwindigkeit
 \end{align}
 Die Autoren von \ref{link:ETH} konnten zeigen, dass das Kontrollgesetz in relevanten Bereichen asymptotisch stabil und eindeutig ist. Ein Problem bleibt allerdings, so die Autoren, dass die Robustheit gegenüber auch leistungsschwachem Messrauschen gering ist. Das Problem scheint rein theoretischer Natur zu sein und auf Digitalreglern in der Praxis nicht relevant zu sein \ref{link:ETH}. Für eine detailierten Beschreibung der Sollquaternionberechnung wird auf die Quelle und das Kapitel \ref{Reglerimplementierung:Reglerimplementierung} hingewiesen. Dort wird des weitern erleutert welche PID-Parameter an welchen Stellen wirken.
 \begin{center}
-	\includegraphics[scale=0.78]{../Bilder/0001 Quadcopterregler.png}{\\Für den später verwendeten Regler wurden die Solltrajektorie zu einem Sollgeschwindigkeitsvektor vereinfacht und nur die Geschwindigkeit geregelt. Das Bild ist entnommen aus der ursprünglichen Veröffentlichung \ref{link:ETH}.}
+	\includegraphics[scale=0.78]{../images/0001 Quadcopterregler.png}{\\Für den später verwendeten Regler wurden die Solltrajektorie zu einem Sollgeschwindigkeitsvektor vereinfacht und nur die Geschwindigkeit geregelt. Das Bild ist entnommen aus der ursprünglichen Veröffentlichung \ref{link:ETH}.}
 \end{center}
 
 
@@ -184,7 +184,7 @@ Lernende Systeme haben dasselbe Ziel wie klassische Regler sind aber in der Lage
 Tiefes verstärkendes Lernen (eng. Deep reinforcement learning) ist ein Lernparadigma das tiefe Netzwerk mit Fehlrückführungsalgorithmus und belohnungsbasierten Lernen fusioniert. Tiefe Netzwerke werden in der Regelungstechnik schon eine Weile als Regler verwendet \ref{link:Regelungstechnik2}. Eine jüngere Entwicklung ist der Einsatz des tiefen verstärkenden Lernen.
 In der Regelungstechnik determinieren externe Sollwerte das Verhalten, also Werte, die aus einer Umwelt kommen, welche nicht lokal geregelt werden sollen. Im verstärkenden Lernen gibt es keine Sollwerte im Sinne der Regelungstechnik, sondern Belohnungen, welche eine Funktion der Umwelt sind, die geregelt werden soll. Will man beispielsweise die Rotationsgeschwindigkeit der Erde regeln kann man ein verstärkender Regler mit dem inversen Abstand zwischen Soll- und Istgeschwindigkeit belohnen. Auch möglich wäre die Belohnung mit der Zufriedenheit der Erdbewohner skalieren zu lassen vorausgesetzt man kann diese messen. Das Beispiel soll verdeutlichen, dass der Belohnungsbegriff einen direkteren Bezug zur Optimierung hat und mehrdeutiger ist als der Fehlerbegriff aus der klassichen Regelungstechnik.
 \begin{center}
-	\includegraphics[scale=0.26]{../Bilder/0046 Weltmodell ohne Hintergrund.png
+	\includegraphics[scale=0.26]{../images/0046 Weltmodell ohne Hintergrund.png
 	}{\\Modell der Erde und eindimensionalles Rotationsmodell zugleich}
 \end{center}
 
@@ -234,7 +234,7 @@ auf die Summe anwendet. Die Aktivierungsfunktion ermöglicht dem Netzwerk das Le
   \includegraphics[
     width=0.7\textwidth, 
     keepaspectratio
-  ]{../Bilder/0032 multi-layer-perzeptron.png}{\\Ein voll verknüpftes Netzwerk in welchem alle Knoten rot sind die durch das Gewicht $w_{1,1}^{(S)}$ beeinflusst werden \ref{link:MaschinellesLernen}}
+  ]{../images/0032 multi-layer-perzeptron.png}{\\Ein voll verknüpftes Netzwerk in welchem alle Knoten rot sind die durch das Gewicht $w_{1,1}^{(S)}$ beeinflusst werden \ref{link:MaschinellesLernen}}
 \end{center}
 
 \subsubsection{Fehlerückführungsalgorithmus}
@@ -479,7 +479,7 @@ class Umwelt(gym.Env):
 \subsection{\label{tensorboard}Tensorboard}
 Tensorboard ist ein Set an Programmen zur Visualisierung von PyTorch oder TensorFlow Lernprozessen \ref{link:DeepReinforcementLearning}. PyTorch und TensorFlow sind zwei der meistgenutzten Python Bibliotheken im Gebiet des Tiefen Verstärkenden Lernen. Verschiedene Metriken und Parameter können beim Training gespeichert werden und anschließend im Browser über einen lokalen Port visualisiert werden. Besonders wichtig sind die Episodenlänge und die Episodenbelohnung. Die Länge einer Episode entspricht der Anzahl an Schritten eines Agenten. 
 \begin{center}
-	\includegraphics[width=0.98\textwidth, keepaspectratio]{../Bilder/0058 Tensorboard.png}{\\Tensorboard welches ein Training mit PPO zeigt bei dem die mittlere Episodenanzahl konstant ist und die Belohnung im Rollout und in der Evaluation nicht wie gewünscht kontinuirlich steigt.}
+	\includegraphics[width=0.98\textwidth, keepaspectratio]{../images/0058 Tensorboard.png}{\\Tensorboard welches ein Training mit PPO zeigt bei dem die mittlere Episodenanzahl konstant ist und die Belohnung im Rollout und in der Evaluation nicht wie gewünscht kontinuirlich steigt.}
 \end{center}
 
 \subsection{Zustandsobservation mit einer Inertialen Messeinheit}
@@ -508,5 +508,5 @@ BLDC-Motoren werden wegen ihres Aufbaus zur Klasse der Gleichstrommotoren gezäh
 \subsection{Flask und ThreeJS}
 Flask ist eine Python Bibliothek welche das Programmieren von Webanwendungen vereinfacht \ref{link:Flask}. In Kombination mit der Javaskript Bibliothek ThreeJS lassen sich vergleichsweise schnell 3D-Anwendungen für den Browser entwickeln. Im Netz zugänglich ist neben der ThreeJS Dokumentation eine umfangreiche Zusammenstellung von Beispielen.
 \begin{center}
-	\includegraphics[width=0.9\textwidth, keepaspectratio]{../Bilder/0062 ThreeJS Beispielselektor.png}{\\ThreeJS Beispielselektor mit Beispiel tsl/earth gewählt \ref{bild:3}}
+	\includegraphics[width=0.9\textwidth, keepaspectratio]{../images/0062 ThreeJS Beispielselektor.png}{\\ThreeJS Beispielselektor mit Beispiel tsl/earth gewählt \ref{bild:3}}
 \end{center}

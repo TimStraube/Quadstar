@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.4.10)  26 SEP 2024 22:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.4.10)  27 SEP 2024 22:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/tim/Programme/Quadstar/Bericht/Bericht.tex
-(/home/tim/Programme/Quadstar/Bericht/Bericht.tex
+**/home/tim/Programme/Quadstar/report/Bericht.tex
+(/home/tim/Programme/Quadstar/report/Bericht.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -712,29 +712,29 @@ Overfull \hbox (0.8942pt too wide) in paragraph at lines 4--7
 
 
 ]
-<../Bilder/0026 Eulerwinkel.png, id=371, 887.315pt x 698.61pt>
-File: ../Bilder/0026 Eulerwinkel.png Graphic file (type png)
-<use ../Bilder/0026 Eulerwinkel.png>
-Package pdftex.def Info: ../Bilder/0026 Eulerwinkel.png  used on input line 32.
+<../images/0026 Eulerwinkel.png, id=371, 887.315pt x 698.61pt>
+File: ../images/0026 Eulerwinkel.png Graphic file (type png)
+<use ../images/0026 Eulerwinkel.png>
+Package pdftex.def Info: ../images/0026 Eulerwinkel.png  used on input line 32.
 (pdftex.def)             Requested size: 443.65642pt x 349.30414pt.
- [5 <../Bilder/0026 Eulerwinkel.png>]
-<../Bilder/0028 Kardanwinkel.png, id=388, 899.36pt x 738.76pt>
-File: ../Bilder/0028 Kardanwinkel.png Graphic file (type png)
-<use ../Bilder/0028 Kardanwinkel.png>
-Package pdftex.def Info: ../Bilder/0028 Kardanwinkel.png  used on input line 69.
+ [5 <../images/0026 Eulerwinkel.png>]
+<../images/0028 Kardanwinkel.png, id=388, 899.36pt x 738.76pt>
+File: ../images/0028 Kardanwinkel.png Graphic file (type png)
+<use ../images/0028 Kardanwinkel.png>
+Package pdftex.def Info: ../images/0028 Kardanwinkel.png  used on input line 69.
 (pdftex.def)             Requested size: 449.6789pt x 369.37909pt.
- [6 <../Bilder/0028 Kardanwinkel.png>]
-<../Bilder/0029 Roll-Pitch-Yaw.png, id=403, 899.36pt x 738.76pt>
-File: ../Bilder/0029 Roll-Pitch-Yaw.png Graphic file (type png)
-<use ../Bilder/0029 Roll-Pitch-Yaw.png>
-Package pdftex.def Info: ../Bilder/0029 Roll-Pitch-Yaw.png  used on input line 100.
+ [6 <../images/0028 Kardanwinkel.png>]
+<../images/0029 Roll-Pitch-Yaw.png, id=403, 899.36pt x 738.76pt>
+File: ../images/0029 Roll-Pitch-Yaw.png Graphic file (type png)
+<use ../images/0029 Roll-Pitch-Yaw.png>
+Package pdftex.def Info: ../images/0029 Roll-Pitch-Yaw.png  used on input line 100.
 (pdftex.def)             Requested size: 449.6789pt x 369.37909pt.
-<../Bilder/0027 Gimbel Lock.png, id=406, 899.36pt x 738.76pt>
-File: ../Bilder/0027 Gimbel Lock.png Graphic file (type png)
-<use ../Bilder/0027 Gimbel Lock.png>
-Package pdftex.def Info: ../Bilder/0027 Gimbel Lock.png  used on input line 107.
+<../images/0027 Gimbel Lock.png, id=406, 899.36pt x 738.76pt>
+File: ../images/0027 Gimbel Lock.png Graphic file (type png)
+<use ../images/0027 Gimbel Lock.png>
+Package pdftex.def Info: ../images/0027 Gimbel Lock.png  used on input line 107.
 (pdftex.def)             Requested size: 449.6789pt x 369.37909pt.
- [7 <../Bilder/0029 Roll-Pitch-Yaw.png>] [8 <../Bilder/0027 Gimbel Lock.png>]) [9]
+ [7 <../images/0029 Roll-Pitch-Yaw.png>] [8 <../images/0027 Gimbel Lock.png>]) [9]
 \openout2 = `"sections/04 Systemtheoretische Vorbetrachtungen.aux"'.
 
  (./sections/04 Systemtheoretische Vorbetrachtungen.tex [10
@@ -742,29 +742,29 @@ Package pdftex.def Info: ../Bilder/0027 Gimbel Lock.png  used on input line 107.
 
 
 ] [11]
-<../Bilder/0047 Eulerwinkel Zufällige Aktionen.png, id=458, 1517.67pt x 544.0325pt>
-File: ../Bilder/0047 Eulerwinkel Zufällige Aktionen.png Graphic file (type png)
-<use ../Bilder/0047 Eulerwinkel Zufällige Aktionen.png>
-Package pdftex.def Info: ../Bilder/0047 Eulerwinkel Zufällige Aktionen.png  used on input line 133.
+<../images/0047 Eulerwinkel Zufällige Aktionen.png, id=458, 1517.67pt x 544.0325pt>
+File: ../images/0047 Eulerwinkel Zufällige Aktionen.png Graphic file (type png)
+<use ../images/0047 Eulerwinkel Zufällige Aktionen.png>
+Package pdftex.def Info: ../images/0047 Eulerwinkel Zufällige Aktionen.png  used on input line 133.
 (pdftex.def)             Requested size: 455.30452pt x 163.211pt.
- [12] [13 <../Bilder/0047 Eulerwinkel Zufällige Aktionen.png>] [14]
-<../Bilder/0001 Quadcopterregler.png, id=500, 445.665pt x 124.465pt>
-File: ../Bilder/0001 Quadcopterregler.png Graphic file (type png)
-<use ../Bilder/0001 Quadcopterregler.png>
-Package pdftex.def Info: ../Bilder/0001 Quadcopterregler.png  used on input line 170.
+ [12] [13 <../images/0047 Eulerwinkel Zufällige Aktionen.png>] [14]
+<../images/0001 Quadcopterregler.png, id=500, 445.665pt x 124.465pt>
+File: ../images/0001 Quadcopterregler.png Graphic file (type png)
+<use ../images/0001 Quadcopterregler.png>
+Package pdftex.def Info: ../images/0001 Quadcopterregler.png  used on input line 170.
 (pdftex.def)             Requested size: 347.6173pt x 97.0823pt.
-<../Bilder/0046 Weltmodell ohne Hintergrund.png, id=503, 579.16376pt x 434.62375pt>
-File: ../Bilder/0046 Weltmodell ohne Hintergrund.png Graphic file (type png)
-<use ../Bilder/0046 Weltmodell ohne Hintergrund.png>
-Package pdftex.def Info: ../Bilder/0046 Weltmodell ohne Hintergrund.png  used on input line 188.
+<../images/0046 Weltmodell ohne Hintergrund.png, id=503, 579.16376pt x 434.62375pt>
+File: ../images/0046 Weltmodell ohne Hintergrund.png Graphic file (type png)
+<use ../images/0046 Weltmodell ohne Hintergrund.png>
+Package pdftex.def Info: ../images/0046 Weltmodell ohne Hintergrund.png  used on input line 188.
 (pdftex.def)             Requested size: 150.57903pt x 112.9995pt.
- [15 <../Bilder/0001 Quadcopterregler.png> <../Bilder/0046 Weltmodell ohne Hintergrund.png>] [16]
-<../Bilder/0032 multi-layer-perzeptron.png, id=527, 911.405pt x 624.3325pt>
-File: ../Bilder/0032 multi-layer-perzeptron.png Graphic file (type png)
-<use ../Bilder/0032 multi-layer-perzeptron.png>
-Package pdftex.def Info: ../Bilder/0032 multi-layer-perzeptron.png  used on input line 237.
+ [15 <../images/0001 Quadcopterregler.png> <../images/0046 Weltmodell ohne Hintergrund.png>] [16]
+<../images/0032 multi-layer-perzeptron.png, id=527, 911.405pt x 624.3325pt>
+File: ../images/0032 multi-layer-perzeptron.png Graphic file (type png)
+<use ../images/0032 multi-layer-perzeptron.png>
+Package pdftex.def Info: ../images/0032 multi-layer-perzeptron.png  used on input line 237.
 (pdftex.def)             Requested size: 338.58632pt x 231.94254pt.
- [17 <../Bilder/0032 multi-layer-perzeptron.png>] [18]
+ [17 <../images/0032 multi-layer-perzeptron.png>] [18]
 Overfull \hbox (0.12453pt too wide) in paragraph at lines 378--379
 \OT1/cmr/m/n/12 Diese Einf^^?uhrung zu Proximal-Policy-Optimization hat nicht den Anspruch eine vol-lumf^^?angliche
  []
@@ -787,18 +787,18 @@ LaTeX Font Info:    Trying to load font information for TS1+cmss on input line 4
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmss.fd
 File: ts1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-<../Bilder/0058 Tensorboard.png, id=621, 1927.2pt x 952.55875pt>
-File: ../Bilder/0058 Tensorboard.png Graphic file (type png)
-<use ../Bilder/0058 Tensorboard.png>
-Package pdftex.def Info: ../Bilder/0058 Tensorboard.png  used on input line 482.
+<../images/0058 Tensorboard.png, id=621, 1927.2pt x 952.55875pt>
+File: ../images/0058 Tensorboard.png Graphic file (type png)
+<use ../images/0058 Tensorboard.png>
+Package pdftex.def Info: ../images/0058 Tensorboard.png  used on input line 482.
 (pdftex.def)             Requested size: 474.02086pt x 234.28737pt.
- [21 <../Bilder/0058 Tensorboard.png>] [22]
-<../Bilder/0062 ThreeJS Beispielselektor.png, id=673, 1927.2pt x 953.5625pt>
-File: ../Bilder/0062 ThreeJS Beispielselektor.png Graphic file (type png)
-<use ../Bilder/0062 ThreeJS Beispielselektor.png>
-Package pdftex.def Info: ../Bilder/0062 ThreeJS Beispielselektor.png  used on input line 511.
+ [21 <../images/0058 Tensorboard.png>] [22]
+<../images/0062 ThreeJS Beispielselektor.png, id=673, 1927.2pt x 953.5625pt>
+File: ../images/0062 ThreeJS Beispielselektor.png Graphic file (type png)
+<use ../images/0062 ThreeJS Beispielselektor.png>
+Package pdftex.def Info: ../images/0062 ThreeJS Beispielselektor.png  used on input line 511.
 (pdftex.def)             Requested size: 435.32422pt x 215.38622pt.
-) [23 <../Bilder/0062 ThreeJS Beispielselektor.png>]
+) [23 <../images/0062 ThreeJS Beispielselektor.png>]
 \openout2 = `"sections/05 Implementierung.aux"'.
 
  (./sections/05 Implementierung.tex [24
@@ -806,76 +806,76 @@ Package pdftex.def Info: ../Bilder/0062 ThreeJS Beispielselektor.png  used on in
 
 
 ] [25]
-<../Bilder/0002 nucleo-f411re.png, id=708, 579.16376pt x 434.62375pt>
-File: ../Bilder/0002 nucleo-f411re.png Graphic file (type png)
-<use ../Bilder/0002 nucleo-f411re.png>
-Package pdftex.def Info: ../Bilder/0002 nucleo-f411re.png  used on input line 37.
+<../images/0002 nucleo-f411re.png, id=708, 579.16376pt x 434.62375pt>
+File: ../images/0002 nucleo-f411re.png Graphic file (type png)
+<use ../images/0002 nucleo-f411re.png>
+Package pdftex.def Info: ../images/0002 nucleo-f411re.png  used on input line 37.
 (pdftex.def)             Requested size: 347.50093pt x 260.77626pt.
- [26 <../Bilder/0002 nucleo-f411re.png>] [27] [28] [29]
-<../Bilder/0068 Quadlive 1.png, id=833, 633.36626pt x 702.625pt>
-File: ../Bilder/0068 Quadlive 1.png Graphic file (type png)
-<use ../Bilder/0068 Quadlive 1.png>
-Package pdftex.def Info: ../Bilder/0068 Quadlive 1.png  used on input line 289.
+ [26 <../images/0002 nucleo-f411re.png>] [27] [28] [29]
+<../images/0068 Quadlive 1.png, id=833, 633.36626pt x 702.625pt>
+File: ../images/0068 Quadlive 1.png Graphic file (type png)
+<use ../images/0068 Quadlive 1.png>
+Package pdftex.def Info: ../images/0068 Quadlive 1.png  used on input line 289.
 (pdftex.def)             Requested size: 190.01134pt x 210.78912pt.
- [30 <../Bilder/0068 Quadlive 1.png>] [31]
+ [30 <../images/0068 Quadlive 1.png>] [31]
 Overfull \hbox (2.1074pt too wide) in paragraph at lines 386--388
 \OT1/cmr/m/n/12 Das An-ler-nen des PID-Geschwindigkeitsregelers um-fasste bis zu 18 PID-Parameter. Zu beachten
  []
 
 [32] [33]
-<../Bilder/0089 PID Lernen.png, id=873, 1251.67625pt x 479.7925pt>
-File: ../Bilder/0089 PID Lernen.png Graphic file (type png)
-<use ../Bilder/0089 PID Lernen.png>
-Package pdftex.def Info: ../Bilder/0089 PID Lernen.png  used on input line 514.
+<../images/0089 PID Lernen.png, id=873, 1251.67625pt x 479.7925pt>
+File: ../images/0089 PID Lernen.png Graphic file (type png)
+<use ../images/0089 PID Lernen.png>
+Package pdftex.def Info: ../images/0089 PID Lernen.png  used on input line 514.
 (pdftex.def)             Requested size: 475.64192pt x 182.32303pt.
- [34 <../Bilder/0089 PID Lernen.png>]
-<../Bilder/0096 Geschwindigkeit.png, id=882, 1504.62125pt x 833.1125pt>
-File: ../Bilder/0096 Geschwindigkeit.png Graphic file (type png)
-<use ../Bilder/0096 Geschwindigkeit.png>
-Package pdftex.def Info: ../Bilder/0096 Geschwindigkeit.png  used on input line 519.
+ [34 <../images/0089 PID Lernen.png>]
+<../images/0096 Geschwindigkeit.png, id=882, 1504.62125pt x 833.1125pt>
+File: ../images/0096 Geschwindigkeit.png Graphic file (type png)
+<use ../images/0096 Geschwindigkeit.png>
+Package pdftex.def Info: ../images/0096 Geschwindigkeit.png  used on input line 519.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../Bilder/0098 Position.png, id=883, 1504.62125pt x 833.1125pt>
-File: ../Bilder/0098 Position.png Graphic file (type png)
-<use ../Bilder/0098 Position.png>
-Package pdftex.def Info: ../Bilder/0098 Position.png  used on input line 522.
+<../images/0098 Position.png, id=883, 1504.62125pt x 833.1125pt>
+File: ../images/0098 Position.png Graphic file (type png)
+<use ../images/0098 Position.png>
+Package pdftex.def Info: ../images/0098 Position.png  used on input line 522.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../Bilder/0097 Drehlage.png, id=884, 1523.6925pt x 553.06625pt>
-File: ../Bilder/0097 Drehlage.png Graphic file (type png)
-<use ../Bilder/0097 Drehlage.png>
-Package pdftex.def Info: ../Bilder/0097 Drehlage.png  used on input line 525.
+<../images/0097 Drehlage.png, id=884, 1523.6925pt x 553.06625pt>
+File: ../images/0097 Drehlage.png Graphic file (type png)
+<use ../images/0097 Drehlage.png>
+Package pdftex.def Info: ../images/0097 Drehlage.png  used on input line 525.
 (pdftex.def)             Requested size: 380.9222pt x 138.26622pt.
- [35 <../Bilder/0096 Geschwindigkeit.png> <../Bilder/0098 Position.png> <../Bilder/0097 Drehlage.png>]
-<../Bilder/0093 Geschwindigkeit.png, id=892, 1504.62125pt x 833.1125pt>
-File: ../Bilder/0093 Geschwindigkeit.png Graphic file (type png)
-<use ../Bilder/0093 Geschwindigkeit.png>
-Package pdftex.def Info: ../Bilder/0093 Geschwindigkeit.png  used on input line 530.
+ [35 <../images/0096 Geschwindigkeit.png> <../images/0098 Position.png> <../images/0097 Drehlage.png>]
+<../images/0093 Geschwindigkeit.png, id=892, 1504.62125pt x 833.1125pt>
+File: ../images/0093 Geschwindigkeit.png Graphic file (type png)
+<use ../images/0093 Geschwindigkeit.png>
+Package pdftex.def Info: ../images/0093 Geschwindigkeit.png  used on input line 530.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../Bilder/0094 Position.png, id=893, 1504.62125pt x 833.1125pt>
-File: ../Bilder/0094 Position.png Graphic file (type png)
-<use ../Bilder/0094 Position.png>
-Package pdftex.def Info: ../Bilder/0094 Position.png  used on input line 533.
+<../images/0094 Position.png, id=893, 1504.62125pt x 833.1125pt>
+File: ../images/0094 Position.png Graphic file (type png)
+<use ../images/0094 Position.png>
+Package pdftex.def Info: ../images/0094 Position.png  used on input line 533.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../Bilder/0095 Drehlage.png, id=894, 1519.6775pt x 540.0175pt>
-File: ../Bilder/0095 Drehlage.png Graphic file (type png)
-<use ../Bilder/0095 Drehlage.png>
-Package pdftex.def Info: ../Bilder/0095 Drehlage.png  used on input line 536.
+<../images/0095 Drehlage.png, id=894, 1519.6775pt x 540.0175pt>
+File: ../images/0095 Drehlage.png Graphic file (type png)
+<use ../images/0095 Drehlage.png>
+Package pdftex.def Info: ../images/0095 Drehlage.png  used on input line 536.
 (pdftex.def)             Requested size: 379.91844pt x 135.00404pt.
- [36 <../Bilder/0093 Geschwindigkeit.png> <../Bilder/0094 Position.png> <../Bilder/0095 Drehlage.png>]
+ [36 <../images/0093 Geschwindigkeit.png> <../images/0094 Position.png> <../images/0095 Drehlage.png>]
 Overfull \hbox (1.46893pt too wide) in paragraph at lines 541--542
 \OT1/cmr/m/n/12 Beobach-tung bes-timmter Quad-copterzust^^?ande di-rekt Mo-tor-be-fehle vorher-sagt, so-dass die Quad-
  []
 
 [37]
-<../Bilder/0091 Ende-zu-Ende 1.png, id=910, 1262.7175pt x 429.605pt>
-File: ../Bilder/0091 Ende-zu-Ende 1.png Graphic file (type png)
-<use ../Bilder/0091 Ende-zu-Ende 1.png>
-Package pdftex.def Info: ../Bilder/0091 Ende-zu-Ende 1.png  used on input line 672.
+<../images/0091 Ende-zu-Ende 1.png, id=910, 1262.7175pt x 429.605pt>
+File: ../images/0091 Ende-zu-Ende 1.png Graphic file (type png)
+<use ../images/0091 Ende-zu-Ende 1.png>
+Package pdftex.def Info: ../images/0091 Ende-zu-Ende 1.png  used on input line 672.
 (pdftex.def)             Requested size: 454.57796pt x 154.65767pt.
  [38]
-<../Bilder/0092 Ende-zu-Ende 2.png, id=916, 1262.7175pt x 429.605pt>
-File: ../Bilder/0092 Ende-zu-Ende 2.png Graphic file (type png)
-<use ../Bilder/0092 Ende-zu-Ende 2.png>
-Package pdftex.def Info: ../Bilder/0092 Ende-zu-Ende 2.png  used on input line 675.
+<../images/0092 Ende-zu-Ende 2.png, id=916, 1262.7175pt x 429.605pt>
+File: ../images/0092 Ende-zu-Ende 2.png Graphic file (type png)
+<use ../images/0092 Ende-zu-Ende 2.png>
+Package pdftex.def Info: ../images/0092 Ende-zu-Ende 2.png  used on input line 675.
 (pdftex.def)             Requested size: 454.57796pt x 154.65767pt.
 
 Overfull \hbox (19.64236pt too wide) in paragraph at lines 702--703
@@ -887,54 +887,54 @@ Overfull \hbox (32.91953pt too wide) in paragraph at lines 702--703
 \OT1/cmr/m/n/12 noch nicht gen-er-al-isiert hat. Aber zu-min-d-est hat das Mod-ell ver-standen den 8 Sollgeschwindigkeitsvek-
  []
 
-[39 <../Bilder/0091 Ende-zu-Ende 1.png> <../Bilder/0092 Ende-zu-Ende 2.png>]
-<../Bilder/0081 Model E 1.png, id=923, 1498.59875pt x 854.19125pt>
-File: ../Bilder/0081 Model E 1.png Graphic file (type png)
-<use ../Bilder/0081 Model E 1.png>
-Package pdftex.def Info: ../Bilder/0081 Model E 1.png  used on input line 704.
+[39 <../images/0091 Ende-zu-Ende 1.png> <../images/0092 Ende-zu-Ende 2.png>]
+<../images/0081 Model E 1.png, id=923, 1498.59875pt x 854.19125pt>
+File: ../images/0081 Model E 1.png Graphic file (type png)
+<use ../images/0081 Model E 1.png>
+Package pdftex.def Info: ../images/0081 Model E 1.png  used on input line 704.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../Bilder/0080 Model E 2.png, id=924, 1498.59875pt x 854.19125pt>
-File: ../Bilder/0080 Model E 2.png Graphic file (type png)
-<use ../Bilder/0080 Model E 2.png>
-Package pdftex.def Info: ../Bilder/0080 Model E 2.png  used on input line 707.
+<../images/0080 Model E 2.png, id=924, 1498.59875pt x 854.19125pt>
+File: ../images/0080 Model E 2.png Graphic file (type png)
+<use ../images/0080 Model E 2.png>
+Package pdftex.def Info: ../images/0080 Model E 2.png  used on input line 707.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../Bilder/0079 Model E 3.png, id=925, 1524.69624pt x 541.02126pt>
-File: ../Bilder/0079 Model E 3.png Graphic file (type png)
-<use ../Bilder/0079 Model E 3.png>
-Package pdftex.def Info: ../Bilder/0079 Model E 3.png  used on input line 710.
+<../images/0079 Model E 3.png, id=925, 1524.69624pt x 541.02126pt>
+File: ../images/0079 Model E 3.png Graphic file (type png)
+<use ../images/0079 Model E 3.png>
+Package pdftex.def Info: ../images/0079 Model E 3.png  used on input line 710.
 (pdftex.def)             Requested size: 381.17313pt x 135.25497pt.
- [40 <../Bilder/0081 Model E 1.png> <../Bilder/0080 Model E 2.png> <../Bilder/0079 Model E 3.png>]
-<../Bilder/0085 2.png, id=933, 1498.59875pt x 854.19125pt>
-File: ../Bilder/0085 2.png Graphic file (type png)
-<use ../Bilder/0085 2.png>
-Package pdftex.def Info: ../Bilder/0085 2.png  used on input line 714.
+ [40 <../images/0081 Model E 1.png> <../images/0080 Model E 2.png> <../images/0079 Model E 3.png>]
+<../images/0085 2.png, id=933, 1498.59875pt x 854.19125pt>
+File: ../images/0085 2.png Graphic file (type png)
+<use ../images/0085 2.png>
+Package pdftex.def Info: ../images/0085 2.png  used on input line 714.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../Bilder/0084 1.png, id=934, 1498.59875pt x 854.19125pt>
-File: ../Bilder/0084 1.png Graphic file (type png)
-<use ../Bilder/0084 1.png>
-Package pdftex.def Info: ../Bilder/0084 1.png  used on input line 717.
+<../images/0084 1.png, id=934, 1498.59875pt x 854.19125pt>
+File: ../images/0084 1.png Graphic file (type png)
+<use ../images/0084 1.png>
+Package pdftex.def Info: ../images/0084 1.png  used on input line 717.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../Bilder/0086 3.png, id=935, 1512.65125pt x 532.99126pt>
-File: ../Bilder/0086 3.png Graphic file (type png)
-<use ../Bilder/0086 3.png>
-Package pdftex.def Info: ../Bilder/0086 3.png  used on input line 720.
+<../images/0086 3.png, id=935, 1512.65125pt x 532.99126pt>
+File: ../images/0086 3.png Graphic file (type png)
+<use ../images/0086 3.png>
+Package pdftex.def Info: ../images/0086 3.png  used on input line 720.
 (pdftex.def)             Requested size: 378.16188pt x 133.24748pt.
- [41 <../Bilder/0085 2.png> <../Bilder/0084 1.png> <../Bilder/0086 3.png>]
-<../Bilder/0064 Pinbelegung.png, id=944, 551.05875pt x 506.89375pt>
-File: ../Bilder/0064 Pinbelegung.png Graphic file (type png)
-<use ../Bilder/0064 Pinbelegung.png>
-Package pdftex.def Info: ../Bilder/0064 Pinbelegung.png  used on input line 729.
+ [41 <../images/0085 2.png> <../images/0084 1.png> <../images/0086 3.png>]
+<../images/0064 Pinbelegung.png, id=944, 551.05875pt x 506.89375pt>
+File: ../images/0064 Pinbelegung.png Graphic file (type png)
+<use ../images/0064 Pinbelegung.png>
+Package pdftex.def Info: ../images/0064 Pinbelegung.png  used on input line 729.
 (pdftex.def)             Requested size: 275.52869pt x 253.44626pt.
-<../Bilder/0067 Pinout NUCLEO F411RE.jpeg, id=945, 1927.2pt x 1445.4pt>
-File: ../Bilder/0067 Pinout NUCLEO F411RE.jpeg Graphic file (type jpg)
-<use ../Bilder/0067 Pinout NUCLEO F411RE.jpeg>
-Package pdftex.def Info: ../Bilder/0067 Pinout NUCLEO F411RE.jpeg  used on input line 733.
+<../images/0067 Pinout NUCLEO F411RE.jpeg, id=945, 1927.2pt x 1445.4pt>
+File: ../images/0067 Pinout NUCLEO F411RE.jpeg Graphic file (type jpg)
+<use ../images/0067 Pinout NUCLEO F411RE.jpeg>
+Package pdftex.def Info: ../images/0067 Pinout NUCLEO F411RE.jpeg  used on input line 733.
 (pdftex.def)             Requested size: 269.80617pt x 202.35461pt.
- [42 <../Bilder/0064 Pinbelegung.png> <../Bilder/0067 Pinout NUCLEO F411RE.jpeg>]
-<../Bilder/0065 Clock.png, id=956, 1115.16624pt x 502.87875pt>
-File: ../Bilder/0065 Clock.png Graphic file (type png)
-<use ../Bilder/0065 Clock.png>
-Package pdftex.def Info: ../Bilder/0065 Clock.png  used on input line 737.
+ [42 <../images/0064 Pinbelegung.png> <../images/0067 Pinout NUCLEO F411RE.jpeg>]
+<../images/0065 Clock.png, id=956, 1115.16624pt x 502.87875pt>
+File: ../images/0065 Clock.png Graphic file (type png)
+<use ../images/0065 Clock.png>
+Package pdftex.def Info: ../images/0065 Clock.png  used on input line 737.
 (pdftex.def)             Requested size: 390.31404pt x 176.0102pt.
  (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
@@ -949,66 +949,66 @@ LaTeX Font Warning: Font shape `OML/cmss/m/n' undefined
 (Font)              using `OML/cmm/m/it' instead
 (Font)              for symbol `textgreater' on input line 773.
 
-[43 <../Bilder/0065 Clock.png>] [44]
+[43 <../images/0065 Clock.png>] [44]
 Overfull \hbox (4.34613pt too wide) in paragraph at lines 927--928
  [][] 
  []
 
 [45]
-<../Bilder/0070 Modell 1.jpg, id=1129, 1927.2pt x 2569.6pt>
-File: ../Bilder/0070 Modell 1.jpg Graphic file (type jpg)
-<use ../Bilder/0070 Modell 1.jpg>
-Package pdftex.def Info: ../Bilder/0070 Modell 1.jpg  used on input line 932.
+<../images/0070 Modell 1.jpg, id=1129, 1927.2pt x 2569.6pt>
+File: ../images/0070 Modell 1.jpg Graphic file (type jpg)
+<use ../images/0070 Modell 1.jpg>
+Package pdftex.def Info: ../images/0070 Modell 1.jpg  used on input line 932.
 (pdftex.def)             Requested size: 192.7313pt x 256.97505pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 937--939
 
  []
 
-<../Bilder/0063 Joystick.jpg, id=1130, 1050.92625pt x 902.37125pt>
-File: ../Bilder/0063 Joystick.jpg Graphic file (type jpg)
-<use ../Bilder/0063 Joystick.jpg>
-Package pdftex.def Info: ../Bilder/0063 Joystick.jpg  used on input line 941.
+<../images/0063 Joystick.jpg, id=1130, 1050.92625pt x 902.37125pt>
+File: ../images/0063 Joystick.jpg Graphic file (type jpg)
+<use ../images/0063 Joystick.jpg>
+Package pdftex.def Info: ../images/0063 Joystick.jpg  used on input line 941.
 (pdftex.def)             Requested size: 131.36546pt x 112.79613pt.
-[46 <../Bilder/0070 Modell 1.jpg> <../Bilder/0063 Joystick.jpg>]
-<../Bilder/0088 Joystick Mode.jpg, id=1137, 1927.2pt x 2569.6pt>
-File: ../Bilder/0088 Joystick Mode.jpg Graphic file (type jpg)
-<use ../Bilder/0088 Joystick Mode.jpg>
-Package pdftex.def Info: ../Bilder/0088 Joystick Mode.jpg  used on input line 945.
+[46 <../images/0070 Modell 1.jpg> <../images/0063 Joystick.jpg>]
+<../images/0088 Joystick Mode.jpg, id=1137, 1927.2pt x 2569.6pt>
+File: ../images/0088 Joystick Mode.jpg Graphic file (type jpg)
+<use ../images/0088 Joystick Mode.jpg>
+Package pdftex.def Info: ../images/0088 Joystick Mode.jpg  used on input line 945.
 (pdftex.def)             Requested size: 154.17915pt x 205.5722pt.
- [47 <../Bilder/0088 Joystick Mode.jpg>]
-<../Bilder/0082 Akku.png, id=1175, 483.8075pt x 195.73125pt>
-File: ../Bilder/0082 Akku.png Graphic file (type png)
-<use ../Bilder/0082 Akku.png>
-Package pdftex.def Info: ../Bilder/0082 Akku.png  used on input line 993.
+ [47 <../images/0088 Joystick Mode.jpg>]
+<../images/0082 Akku.png, id=1175, 483.8075pt x 195.73125pt>
+File: ../images/0082 Akku.png Graphic file (type png)
+<use ../images/0082 Akku.png>
+Package pdftex.def Info: ../images/0082 Akku.png  used on input line 993.
 (pdftex.def)             Requested size: 203.19775pt x 82.20656pt.
-<../Bilder/0087 Testbench.jpg, id=1176, 2569.6pt x 1927.2pt>
-File: ../Bilder/0087 Testbench.jpg Graphic file (type jpg)
-<use ../Bilder/0087 Testbench.jpg>
-Package pdftex.def Info: ../Bilder/0087 Testbench.jpg  used on input line 997.
+<../images/0087 Testbench.jpg, id=1176, 2569.6pt x 1927.2pt>
+File: ../images/0087 Testbench.jpg Graphic file (type jpg)
+<use ../images/0087 Testbench.jpg>
+Package pdftex.def Info: ../images/0087 Testbench.jpg  used on input line 997.
 (pdftex.def)             Requested size: 462.50806pt x 346.88104pt.
 
 Overfull \hbox (6.36055pt too wide) in paragraph at lines 1001--1003
 \OT1/cmr/m/n/12 Der Adap-tion-steil-prozess enth^^?alt alle Ar-beitss-chritte die an-fallen, wenn ein neues Teilziel definiert
  []
 
-[48 <../Bilder/0082 Akku.png> <../Bilder/0087 Testbench.jpg>]
-<../Bilder/0073 Flugtest.png, id=1183, 883.3pt x 387.4475pt>
-File: ../Bilder/0073 Flugtest.png Graphic file (type png)
-<use ../Bilder/0073 Flugtest.png>
-Package pdftex.def Info: ../Bilder/0073 Flugtest.png  used on input line 1004.
+[48 <../images/0082 Akku.png> <../images/0087 Testbench.jpg>]
+<../images/0073 Flugtest.png, id=1183, 883.3pt x 387.4475pt>
+File: ../images/0073 Flugtest.png Graphic file (type png)
+<use ../images/0073 Flugtest.png>
+Package pdftex.def Info: ../images/0073 Flugtest.png  used on input line 1004.
 (pdftex.def)             Requested size: 353.31374pt x 154.97624pt.
-<../Bilder/0074 Flugtest.png, id=1184, 883.3pt x 387.4475pt>
-File: ../Bilder/0074 Flugtest.png Graphic file (type png)
-<use ../Bilder/0074 Flugtest.png>
-Package pdftex.def Info: ../Bilder/0074 Flugtest.png  used on input line 1007.
+<../images/0074 Flugtest.png, id=1184, 883.3pt x 387.4475pt>
+File: ../images/0074 Flugtest.png Graphic file (type png)
+<use ../images/0074 Flugtest.png>
+Package pdftex.def Info: ../images/0074 Flugtest.png  used on input line 1007.
 (pdftex.def)             Requested size: 353.31374pt x 154.97624pt.
-<../Bilder/0075 Flugtest.png, id=1185, 414.54875pt x 155.58125pt>
-File: ../Bilder/0075 Flugtest.png Graphic file (type png)
-<use ../Bilder/0075 Flugtest.png>
-Package pdftex.def Info: ../Bilder/0075 Flugtest.png  used on input line 1010.
+<../images/0075 Flugtest.png, id=1185, 414.54875pt x 155.58125pt>
+File: ../images/0075 Flugtest.png Graphic file (type png)
+<use ../images/0075 Flugtest.png>
+Package pdftex.def Info: ../images/0075 Flugtest.png  used on input line 1010.
 (pdftex.def)             Requested size: 352.36809pt x 132.24467pt.
-) [49 <../Bilder/0073 Flugtest.png> <../Bilder/0074 Flugtest.png> <../Bilder/0075 Flugtest.png>] [50]
+) [49 <../images/0073 Flugtest.png> <../images/0074 Flugtest.png> <../images/0075 Flugtest.png>] [50]
 \openout2 = `"sections/06 Zusammenfasssung.aux"'.
 
  (./sections/06 Zusammenfasssung.tex) [51
@@ -1071,14 +1071,14 @@ Package rerunfilecheck Info: File `Bericht.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  28326 strings out of 480171
- 554405 string characters out of 5894489
+ 554402 string characters out of 5894489
  1068809 words of memory out of 5000000
  45170 multiletter control sequences out of 15000+600000
  478812 words of font info for 60 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 100i,19n,104p,3183b,2079s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 100i,19n,104p,3182b,2079s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/tim/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcsi0800.600pk> </home/tim/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.600pk> </home/tim/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcss0800.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on Bericht.pdf (55 pages, 9327918 bytes).
+Output written on Bericht.pdf (55 pages, 9327921 bytes).
 PDF statistics:
  1444 PDF objects out of 1728 (max. 8388607)
  1241 compressed objects within 13 object streams

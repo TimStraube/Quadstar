@@ -7,7 +7,7 @@ email: john.bobzwik@gmail.com
 author: Tim Leonard Straube
 organization: HTWG Konstanz
 email: ti741str@htwg-konstanz.de
-comment: PID-Regler
+comment: Quaternion Methods
 """
 
 import numpy
@@ -183,4 +183,3 @@ class Quaternion():
     
 if "__main__" == __name__:
     q = Quaternion()
-    print(q.kardanwinkel2quaternion(0, 0, 0))

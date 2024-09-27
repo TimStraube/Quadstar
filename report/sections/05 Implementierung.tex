@@ -34,7 +34,7 @@ Da der Quadcopterrahmen die meisten Schnittstellen zu anderen Teilen aufwies wur
 Zentrales Bauteile ist neben den BLDC-Motoren und dem Rahmen das Herzstück des Quadcopters der Rechner, auf welchem die Regelung prozessiert wird.
 Um diese Aufgabe zu erfüllen wurde ein ST NUCELO-F411RE \ref{link:33} ergänzt durch ein X-NUCLEO-IKS4A1Sensorboard\\ beschafft \ref{link:34}.
 \begin{center}
-\includegraphics[scale=0.6]{../Bilder/0002 nucleo-f411re.png}{\\STMicroelectronis NUCLEO-F411RE Mikrocontrollerboard mit X-NUCLEO-IKS4A1 Sensorboard}
+\includegraphics[scale=0.6]{../images/0002 nucleo-f411re.png}{\\STMicroelectronis NUCLEO-F411RE Mikrocontrollerboard mit X-NUCLEO-IKS4A1 Sensorboard}
 \end{center}
 Die Beschaffung aller Teile lief, bis auf ein überdimensioniertes Kabel und unterdimensioniert Propeller und Motoren reibungslos.\\
 Allerdings war der ST NUCELO-F411RE nicht die erste Wahl. Zunächst wurde ein STM32-F4-DISCO bestellt. Da mit diesem aber keine serielle Verbindung zum Rechner aufgebaut werden konnte hatte das NUCLEO-F411RE Board die Möglichkeit sich, als würdigen Ersatz zu präsentieren. Dieser Fehler ist nicht als Beschaffungsfehler klassifiziert, sondern als Produktfehler.
@@ -286,7 +286,7 @@ Das Diagramm visualisiert Klassen welche andere instanziieren und Informationsfl
 Die in \textit{quad.py} definierte Klasse Quadcopter umfasst vor allem die Quadcopterdynamiksimulation \ref{simcon:simcon}. Mit \textit{quadtrain.py} welche Methoden aus \textit{quadpid.py} oder \textit{quadendezuende.py} aufruft lassen sich PID-Parameter beziehungsweise Ende-zu-Ende-Modelle lernen. 
 Die Klassen \textit{Quadpid} und \textit{Quadendezuende} welche in \textit{quadpid.py} beziehungsweise \textit{quadendezuende.py} definiert sind erben von \text{gym.Env} \ref{gymnasium} und implementierten die Funktionen \textit{reset} und \textit{step}. Trainiert der Nutzer ein Modell mit \textit{quadtrain.py} greift Stable Baselines3 auf eine der Umwelten zu entsprechend der Definition in \textit{config.py}. Weiterführende Details zur Implementierung, Spezifizierung und zu den Hyperparametern der Trainingsumgebungen werden in \ref{pidlernen} und \ref{EndeZuEndeModell}\\ vorgestellt. Durch den Aufruf von \textit{quadlive.py} wird ein Flask-Server gestartet mithilfe von welchem die Trajektorie eines Quadcopter im Browser simuliert wird. 
 \begin{center}
-	\includegraphics[scale=0.3]{../Bilder/0068 Quadlive 1.png}{\\Visualisierung des Quadcopters mit \textit{quadlive.py} im Browser}
+	\includegraphics[scale=0.3]{../images/0068 Quadlive 1.png}{\\Visualisierung des Quadcopters mit \textit{quadlive.py} im Browser}
 \end{center}
 Die Webvisualisierung greift auf Methoden aus \textit{quadtest.py} zurück welche auch dazu verwendet werden können, Plots von Trajektorien zu erstellen. Gezeichnet werden 6 translatorischen Parameter welche die Position und Geschwindigkeit des Quadcopters im Nord-Ost-Unten Orientierungssystem repräsentieren und 3 rotatorische Parameter, welche die Drehlage darstellen, wobei die Darstellung in Polarkoordinaten gewählt wurde, um der periodischen Natur der Größe gerecht zu werden.\\
 Die Entwicklung und Implementierung des Programms \textit{quadsoft.c}, auf dem NUCELO-F411RE Board, ist Teil des Arbeitsschrittes Reglerimplementierung \ref{Reglerimplementierung:Reglerimplementierung}.\\
@@ -511,29 +511,29 @@ $\delta_r$ & 0.2\\
 \vspace*{0.5cm}
 Der Rechner EIPC55 hat 32GB RAM und eine Intel Xeon CPU die mit bei zu 3900MHZ taktet. Als GPU ist eine RTXA4000 verbaut.
 \begin{center}
-	\includegraphics[scale=0.38]{../Bilder/0089 PID Lernen.png}{\\Mittlerere Belohnung als Funktion der Episode aufgezeichnet und dargestellt mit Tensorboard. Wichtig ist das der Lernerfolg einsetzte nachdem die Belohnungsfunktion von der in \ref{Belohnung} abgewandelt wurde auf eine der From $-|e_v|$. In jedem Quadcopterschritt wird die Belohnung berechnet wie mit den vorgestellten Belohnungsfunktion \ref{Belohnung} und auf die Episodenbelohnung addiert, sodass nicht nur der Quadcopterschritt die Belohnung determiniert. Ob die veränderten Hyperparameter dieses Modell halbwegs akzeptabel lernen lassen haben oder tatsächlich die Belohnungsfunktion muss noch analysiert werden.}
+	\includegraphics[scale=0.38]{../images/0089 PID Lernen.png}{\\Mittlerere Belohnung als Funktion der Episode aufgezeichnet und dargestellt mit Tensorboard. Wichtig ist das der Lernerfolg einsetzte nachdem die Belohnungsfunktion von der in \ref{Belohnung} abgewandelt wurde auf eine der From $-|e_v|$. In jedem Quadcopterschritt wird die Belohnung berechnet wie mit den vorgestellten Belohnungsfunktion \ref{Belohnung} und auf die Episodenbelohnung addiert, sodass nicht nur der Quadcopterschritt die Belohnung determiniert. Ob die veränderten Hyperparameter dieses Modell halbwegs akzeptabel lernen lassen haben oder tatsächlich die Belohnungsfunktion muss noch analysiert werden.}
 \end{center}
 \pagebreak 
 Die Bilder zeigen exemplarisch, simulierte Positions-, Geschwindigkeits- und Drehlagetrajektorien in blau sowie Positions- und Geschwindigkeitssolltrajektorien in grün. Zunächst werden die Default PID-Parameter aus \ref{simcon:simcon} betrachtet.
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0096 Geschwindigkeit.png}{\\Die Istgeschwindigkeit folgt der Sollgeschwindigkeit in erster Näherung perfekt bis auf den unerwarteten verbleibenden Fehler auf der Nord-Dimension.}
+	\includegraphics[scale=0.25]{../images/0096 Geschwindigkeit.png}{\\Die Istgeschwindigkeit folgt der Sollgeschwindigkeit in erster Näherung perfekt bis auf den unerwarteten verbleibenden Fehler auf der Nord-Dimension.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0098 Position.png}{\\Die Wirkung des verbleibenden Fehlers zwischen Ist- und Sollgeschwindigkeit ist im Positionsplot kaum sichbar da während der Beschleunigungsphase ein Offset entsteht.}
+	\includegraphics[scale=0.25]{../images/0098 Position.png}{\\Die Wirkung des verbleibenden Fehlers zwischen Ist- und Sollgeschwindigkeit ist im Positionsplot kaum sichbar da während der Beschleunigungsphase ein Offset entsteht.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0097 Drehlage.png}{\\Winkel}
+	\includegraphics[scale=0.25]{../images/0097 Drehlage.png}{\\Winkel}
 \end{center}
 \pagebreak
 Die Trajektorien ergeben sich wenn der PID-Regler mit gelernten Parametern arbeitet.
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0093 Geschwindigkeit.png}{\\Die Parameter wurden gelernt sodass, der Regler gegen die Sollgeschwindigkeit konvergiert. Allerdings ist der gelernte PID-Regler grob abgeschätzt um den Faktor 4 mal später bei der halben Sollgeschwindigkeit.}
+	\includegraphics[scale=0.25]{../images/0093 Geschwindigkeit.png}{\\Die Parameter wurden gelernt sodass, der Regler gegen die Sollgeschwindigkeit konvergiert. Allerdings ist der gelernte PID-Regler grob abgeschätzt um den Faktor 4 mal später bei der halben Sollgeschwindigkeit.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0094 Position.png}{\\Nach 2 Sekunden hat der Quadcopter noch keinen Meter zurückgelegt.}
+	\includegraphics[scale=0.25]{../images/0094 Position.png}{\\Nach 2 Sekunden hat der Quadcopter noch keinen Meter zurückgelegt.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0095 Drehlage.png}{\\Der Quadcopter nickt deutlich schwächer.}
+	\includegraphics[scale=0.25]{../images/0095 Drehlage.png}{\\Der Quadcopter nickt deutlich schwächer.}
 \end{center}
 Die Herausforderung beim Lernen der PID-Parameter für den Geschwindigkeitsregler war Belohnungsfunktionen zu entwerfen die mit geringer Belohnungsvarianz und kontinuirlichen\\ Beobachtungs- und Aktionsräumen umgehen können. PID-Parameter Optimierung scheint ein stärker nichtkonvexes Problem zu sein als zunächst erwartet. Da nur einmal am Anfang pro Episode eine Aktion ausgeführt und eine Belohnung erfahren wird ist zudem die Sampleeffizient besonders gering. Die Kombination aus gewaltigem Quadcopterzustandsraum und Nichtlinearität verstärken den Fluch der Dimensionalität. Die Actor-Critic Architektur addressiert unter anderem das Problem der Sampleineffizienz scheint aber noch kein Allheilmittel zu sein. Grob geschätzt ist anzunehmen, dass nach einem Monat Training auf der vorliegenden Hardware alle Reglerparameter auf einen hohes Güteniveu gebracht werden können. Validieren lässt sich diese Aussage nur durch weiteres Training.
 
@@ -669,10 +669,10 @@ Belohnungsfunktion & [$\alpha_r$ = 0.0, $\beta_r$ = 0.6, $\gamma_r$ = 0.2, $\del
 \end{center}
 Mit dem neuen Setup konnte ein erstes Modell dazu gebracht werden zu lernen.
 \begin{center}
-\includegraphics[scale=0.36]{../Bilder/0091 Ende-zu-Ende 1.png}{\\Die mittlere Episodendauer nimmt ab. Das Modell scheint kürzere Updateschrittweiten zu bevorzugen. Welche darüberhinausgehende Bedeutung das Verhalten hat, könnte durch weiterführende Untersuchungen analysiert werden.}
+\includegraphics[scale=0.36]{../images/0091 Ende-zu-Ende 1.png}{\\Die mittlere Episodendauer nimmt ab. Das Modell scheint kürzere Updateschrittweiten zu bevorzugen. Welche darüberhinausgehende Bedeutung das Verhalten hat, könnte durch weiterführende Untersuchungen analysiert werden.}
 \end{center}
 \begin{center}
-\includegraphics[scale=0.36]{../Bilder/0092 Ende-zu-Ende 2.png}{\\Der Plot zeigt die erste stetig steigende Belohnungskurve eines Ende-zu-Ende-Modells. Ideal wäre, das die mittlere Belohnung der mittleren Episodenlänge entspricht. Doch davon ist das Modell nach 11.2e6 Episoden noch weit entfernt.}
+\includegraphics[scale=0.36]{../images/0092 Ende-zu-Ende 2.png}{\\Der Plot zeigt die erste stetig steigende Belohnungskurve eines Ende-zu-Ende-Modells. Ideal wäre, das die mittlere Belohnung der mittleren Episodenlänge entspricht. Doch davon ist das Modell nach 11.2e6 Episoden noch weit entfernt.}
 \end{center}
 Parallel zum Training mit modellbestimmter Schrittweite wurden die Hyperparameter der Default Ende-zu-Ende Version täglich aktualisiert und neue Modelle antrainiert. Mit folgenden Hyperparametern gelang es ein Modell zu trainieren welches lernte und akzeptabel performte.
 \vspace*{0.5cm}
@@ -701,23 +701,23 @@ Belohnungsfunktion & [$\alpha_r$ = 0.0, $\beta_r$ = 0.6, $\gamma_r$ = 0.2, $\del
 \vspace*{0.5cm}
 Als Regler kann dieses Modell noch nicht eingesetzt werden, da es insbesondere die Drehlageregelung\\ noch nicht generalisiert hat. Aber zumindest hat das Modell verstanden den 8 Sollgeschwindigkeitsvektoren mehr oder minder zu folgen. Zu erwarten ist, dass durch längeres Training die Güte weiter maximiert werden kann. Ob das tatsächlich der Fall ist, wird Gegenstand zukünftiger Trainings- und Testepochen sein.
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0081 Model E 1.png}{\\Sollgeschwindigkeit nach Norden ist 1 und nach Osten Null. Das Modell regelt den Quadcopter in die korrekte Richtung schwingt aber stark über. Auf den anderen Achsen zeigt das Modell unerwünschtes Verhalten, so driftet der Quadcopter um bis zu 1m und fällt 4m kann sich nach Osten hin aber stabilisieren mit einem erkennbar abnehmenden Fehler.}
+	\includegraphics[scale=0.25]{../images/0081 Model E 1.png}{\\Sollgeschwindigkeit nach Norden ist 1 und nach Osten Null. Das Modell regelt den Quadcopter in die korrekte Richtung schwingt aber stark über. Auf den anderen Achsen zeigt das Modell unerwünschtes Verhalten, so driftet der Quadcopter um bis zu 1m und fällt 4m kann sich nach Osten hin aber stabilisieren mit einem erkennbar abnehmenden Fehler.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0080 Model E 2.png}{\\Interessant ist zunächst, dass das Integral zwischen der Differenz von der Soll- und Isttrajektorie über den Episodezeitraum von 1s ungefähr Null ist. Womöglich nur Zufall.}
+	\includegraphics[scale=0.25]{../images/0080 Model E 2.png}{\\Interessant ist zunächst, dass das Integral zwischen der Differenz von der Soll- und Isttrajektorie über den Episodezeitraum von 1s ungefähr Null ist. Womöglich nur Zufall.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0079 Model E 3.png}{\\Die Drehlagentrajektorien offenbaren das Problem des Ende-zu-Ende-Modells. Nach circa 0.4s verliert es die Kontrolle über die Drehlage.}
+	\includegraphics[scale=0.25]{../images/0079 Model E 3.png}{\\Die Drehlagentrajektorien offenbaren das Problem des Ende-zu-Ende-Modells. Nach circa 0.4s verliert es die Kontrolle über die Drehlage.}
 \end{center}
 Für einen anderen Geschwindigkeitssollvektor welcher nach Süd-Osten zeigt ergeben sich die folgenden Bilder.
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0085 2.png}{\\Grundsätzlich ist das Modell in der Lage grob den Sollgeschwindigkeiten zu folgen.}
+	\includegraphics[scale=0.25]{../images/0085 2.png}{\\Grundsätzlich ist das Modell in der Lage grob den Sollgeschwindigkeiten zu folgen.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0084 1.png}{\\Die Positionstrajektorien zeigen ein ähnliches Bild wie im vorangegangen Beispiel.}
+	\includegraphics[scale=0.25]{../images/0084 1.png}{\\Die Positionstrajektorien zeigen ein ähnliches Bild wie im vorangegangen Beispiel.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.25]{../Bilder/0086 3.png}{\\Auch bei einem anderen Sollgeschwindigkeitsvektor verliert das aktuell beste Modell die Kontrolle über den Quadcopter macht aber auch deutlich, das es die Aufgabe verstanden hat.}
+	\includegraphics[scale=0.25]{../images/0086 3.png}{\\Auch bei einem anderen Sollgeschwindigkeitsvektor verliert das aktuell beste Modell die Kontrolle über den Quadcopter macht aber auch deutlich, das es die Aufgabe verstanden hat.}
 \end{center}
 
 \subsection{\label{Reglerimplementierung:Reglerimplementierung}Implementierung des Reglers}
@@ -726,15 +726,15 @@ Für die Programmierung der Informationsflussteilsysteme wurde neben der STM32Cu
 Aus zeitlichen Gründen konnte eine Implementierung des trainierten Modells auf dem Mikrocontroller nicht angegangen geschweige den getestet werden. Dafür wurde der PID-Regler aus \ref{simcon:simcon} adaptiert und portiert auf den STM32F411RE Mikrocontroller. \\
 Die vier BLDC-Motoren werden angesteuert über vier unabhängige PWM-Signale welche alle mit Timer 1 generiert werden. Die PWM-Signale liegen auf den Pins PA8, PA9, PA10, und PA11. Aus der Pinkonfiguration ist ersichtlich, dass diesen Pins jeweils ein Timer-Kanal zugeordnet ist. 
 \begin{center}
-	\includegraphics[scale=0.5]{../Bilder/0064 Pinbelegung.png}{\\Pinkonfiguration in der STM32CubeIDE}
+	\includegraphics[scale=0.5]{../images/0064 Pinbelegung.png}{\\Pinkonfiguration in der STM32CubeIDE}
 \end{center}
 Das Pindiagramm wurde herangezogen um die Pins auf dem Board zu lokalisiert. Um die Pins während der Entwicklungsphase schnell zu finden wurden die verwendeten Pins vorsichtig angewinkelt.
 \begin{center}
-	\includegraphics[scale=0.14]{../Bilder/0067 Pinout NUCLEO F411RE.jpeg}{\\Pindiagramm des NUCLEO-F411RE Boards \ref{bild:Pinout}}
+	\includegraphics[scale=0.14]{../images/0067 Pinout NUCLEO F411RE.jpeg}{\\Pindiagramm des NUCLEO-F411RE Boards \ref{bild:Pinout}}
 \end{center}
 Der Duty-Cycle entspricht dem Wert im Capture-Compare-Register (CCR) in welche die Sollwerte direkt geschrieben werden. Die PWM-Frequenz mit welcher die Treiber arbeiten kann zwischen 50Hz und 60Hz liegen \ref{link:Treiberdatenblatt}. Diese wurde mit der System Clock eingestellt. Bei einer Frequenz von 16Mhz wurde ein Prescaler mit Wert 8 und einer Periode von 30259 eingestellt, um circa 60Hz für das PWM-Signal bereitzustellen.
 \begin{center}
-	\includegraphics[scale=0.35]{../Bilder/0065 Clock.png}{\\Clock Konfiguration in der STM32CubeIDE}
+	\includegraphics[scale=0.35]{../images/0065 Clock.png}{\\Clock Konfiguration in der STM32CubeIDE}
 \end{center}
 Mit einer Frequenz von 100Hz wird die Funktion \textit{regelschritt} ausgeführt. Frei wählbar war die Frequenz nicht da es galt sie auf die MotionFX Sensorfusion abzustimmen. Die Funktion \textit{MX\_MEMS\_INIT} initialisiert die Inertiale Messeinheit und konfigurert den Kalmanfilter für die Sensorfusion. 
 \begin{center}
@@ -929,7 +929,7 @@ void regelschritt(void) {
 Neben der Drehlage arbeitet der Geschwindigkeitsregler auch mit der Drehrate und optional der Drehbeschleunigung. Auf die Drehrate wird durch einen Differenzenquotienten der Drehlage, in Eulerwinkelform, geschlossen. Liegen alle Werte als Gleitkommazahlen vor und sind nicht undefiniert berechnet der Drehraten- und -geschwindigkeitsregler die Motorbefehle. Diese werden skaliert und mit einem einfachen Tiefpass beaufschlagt um die Elektronik und Mechanik zu schonen. Der Duty-Cycle muss auf die ganzzahlige Periode des Timers hoch multipliziert werden. Am Oszilloskop wurde die Validität aller Motorsignale geprüft, wofür die Testbench \ref{testbench:testbench} die perfekten Voraussetzungen bot.\\
 Mit der Implementierung des Reglers auf dem Mikrocontroller war die Entwicklung aller System für den Quadcopter vorerst abgeschlossen. Das System war damit in einem Zustand der erste operationelle Tests erlaubte.
 \begin{center}
-	\includegraphics[scale=0.1]{../Bilder/0070 Modell 1.jpg}{\\Prototyp 1 montiert auf einem Kamerastativ}
+	\includegraphics[scale=0.1]{../images/0070 Modell 1.jpg}{\\Prototyp 1 montiert auf einem Kamerastativ}
 \end{center}
 
 
@@ -937,12 +937,12 @@ Mit der Implementierung des Reglers auf dem Mikrocontroller war die Entwicklung 
 Die Testbench umfasst, ein Sollwertinterface, die Visualisierung des Quadcopterzustands mittels Flask und ThreeJS sowie das Stativ, auf welchem der Quadcopter befestigt wird, mit Leistung aus einer Spannungsquelle versorgt wird und dessen Signale mit einem Oszilloskop analysiert und aufgezeichnet werden. Das Joystick-Sollwertinterface sampelt den Zustand eines Joysticks mit dem Programm \textit{joystick.py} und sendet den Schubwert und die Lage an die serielle Schnittstelle des NUCLEO-F411RE Board welche aus den Daten eine Sollgeschwindigkeit für den Regler berechnet. Die Samplefrequenz ist Default auf 30Hz eingestellt. Im Gegensatz zum Sollwertinterface welches für das Training der Agenten eingesetzt wurde tangiert das Sollwertinterface nun nicht mehr nur Informationsflussteilsysteme.
 Das Pythonprogramm \textit{joystick.py} nutzt die Funktionalitäten der Bibliothek Pygame, wodurch viele verschiedene Joysticks unterstützt werden.\\
 \begin{center}
-	\includegraphics[scale=0.125]{../Bilder/0063 Joystick.jpg
+	\includegraphics[scale=0.125]{../images/0063 Joystick.jpg
 	}{\\Eingesetzter Joystick Saitek X52 \ref{bild:4}}
 \end{center}
 Der Joystickzustand wird, wenn sich ein Wert ändert, an \textit{quadseriell.py} weitergeleitet und mit der Bibliothek \textit{pyserial} an den Quadcopter gesendet. Der UART-Callback wurde erweitert, um die Joystickbefehle zu prozessieren. Die Befehle für die Nick-, Rollrichtung und den Schub werden auf Intervalle modelliert in welchen alle Werte dreistellig sind. Dadurch wird die Eindeutigkeit der Stellen sichergestellt. Im Callback werden die Werte extrahiert, zurück moduliert und in globale Variablen geschrieben. Am Joystick kann mit einem Radregler welcher visuelles Feedback gibt ein Modus selektiert werden.
 \begin{center}
-	\includegraphics[scale=0.08]{../Bilder/0088 Joystick Mode.jpg}{\\Modus 1 am Joystick ist eingestellt und die LED leuchtet leicht rot.}
+	\includegraphics[scale=0.08]{../images/0088 Joystick Mode.jpg}{\\Modus 1 am Joystick ist eingestellt und die LED leuchtet leicht rot.}
 \end{center}
 Im Modus 0 haben Änderungen am Joystick keinen Effekt auf den Quadcopter. Im Modus 1 entspricht der Joystickschubprozentsatz direkt dem Duty-Cycle wodurch die Drehzahlregler und BLDC-Motoren getestet und programmiert werden können. Der Regler wird aktiv, wenn der Nutzer in Modus 2 wechselt.
 \begin{center} 
@@ -990,24 +990,24 @@ Die Stromversorgung des Quadcopters wird auf der Testbench mit Kabel sichergeste
 Im Modellbaubereich werden Akkus standardisiert nach der Anzahl der in Serie geschalteten Standardzellen. Eine Standardzelle hat 3.7V und wird als S1 bezeichnet. Für den Quadcopter wurde sowohl mit 7.4V als auch mit 11.1V gearbeitet, also mit S2 und S3 Akkus. Wichtig ist einen Kondensator parallel zur Spannungsquelle zu schalten um die Gleichspannung zu stabilieren und auf diese Weise die Elektronik vor Spannungsprüngen und Störrauschen zu 
 schützen.
 \begin{center}
-	\includegraphics[scale=0.42]{../Bilder/0082 Akku.png}{\\\label{Akku}S2 Akkumulator welcher als Alternativ zu einem Netzteil verwendet werden kann}
+	\includegraphics[scale=0.42]{../images/0082 Akku.png}{\\\label{Akku}S2 Akkumulator welcher als Alternativ zu einem Netzteil verwendet werden kann}
 \end{center}
 Die Montierung des Quadcopters auf einem Kamerastativ war nützlich. Mit leichten Modifikationen und Bauteilen aus dem \textit{Totem} Bausatz konnte der Quadcopter sicher fixiert werden auch ohne festgeschraubt werden zu müssen.
 \begin{center}
-	\includegraphics[scale=0.18]{../Bilder/0087 Testbench.jpg}{\\Prototyp 2 montiert auf dem Stativ mit dem Testsetup im Hintergrund}
+	\includegraphics[scale=0.18]{../images/0087 Testbench.jpg}{\\Prototyp 2 montiert auf dem Stativ mit dem Testsetup im Hintergrund}
 \end{center}
 
 \subsection{Adaption}
 Der Adaptionsteilprozess enthält alle Arbeitsschritte die anfallen, wenn ein neues Teilziel definiert wird oder ein Ziel abgeändert wird. Beispielsweise wurden neue BLDC-Motoren beschafft da die ursprünglich vorgesehenen nicht die gewünschte Drehzahl erreichten. Der Beschaffungsprozess musste also adaptiert werden. Der Adaptionsteilprozess bezieht sich immer auf mindestens einen anderen Teilprozess.\\
 Auch Teil der Adaptionsphase waren erste vorsichtige Flugtests welche zur Evaluation und Optimierung des Reglers ausgewertet wurden.
 \begin{center}
-	\includegraphics[scale=0.4]{../Bilder/0073 Flugtest.png}{\\Flugtest mit PID-Regler und Joysticksollwertinterface mit Schräglage gleich nach dem Start.}
+	\includegraphics[scale=0.4]{../images/0073 Flugtest.png}{\\Flugtest mit PID-Regler und Joysticksollwertinterface mit Schräglage gleich nach dem Start.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.4]{../Bilder/0074 Flugtest.png}{\\Weiterer Flugtest mit PID-Regler und Joysticksollwertinterface bei dem der Quadcopter sich auch schnell zur Seite neigt und instabil wird. Auch ein Gegensteuern am Joystick zeigt kaum Wirkung.}
+	\includegraphics[scale=0.4]{../images/0074 Flugtest.png}{\\Weiterer Flugtest mit PID-Regler und Joysticksollwertinterface bei dem der Quadcopter sich auch schnell zur Seite neigt und instabil wird. Auch ein Gegensteuern am Joystick zeigt kaum Wirkung.}
 \end{center}
 \begin{center}
-	\includegraphics[scale=0.85]{../Bilder/0075 Flugtest.png}{\\Der Quadcopter gewinnt an Höhe doch wird kurz darauf instabil.}
+	\includegraphics[scale=0.85]{../images/0075 Flugtest.png}{\\Der Quadcopter gewinnt an Höhe doch wird kurz darauf instabil.}
 \end{center}
 Im aktuellen Zustand geht es bei den Flugtests vor allem darum, den Regler zu debuggen und geeignete PID- und Sensorfusionsparameter zu testen. Die ersten Fehlversuche des Quadcopters wurden noch nicht ausreichend untersucht um abschließend festhalten zu können, warum der Quadcopter schnell instabil wird. Sehr wahrscheinlich ist, dass sich einer der Drehzahlregler kurz nach dem Start ausschaltet. Hinweise dafür ist ein Ton der wenige Sekunden nach dem Abheben zu hören ist und die Tatsache das einer der BLDC-Motoren in einem anderen Duty-Cycle Bereich aktiv wird beim Hochfahren. Möglich ist das der Drehzahlregler defekt oder falsch programmiert ist. Unwahrscheinlicher ist ein Fehler im Regler selbst da dieser in Test die richtigen Motorbefehle demonstrierte und das statische Verhalten der BLDC-Motoren einen korrekten Eindruck macht. Auch nicht auszuschließen ist, dass der Kalman-Filter durch die Eigenschwingungen des Quadcopters gestört wird. Maßnahmen zur Schwingungsminimierung wurden getroffen mit einem verstärkten Rahmen und gefederter Lagerung des Mikrocontrollers sind aber potenziell unzulänglich.\\
 Im letzten Implementierung- beziehungsweise Adaptionsschritt wurden alle Software-, Hardwarekomponenten und die Dokumentation auf das wesentliche reduziert, getestet, validiert und geprüft.
