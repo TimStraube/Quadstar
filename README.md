@@ -1,34 +1,30 @@
 # Quadstar
 
-### Ziele
+### Targets of the project
 
-1. Einen Quadcopter entwickeln
-2. Eine Regelung basierend auf Reinforcement Learning Algorithmen entwickeln
-3. Eine Bachelorarbeit rund um die Entwicklung schreiben
+1. Develop a quadcopter from scratch
+2. Utilize deep reinforcement learning for learning a control policy
 
 ### Config
 
-Alle relevanten Parameter sind in dieser Datei zusammengefasst und können variiert werden.
-Bestimmte Parametervariationen können zu Fehlern führen.
+All volatile parameters on the user side can be controlled from a single file.
+When a new model is trained the current config is used for training and is saved in the respective model folder.
 
-### Plot von einer Flugepisode
+### Plot of quadcopter trajectories
 
-Die Testbench kann verwendet werden um Plots von einer Positions- und Lagetrajektorie des Quadcopters zu erstellen
+The program quadtest.py can be used to create matplotlib-plots of position and attitude trajectories from simulation:
 
 ```
 python3 quadtest.py
 ```
 
-### Quadcoptervisualisierung mit Flask
+### Visualize the quadcopter in the browser with flask
 
 ```
 python3 quadlive.py 
 ```
 
-### Training von Modellen mit Stable Baselines3
-
-Die config.py Datei wird beim Training automatisch in den in der config.py angegebenen Trainingsordner kopiert.
-Soll ein Modell mit quadtest.py oder quadlive.py visualisert werden kann die config.py Datei einfach manuel aus dem Trainingsordner in das Hauptverzeichnis kopiert werden und ist dann aktiv.
+### Train models with Stable-Baselines3
 
 ```
 python3 quadtrain.py
