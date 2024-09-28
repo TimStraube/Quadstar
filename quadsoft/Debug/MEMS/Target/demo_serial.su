@@ -1,0 +1,7 @@
+../MEMS/Target/demo_serial.c:64:6:BUILD_REPLY_HEADER	16	static
+../MEMS/Target/demo_serial.c:76:6:INIT_STREAMING_HEADER	16	static
+../MEMS/Target/demo_serial.c:89:6:INIT_STREAMING_MSG	24	static
+../MEMS/Target/demo_serial.c:109:5:HandleMSG	104	static
+../MEMS/Target/demo_serial.c:439:6:RTC_DateRegulate	32	static
+../MEMS/Target/demo_serial.c:462:6:RTC_TimeRegulate	40	static
+../MEMS/Target/demo_serial.c:487:6:Get_PresentationString	136	static

@@ -1,0 +1,6 @@
+../Drivers/BSP/Components/sht40ad1b/sht40ad1b_reg.c:50:16:sht40ad1b_read_reg	1
+../Drivers/BSP/Components/sht40ad1b/sht40ad1b_reg.c:70:16:sht40ad1b_write_reg	1
+../Drivers/BSP/Components/sht40ad1b/sht40ad1b_reg.c:100:9:sht40ad1b_data_get	7
+../Drivers/BSP/Components/sht40ad1b/sht40ad1b_reg.c:167:9:sht40ad1b_device_id_get	1
+../Drivers/BSP/Components/sht40ad1b/sht40ad1b_reg.c:182:16:crc_calculate	4
+../Drivers/BSP/Components/sht40ad1b/sht40ad1b_reg.c:209:16:crc_check	1
