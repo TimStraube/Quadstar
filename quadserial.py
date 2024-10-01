@@ -52,7 +52,7 @@ class Quadserial():
             "w_M2",
             "w_M3"
         ]
-        self.aktuelleSample = np.zeros((
+        self.current_sample = np.zeros((
             len(self.samplebezeichner), 
             1
         ))
@@ -102,7 +102,7 @@ class Quadserial():
                     print(
                         f"{self.samplebezeichner[i]}: {sample}{self.sampleeinheiten[i]}"
                     )
-                    self.aktuelleSample[i] = (sample)
+                    self.current_sample[i] = (sample)
 
             pattern = r'gestimatex:\s*(-?\d+\.\d+)'
 
@@ -157,7 +157,7 @@ class Quadserial():
                         print(
                             f"{self.samplebezeichner[i]}: {sample}{self.sampleeinheiten[i]}"
                         )
-                        self.aktuelleSample[i] = (sample)
+                        self.current_sample[i] = (sample)
 
                 pattern = r'gestimatex:\s*(-?\d+\.\d+)'
 

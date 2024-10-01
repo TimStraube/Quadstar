@@ -26,13 +26,16 @@ class Quadend2end(gymnasium.Env):
         # Initialisierung der Quadcopterklasse
         self.quad = Quadcopter()
         # Initialisierung des Beobachtungsvektors
-        self.beobachtung = numpy.zeros(
+        self.observation = numpy.zeros(
             9, 
             dtype=numpy.float32
         )
         # Definition des Aktionsraums
         self.action_space = spaces.MultiDiscrete(
-            config.Aktionsraum_EndeZuEnde
+            numpy.concatenate([
+                config.aktionspace_end2end[0] * numpy.ones(4),
+                [config.aktionspace_end2end[1]]
+            ])
         )
         # Definition des Beobachtungsraums
         self.observation_space = spaces.Box(
@@ -81,7 +84,7 @@ class Quadend2end(gymnasium.Env):
         )
         
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
-        self.beobachtung[:] = numpy.float32(
+        self.observation[:] = numpy.float32(
             numpy.concatenate([
                 self.drehlage,
                 self.quad.zustand[7:10], 
@@ -89,7 +92,7 @@ class Quadend2end(gymnasium.Env):
             ])
         )
 
-        return self.beobachtung, {}
+        return self.observation, {}
     
     def step(self, aktion):
         terminated = False
@@ -147,7 +150,7 @@ class Quadend2end(gymnasium.Env):
                 self.render()
 
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
-        self.beobachtung[:] = numpy.float32(
+        self.observation[:] = numpy.float32(
             numpy.concatenate([
                 self.drehlage,
                 self.quad.zustand[7:10], 
@@ -156,7 +159,7 @@ class Quadend2end(gymnasium.Env):
         )
 
         return (
-            self.beobachtung, 
+            self.observation, 
             belohnung, 
             terminated, 
             truncated, 

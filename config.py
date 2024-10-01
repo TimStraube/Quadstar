@@ -1,7 +1,7 @@
 ## Parameter
 # NED = [North, East, Down]
 # [s]
-step_interval = 0.001
+step_size = 0.001
 # [s]
 episode_end_time = 10
 # [s]
@@ -25,17 +25,18 @@ parallel_environments = 4
 batchsize = 16
 
 ## Quadend2end
-# [Motor 1, Motor 2, Motor 3, Motor 4, Updateperiode [s]]
-Aktionsraum_EndeZuEnde = [1000, 1000, 1000, 1000, 1]
-# Position, Geschwindigkeit, Drehlage, Drehgeschwindigkeit
-Belohnungsgewichtung = [0.0, 0.4, 0.2, 0.2]
+# [Max motor rps [rad/s], Update step size [s]]
+aktionspace_end2end = [1000, 1]
+# Position, velocity, attitude, angular rate
+reward_weights = [0.0, 0.4, 0.2, 0.2]
 
 ## Quadpid
-Aktionsinterval_PID = [0, 10]
-# Zahl der zulernenden PID-Parameter
-Aktionen = 6
-# Updateperiode [s]
-Updateperiode_PID = 0.01
+# PID-parameter interval
+aktionspace_pid = [0, 10]
+# Number of PID-parameters which are controlled
+aktions = 6
+# [s]
+pid_values_update_step_size = 0.01
 # Auszug der zulernenden PID-Parameter
 # self.controller.vel_P_gain[0] = aktion[0]
 # self.controller.vel_P_gain[1] = aktion[0]
@@ -51,9 +52,9 @@ Updateperiode_PID = 0.01
 
 ## Liveevaluation des Trainings
 # Anzahl der evaluierten Epiosden
-Evaluationsinterval = 2
+evaluation_step_size = 2
 # Schritte bis zur Evaluation
-Evaluationsfrequenz = 10000
+evaluation_frequency = 10000
 
 ## Quadserial
 # Serialport für Linux
@@ -62,16 +63,3 @@ serialname = "/dev/ttyACM2"
 doclear = False
 # Zustand auf der Konsole visualisieren
 doprint = False
-
-## Joystick
-# Weiterleiten des Joystickzustandes an die serielle Schnittstelle
-joystick2serial = True
-
-
-# Schritte bis das Modell ein neue Parameter lernt
-schritte_bis_update = 1
-aktion_range_end2end = 300
-aktion_mittelwert_end2end = 480
-
-selbstorchestriert = True
-selbstorchestriert_interval = [15, 31]

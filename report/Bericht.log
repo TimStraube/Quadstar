@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.4.10)  28 SEP 2024 13:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.19)  1 OCT 2024 22:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -572,7 +572,7 @@ Package: placeins 2005/04/18  v 2.2
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count325
 \l__pdf_internal_box=\box89
-) (./Bericht.aux (./sections/02 Einleitung.aux) (./sections/03 Informationstheoretische Vorbetrachtungen.aux) (./sections/04 Systemtheoretische Vorbetrachtungen.aux) (./sections/05 Implementierung.aux) (./sections/06 Zusammenfasssung.aux) (./sections/07 Referenzen.aux))
+) (./Bericht.aux)
 \openout1 = `Bericht.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 117.
@@ -636,7 +636,6 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 117.
 LaTeX Info: Redefining \pageref on input line 117.
 LaTeX Info: Redefining \nameref on input line 117.
- (./Bericht.out) (./Bericht.out)
 \@outlinefile=\write4
 \openout4 = `Bericht.out'.
 
@@ -686,90 +685,271 @@ Package hyperref Warning: Option `colorlinks' has already been used,
 Package hyperref Warning: Option `pdfpagemode' has already been used,
 (hyperref)                setting the option has no effect on input line 153.
 
-(./Bericht.tocpdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.49 ...nen der PID-Parameter}{32}{subsection.4.7}
-                                                  % [1])
 \tf@toc=\write5
 \openout5 = `Bericht.toc'.
 
- [2]
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.157 \newpage
+               [1]
 \openout2 = `"sections/02 Einleitung.aux"'.
 
- (./sections/02 Einleitung.tex) [3
+ (./sections/02 Einleitung.tex
+
+LaTeX Warning: Reference `link:SimCon' on page 2 undefined on input line 2.
+
+
+LaTeX Warning: Reference `link:ETH' on page 2 undefined on input line 2.
+
+
+LaTeX Warning: Reference `link:MPC' on page 2 undefined on input line 2.
+
+
+LaTeX Warning: Reference `link:ReinforcementLearningQuadcopter' on page 2 undefined on input line 2.
+
+) [2
 
 ]
 \openout2 = `"sections/03 Informationstheoretische Vorbetrachtungen.aux"'.
 
  (./sections/03 Informationstheoretische Vorbetrachtungen.tex
+
+LaTeX Warning: Reference `link:LocalTangent' on page 3 undefined on input line 6.
+
+
 Overfull \hbox (0.8942pt too wide) in paragraph at lines 4--7
 \OT1/cmr/m/n/12 Ein drei-di-men-sion-aler Vek-tor-raum habe die drei or-thog-o-nalen Ba-sisvek-toren $\OML/cmm/m/it/12 x$\OT1/cmr/m/n/12 , $\OML/cmm/m/it/12 y$ \OT1/cmr/m/n/12 und $\OML/cmm/m/it/12 z$\OT1/cmr/m/n/12 . Mithilfe
  []
 
-[4
+
+LaTeX Warning: Reference `link:Eulerwinkel' on page 3 undefined on input line 15.
+
+
+LaTeX Warning: Reference `link:Eulerwinkel' on page 3 undefined on input line 19.
+
+
+LaTeX Warning: Reference `link:Eulerwinkel' on page 3 undefined on input line 20.
+
+[3
 
 
 
 ]
-<../images/0026 Eulerwinkel.png, id=371, 887.315pt x 698.61pt>
+<../images/0026 Eulerwinkel.png, id=68, 887.315pt x 698.61pt>
 File: ../images/0026 Eulerwinkel.png Graphic file (type png)
 <use ../images/0026 Eulerwinkel.png>
 Package pdftex.def Info: ../images/0026 Eulerwinkel.png  used on input line 32.
 (pdftex.def)             Requested size: 443.65642pt x 349.30414pt.
- [5 <../images/0026 Eulerwinkel.png>]
-<../images/0028 Kardanwinkel.png, id=388, 899.36pt x 738.76pt>
+
+
+LaTeX Warning: Reference `bild:1' on page 4 undefined on input line 32.
+
+
+LaTeX Warning: Reference `link:Eulerwinkel' on page 4 undefined on input line 34.
+
+[4 <../images/0026 Eulerwinkel.png>]
+
+LaTeX Warning: Reference `link:Eulerwinkel' on page 5 undefined on input line 67.
+
+<../images/0028 Kardanwinkel.png, id=81, 899.36pt x 738.76pt>
 File: ../images/0028 Kardanwinkel.png Graphic file (type png)
 <use ../images/0028 Kardanwinkel.png>
 Package pdftex.def Info: ../images/0028 Kardanwinkel.png  used on input line 69.
 (pdftex.def)             Requested size: 449.6789pt x 369.37909pt.
- [6 <../images/0028 Kardanwinkel.png>]
-<../images/0029 Roll-Pitch-Yaw.png, id=403, 899.36pt x 738.76pt>
+
+LaTeX Warning: Reference `bild:1' on page 5 undefined on input line 69.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 5 undefined on input line 83.
+
+[5 <../images/0028 Kardanwinkel.png>]
+<../images/0029 Roll-Pitch-Yaw.png, id=94, 899.36pt x 738.76pt>
 File: ../images/0029 Roll-Pitch-Yaw.png Graphic file (type png)
 <use ../images/0029 Roll-Pitch-Yaw.png>
 Package pdftex.def Info: ../images/0029 Roll-Pitch-Yaw.png  used on input line 100.
 (pdftex.def)             Requested size: 449.6789pt x 369.37909pt.
-<../images/0027 Gimbel Lock.png, id=406, 899.36pt x 738.76pt>
+
+
+LaTeX Warning: Reference `bild:1' on page 6 undefined on input line 100.
+
+
+LaTeX Warning: Reference `link:Eulerwinkel' on page 6 undefined on input line 105.
+
+<../images/0027 Gimbel Lock.png, id=95, 899.36pt x 738.76pt>
 File: ../images/0027 Gimbel Lock.png Graphic file (type png)
 <use ../images/0027 Gimbel Lock.png>
 Package pdftex.def Info: ../images/0027 Gimbel Lock.png  used on input line 107.
 (pdftex.def)             Requested size: 449.6789pt x 369.37909pt.
- [7 <../images/0029 Roll-Pitch-Yaw.png>] [8 <../images/0027 Gimbel Lock.png>]) [9]
+[6 <../images/0029 Roll-Pitch-Yaw.png>]
+
+LaTeX Warning: Reference `bild:1' on page 7 undefined on input line 107.
+
+[7 <../images/0027 Gimbel Lock.png>]
+
+LaTeX Warning: Reference `link:Quaternion' on page 8 undefined on input line 195.
+
+) [8]
 \openout2 = `"sections/04 Systemtheoretische Vorbetrachtungen.aux"'.
 
- (./sections/04 Systemtheoretische Vorbetrachtungen.tex [10
+ (./sections/04 Systemtheoretische Vorbetrachtungen.tex
+
+LaTeX Warning: Reference `link:Modelle' on page 9 undefined on input line 4.
+
+
+LaTeX Warning: Reference `simcon:simcon' on page 9 undefined on input line 16.
+
+[9
 
 
 
-] [11]
-<../images/0047 Eulerwinkel Zufällige Aktionen.png, id=458, 1517.67pt x 544.0325pt>
+]
+
+LaTeX Warning: Reference `software:Software' on page 10 undefined on input line 43.
+
+
+LaTeX Warning: Reference `Reglerimplementierung:Reglerimplementierung' on page 10 undefined on input line 44.
+
+
+LaTeX Warning: Reference `simcon:simcon' on page 10 undefined on input line 73.
+
+
+LaTeX Warning: Reference `link:Kane' on page 10 undefined on input line 73.
+
+[10]
+<../images/0047 Eulerwinkel Zufällige Aktionen.png, id=145, 1517.67pt x 544.0325pt>
 File: ../images/0047 Eulerwinkel Zufällige Aktionen.png Graphic file (type png)
 <use ../images/0047 Eulerwinkel Zufällige Aktionen.png>
 Package pdftex.def Info: ../images/0047 Eulerwinkel Zufällige Aktionen.png  used on input line 133.
 (pdftex.def)             Requested size: 455.30452pt x 163.211pt.
- [12] [13 <../images/0047 Eulerwinkel Zufällige Aktionen.png>] [14]
-<../images/0001 Quadcopterregler.png, id=500, 445.665pt x 124.465pt>
+ [11]
+
+LaTeX Warning: Reference `link:Regelungstechnik1' on page 12 undefined on input line 141.
+
+
+LaTeX Warning: Reference `link:Regelungstechnik1' on page 12 undefined on input line 148.
+
+
+LaTeX Warning: Reference `link:Regelungstechnik1' on page 12 undefined on input line 151.
+
+
+LaTeX Warning: Reference `link:Regelungstechnik1' on page 12 undefined on input line 161.
+
+
+LaTeX Warning: Reference `link:Regelungstechnik1' on page 12 undefined on input line 161.
+
+[12 <../images/0047 Eulerwinkel Zufällige Aktionen.png>]
+
+LaTeX Warning: Reference `simcon:simcon' on page 13 undefined on input line 164.
+
+
+LaTeX Warning: Reference `link:MPC' on page 13 undefined on input line 164.
+
+
+LaTeX Warning: Reference `link:Regelungstechnik2' on page 13 undefined on input line 164.
+
+
+LaTeX Warning: Reference `simcon:simcon' on page 13 undefined on input line 164.
+
+
+LaTeX Warning: Reference `link:ETH' on page 13 undefined on input line 164.
+
+
+LaTeX Warning: Reference `link:ETH' on page 13 undefined on input line 168.
+
+
+LaTeX Warning: Reference `link:ETH' on page 13 undefined on input line 168.
+
+
+LaTeX Warning: Reference `Reglerimplementierung:Reglerimplementierung' on page 13 undefined on input line 168.
+
+<../images/0001 Quadcopterregler.png, id=172, 445.665pt x 124.465pt>
 File: ../images/0001 Quadcopterregler.png Graphic file (type png)
 <use ../images/0001 Quadcopterregler.png>
 Package pdftex.def Info: ../images/0001 Quadcopterregler.png  used on input line 170.
 (pdftex.def)             Requested size: 347.6173pt x 97.0823pt.
-<../images/0046 Weltmodell ohne Hintergrund.png, id=503, 579.16376pt x 434.62375pt>
+[13]
+
+LaTeX Warning: Reference `link:ETH' on page 14 undefined on input line 170.
+
+
+LaTeX Warning: Reference `link:Regelungstechnik2' on page 14 undefined on input line 184.
+
+<../images/0046 Weltmodell ohne Hintergrund.png, id=179, 579.16376pt x 434.62375pt>
 File: ../images/0046 Weltmodell ohne Hintergrund.png Graphic file (type png)
 <use ../images/0046 Weltmodell ohne Hintergrund.png>
 Package pdftex.def Info: ../images/0046 Weltmodell ohne Hintergrund.png  used on input line 188.
 (pdftex.def)             Requested size: 150.57903pt x 112.9995pt.
- [15 <../images/0001 Quadcopterregler.png> <../images/0046 Weltmodell ohne Hintergrund.png>] [16]
-<../images/0032 multi-layer-perzeptron.png, id=527, 911.405pt x 624.3325pt>
+
+LaTeX Warning: Reference `ppo' on page 14 undefined on input line 192.
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 14 undefined on input line 194.
+
+[14 <../images/0001 Quadcopterregler.png> <../images/0046 Weltmodell ohne Hintergrund.png>]
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 15 undefined on input line 198.
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 15 undefined on input line 207.
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 15 undefined on input line 212.
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 15 undefined on input line 213.
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 15 undefined on input line 221.
+
+[15]
+<../images/0032 multi-layer-perzeptron.png, id=200, 911.405pt x 624.3325pt>
 File: ../images/0032 multi-layer-perzeptron.png Graphic file (type png)
 <use ../images/0032 multi-layer-perzeptron.png>
 Package pdftex.def Info: ../images/0032 multi-layer-perzeptron.png  used on input line 237.
 (pdftex.def)             Requested size: 338.58632pt x 231.94254pt.
- [17 <../images/0032 multi-layer-perzeptron.png>] [18]
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 16 undefined on input line 237.
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 16 undefined on input line 241.
+
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 16 undefined on input line 253.
+
+[16 <../images/0032 multi-layer-perzeptron.png>]
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 17 undefined on input line 272.
+
+
+LaTeX Warning: Reference `link:PPOSpinningUp' on page 17 undefined on input line 275.
+
+
+LaTeX Warning: Reference `link:PPOSpinningUp' on page 17 undefined on input line 277.
+
+
+LaTeX Warning: Reference `link:LogPPO' on page 17 undefined on input line 279.
+
+
+LaTeX Warning: Reference `link:PPOSpinningUp' on page 17 undefined on input line 280.
+
+[17]
+
+LaTeX Warning: Reference `link:PPOBeginner' on page 18 undefined on input line 378.
+
+
 Overfull \hbox (0.12453pt too wide) in paragraph at lines 378--379
 \OT1/cmr/m/n/12 Diese Einf^^?uhrung zu Proximal-Policy-Optimization hat nicht den Anspruch eine vol-lumf^^?angliche
  []
 
-[19] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+
+LaTeX Warning: Reference `gymnasium' on page 18 undefined on input line 381.
+
+
+LaTeX Warning: Reference `tensorboard' on page 18 undefined on input line 382.
+
+[18] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 LaTeX Font Info:    Trying to load font information for OMS+cmss on input line 398.
@@ -782,97 +962,248 @@ LaTeX Font Warning: Font shape `OMS/cmss/m/n' undefined
 
 LaTeX Font Info:    Font shape `OT1/cmss/m/it' in size <8> not available
 (Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 402.
-[20]
+[19]
 LaTeX Font Info:    Trying to load font information for TS1+cmss on input line 456.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmss.fd
 File: ts1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-<../images/0058 Tensorboard.png, id=621, 1927.2pt x 952.55875pt>
+
+LaTeX Warning: Reference `link:DeepReinforcementLearning' on page 20 undefined on input line 480.
+
+<../images/0058 Tensorboard.png, id=284, 1927.2pt x 952.55875pt>
 File: ../images/0058 Tensorboard.png Graphic file (type png)
 <use ../images/0058 Tensorboard.png>
 Package pdftex.def Info: ../images/0058 Tensorboard.png  used on input line 482.
 (pdftex.def)             Requested size: 474.02086pt x 234.28737pt.
- [21 <../images/0058 Tensorboard.png>] [22]
-<../images/0062 ThreeJS Beispielselektor.png, id=673, 1927.2pt x 953.5625pt>
+[20 <../images/0058 Tensorboard.png>]
+
+LaTeX Warning: Reference `link:Sensorfusion' on page 21 undefined on input line 486.
+
+
+LaTeX Warning: Reference `link:DeepLearningStateEstimation' on page 21 undefined on input line 487.
+
+
+LaTeX Warning: Reference `X-CUBE-MEMS1' on page 21 undefined on input line 489.
+
+
+LaTeX Warning: Reference `link:Flask' on page 21 undefined on input line 509.
+
+[21]
+<../images/0062 ThreeJS Beispielselektor.png, id=331, 1927.2pt x 953.5625pt>
 File: ../images/0062 ThreeJS Beispielselektor.png Graphic file (type png)
 <use ../images/0062 ThreeJS Beispielselektor.png>
 Package pdftex.def Info: ../images/0062 ThreeJS Beispielselektor.png  used on input line 511.
 (pdftex.def)             Requested size: 435.32422pt x 215.38622pt.
-) [23 <../images/0062 ThreeJS Beispielselektor.png>]
+
+
+LaTeX Warning: Reference `bild:3' on page 22 undefined on input line 511.
+
+) [22 <../images/0062 ThreeJS Beispielselektor.png>]
 \openout2 = `"sections/05 Implementierung.aux"'.
 
- (./sections/05 Implementierung.tex [24
+ (./sections/05 Implementierung.tex
+
+LaTeX Warning: Reference `link:Betriebswirtschaftslehre' on page 23 undefined on input line 3.
+
+
+LaTeX Warning: Reference `link:DeepReinforcementLearning' on page 23 undefined on input line 5.
+
+[23
 
 
 
-] [25]
-<../images/0002 nucleo-f411re.png, id=708, 579.16376pt x 434.62375pt>
+]
+
+LaTeX Warning: Reference `Produktivität' on page 24 undefined on input line 22.
+
+
+LaTeX Warning: Reference `link:33' on page 24 undefined on input line 35.
+
+
+LaTeX Warning: Reference `link:34' on page 24 undefined on input line 35.
+
+[24]
+<../images/0002 nucleo-f411re.png, id=361, 579.16376pt x 434.62375pt>
 File: ../images/0002 nucleo-f411re.png Graphic file (type png)
 <use ../images/0002 nucleo-f411re.png>
 Package pdftex.def Info: ../images/0002 nucleo-f411re.png  used on input line 37.
 (pdftex.def)             Requested size: 347.50093pt x 260.77626pt.
- [26 <../images/0002 nucleo-f411re.png>] [27] [28] [29]
-<../images/0068 Quadlive 1.png, id=833, 633.36626pt x 702.625pt>
+
+
+LaTeX Warning: Reference `Beschaffung' on page 25 undefined on input line 42.
+
+[25 <../images/0002 nucleo-f411re.png>]
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 57.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 58.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 59.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 61.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 62.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 63.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 64.
+
+
+LaTeX Warning: Reference `link:SimCon' on page 26 undefined on input line 65.
+
+
+LaTeX Warning: Reference `Akku' on page 26 undefined on input line 70.
+
+
+LaTeX Warning: Reference `Akku' on page 26 undefined on input line 71.
+
+
+LaTeX Warning: Reference `link:Treiberdatenblatt' on page 26 undefined on input line 72.
+
+
+LaTeX Warning: Reference `link:Treiberdatenblatt' on page 26 undefined on input line 73.
+
+
+LaTeX Warning: Reference `link:Treiberdatenblatt' on page 26 undefined on input line 74.
+
+
+LaTeX Warning: Reference `simcon:simcon' on page 26 undefined on input line 79.
+
+
+LaTeX Warning: Reference `zustandsvektor:zustandsvektor' on page 26 undefined on input line 80.
+
+[26] [27]
+
+LaTeX Warning: Reference `simcon:simcon' on page 28 undefined on input line 286.
+
+
+LaTeX Warning: Reference `gymnasium' on page 28 undefined on input line 287.
+
+
+LaTeX Warning: Reference `pidlernen' on page 28 undefined on input line 287.
+
+
+LaTeX Warning: Reference `EndeZuEndeModell' on page 28 undefined on input line 287.
+
+[28]
+<../images/0068 Quadlive 1.png, id=467, 633.36626pt x 702.625pt>
 File: ../images/0068 Quadlive 1.png Graphic file (type png)
 <use ../images/0068 Quadlive 1.png>
 Package pdftex.def Info: ../images/0068 Quadlive 1.png  used on input line 289.
 (pdftex.def)             Requested size: 190.01134pt x 210.78912pt.
- [30 <../images/0068 Quadlive 1.png>] [31]
+
+
+LaTeX Warning: Reference `Reglerimplementierung:Reglerimplementierung' on page 29 undefined on input line 292.
+
+
+LaTeX Warning: Reference `paralleleUmwelten' on page 29 undefined on input line 311.
+
+
+LaTeX Warning: Reference `EndeZuEndeModell' on page 29 undefined on input line 316.
+
+
+LaTeX Warning: Reference `Belohnung' on page 29 undefined on input line 317.
+
+[29 <../images/0068 Quadlive 1.png>]
+
+LaTeX Warning: Reference `link:ReinforcementLearningQuadcopter' on page 30 undefined on input line 324.
+
+
+LaTeX Warning: Reference `link:ReinforcementLearningQuadcopter' on page 30 undefined on input line 351.
+
+[30]
+
+LaTeX Warning: Reference `link:MaschinellesLernen' on page 31 undefined on input line 355.
+
+
+LaTeX Warning: Reference `EndeZuEndeModell' on page 31 undefined on input line 355.
+
+
+LaTeX Warning: Reference `testbench:testbench' on page 31 undefined on input line 374.
+
+
 Overfull \hbox (2.1074pt too wide) in paragraph at lines 386--388
 \OT1/cmr/m/n/12 Das An-ler-nen des PID-Geschwindigkeitsregelers um-fasste bis zu 18 PID-Parameter. Zu beachten
  []
 
-[32] [33]
-<../images/0089 PID Lernen.png, id=873, 1251.67625pt x 479.7925pt>
+[31]
+
+LaTeX Warning: Reference `Quadcopterregelungsproblem' on page 32 undefined on input line 408.
+
+[32]
+<../images/0089 PID Lernen.png, id=501, 1251.67625pt x 479.7925pt>
 File: ../images/0089 PID Lernen.png Graphic file (type png)
 <use ../images/0089 PID Lernen.png>
 Package pdftex.def Info: ../images/0089 PID Lernen.png  used on input line 514.
 (pdftex.def)             Requested size: 475.64192pt x 182.32303pt.
- [34 <../images/0089 PID Lernen.png>]
-<../images/0096 Geschwindigkeit.png, id=882, 1504.62125pt x 833.1125pt>
+
+
+LaTeX Warning: Reference `Belohnung' on page 33 undefined on input line 514.
+
+
+LaTeX Warning: Reference `Belohnung' on page 33 undefined on input line 514.
+
+[33 <../images/0089 PID Lernen.png>]
+
+LaTeX Warning: Reference `simcon:simcon' on page 34 undefined on input line 517.
+
+<../images/0096 Geschwindigkeit.png, id=507, 1504.62125pt x 833.1125pt>
 File: ../images/0096 Geschwindigkeit.png Graphic file (type png)
 <use ../images/0096 Geschwindigkeit.png>
 Package pdftex.def Info: ../images/0096 Geschwindigkeit.png  used on input line 519.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0098 Position.png, id=883, 1504.62125pt x 833.1125pt>
+<../images/0098 Position.png, id=508, 1504.62125pt x 833.1125pt>
 File: ../images/0098 Position.png Graphic file (type png)
 <use ../images/0098 Position.png>
 Package pdftex.def Info: ../images/0098 Position.png  used on input line 522.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0097 Drehlage.png, id=884, 1523.6925pt x 553.06625pt>
+<../images/0097 Drehlage.png, id=509, 1523.6925pt x 553.06625pt>
 File: ../images/0097 Drehlage.png Graphic file (type png)
 <use ../images/0097 Drehlage.png>
 Package pdftex.def Info: ../images/0097 Drehlage.png  used on input line 525.
 (pdftex.def)             Requested size: 380.9222pt x 138.26622pt.
- [35 <../images/0096 Geschwindigkeit.png> <../images/0098 Position.png> <../images/0097 Drehlage.png>]
-<../images/0093 Geschwindigkeit.png, id=892, 1504.62125pt x 833.1125pt>
+[34 <../images/0096 Geschwindigkeit.png> <../images/0098 Position.png> <../images/0097 Drehlage.png>]
+<../images/0093 Geschwindigkeit.png, id=517, 1504.62125pt x 833.1125pt>
 File: ../images/0093 Geschwindigkeit.png Graphic file (type png)
 <use ../images/0093 Geschwindigkeit.png>
 Package pdftex.def Info: ../images/0093 Geschwindigkeit.png  used on input line 530.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0094 Position.png, id=893, 1504.62125pt x 833.1125pt>
+<../images/0094 Position.png, id=518, 1504.62125pt x 833.1125pt>
 File: ../images/0094 Position.png Graphic file (type png)
 <use ../images/0094 Position.png>
 Package pdftex.def Info: ../images/0094 Position.png  used on input line 533.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0095 Drehlage.png, id=894, 1519.6775pt x 540.0175pt>
+<../images/0095 Drehlage.png, id=519, 1519.6775pt x 540.0175pt>
 File: ../images/0095 Drehlage.png Graphic file (type png)
 <use ../images/0095 Drehlage.png>
 Package pdftex.def Info: ../images/0095 Drehlage.png  used on input line 536.
 (pdftex.def)             Requested size: 379.91844pt x 135.00404pt.
- [36 <../images/0093 Geschwindigkeit.png> <../images/0094 Position.png> <../images/0095 Drehlage.png>]
+ [35 <../images/0093 Geschwindigkeit.png> <../images/0094 Position.png> <../images/0095 Drehlage.png>]
+
+LaTeX Warning: Reference `Geschwindigkeitssollvektor' on page 36 undefined on input line 541.
+
+
 Overfull \hbox (1.46893pt too wide) in paragraph at lines 541--542
 \OT1/cmr/m/n/12 Beobach-tung bes-timmter Quad-copterzust^^?ande di-rekt Mo-tor-be-fehle vorher-sagt, so-dass die Quad-
  []
 
-[37]
-<../images/0091 Ende-zu-Ende 1.png, id=910, 1262.7175pt x 429.605pt>
+
+LaTeX Warning: Reference `link:ReinforcementLearningQuadcopter' on page 36 undefined on input line 551.
+
+[36]
+<../images/0091 Ende-zu-Ende 1.png, id=535, 1262.7175pt x 429.605pt>
 File: ../images/0091 Ende-zu-Ende 1.png Graphic file (type png)
 <use ../images/0091 Ende-zu-Ende 1.png>
 Package pdftex.def Info: ../images/0091 Ende-zu-Ende 1.png  used on input line 672.
 (pdftex.def)             Requested size: 454.57796pt x 154.65767pt.
- [38]
-<../images/0092 Ende-zu-Ende 2.png, id=916, 1262.7175pt x 429.605pt>
+ [37]
+<../images/0092 Ende-zu-Ende 2.png, id=541, 1262.7175pt x 429.605pt>
 File: ../images/0092 Ende-zu-Ende 2.png Graphic file (type png)
 <use ../images/0092 Ende-zu-Ende 2.png>
 Package pdftex.def Info: ../images/0092 Ende-zu-Ende 2.png  used on input line 675.
@@ -887,56 +1218,94 @@ Overfull \hbox (32.91953pt too wide) in paragraph at lines 702--703
 \OT1/cmr/m/n/12 noch nicht gen-er-al-isiert hat. Aber zu-min-d-est hat das Mod-ell ver-standen den 8 Sollgeschwindigkeitsvek-
  []
 
-[39 <../images/0091 Ende-zu-Ende 1.png> <../images/0092 Ende-zu-Ende 2.png>]
-<../images/0081 Model E 1.png, id=923, 1498.59875pt x 854.19125pt>
+[38 <../images/0091 Ende-zu-Ende 1.png> <../images/0092 Ende-zu-Ende 2.png>]
+<../images/0081 Model E 1.png, id=548, 1498.59875pt x 854.19125pt>
 File: ../images/0081 Model E 1.png Graphic file (type png)
 <use ../images/0081 Model E 1.png>
 Package pdftex.def Info: ../images/0081 Model E 1.png  used on input line 704.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0080 Model E 2.png, id=924, 1498.59875pt x 854.19125pt>
+<../images/0080 Model E 2.png, id=549, 1498.59875pt x 854.19125pt>
 File: ../images/0080 Model E 2.png Graphic file (type png)
 <use ../images/0080 Model E 2.png>
 Package pdftex.def Info: ../images/0080 Model E 2.png  used on input line 707.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0079 Model E 3.png, id=925, 1524.69624pt x 541.02126pt>
+<../images/0079 Model E 3.png, id=550, 1524.69624pt x 541.02126pt>
 File: ../images/0079 Model E 3.png Graphic file (type png)
 <use ../images/0079 Model E 3.png>
 Package pdftex.def Info: ../images/0079 Model E 3.png  used on input line 710.
 (pdftex.def)             Requested size: 381.17313pt x 135.25497pt.
- [40 <../images/0081 Model E 1.png> <../images/0080 Model E 2.png> <../images/0079 Model E 3.png>]
-<../images/0085 2.png, id=933, 1498.59875pt x 854.19125pt>
-File: ../images/0085 2.png Graphic file (type png)
-<use ../images/0085 2.png>
-Package pdftex.def Info: ../images/0085 2.png  used on input line 714.
-(pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0084 1.png, id=934, 1498.59875pt x 854.19125pt>
-File: ../images/0084 1.png Graphic file (type png)
-<use ../images/0084 1.png>
-Package pdftex.def Info: ../images/0084 1.png  used on input line 717.
-(pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0086 3.png, id=935, 1512.65125pt x 532.99126pt>
-File: ../images/0086 3.png Graphic file (type png)
-<use ../images/0086 3.png>
-Package pdftex.def Info: ../images/0086 3.png  used on input line 720.
-(pdftex.def)             Requested size: 378.16188pt x 133.24748pt.
- [41 <../images/0085 2.png> <../images/0084 1.png> <../images/0086 3.png>]
-<../images/0064 Pinbelegung.png, id=944, 551.05875pt x 506.89375pt>
+ [39 <../images/0081 Model E 1.png> <../images/0080 Model E 2.png> <../images/0079 Model E 3.png>]
+
+LaTeX Warning: File `../images/0085 2.png' not found on input line 714.
+
+
+./sections/05 Implementierung.tex:714: Package pdftex.def Error: File `../images/0085 2.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.714 ...raphics[scale=0.25]{../images/0085 2.png}
+                                                  {\\Grundsätzlich ist das ...
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: File `../images/0084 1.png' not found on input line 717.
+
+
+./sections/05 Implementierung.tex:717: Package pdftex.def Error: File `../images/0084 1.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.717 ...raphics[scale=0.25]{../images/0084 1.png}
+                                                  {\\Die Positionstrajektori...
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: File `../images/0086 3.png' not found on input line 720.
+
+
+./sections/05 Implementierung.tex:720: Package pdftex.def Error: File `../images/0086 3.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.720 ...raphics[scale=0.25]{../images/0086 3.png}
+                                                  {\\Auch bei einem anderen ...
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: Reference `simcon:simcon' on page 40 undefined on input line 726.
+
+<../images/0064 Pinbelegung.png, id=558, 551.05875pt x 506.89375pt>
 File: ../images/0064 Pinbelegung.png Graphic file (type png)
 <use ../images/0064 Pinbelegung.png>
 Package pdftex.def Info: ../images/0064 Pinbelegung.png  used on input line 729.
 (pdftex.def)             Requested size: 275.52869pt x 253.44626pt.
-<../images/0067 Pinout NUCLEO F411RE.jpeg, id=945, 1927.2pt x 1445.4pt>
+<../images/0067 Pinout NUCLEO F411RE.jpeg, id=559, 1927.2pt x 1445.4pt>
 File: ../images/0067 Pinout NUCLEO F411RE.jpeg Graphic file (type jpg)
 <use ../images/0067 Pinout NUCLEO F411RE.jpeg>
 Package pdftex.def Info: ../images/0067 Pinout NUCLEO F411RE.jpeg  used on input line 733.
 (pdftex.def)             Requested size: 269.80617pt x 202.35461pt.
- [42 <../images/0064 Pinbelegung.png> <../images/0067 Pinout NUCLEO F411RE.jpeg>]
-<../images/0065 Clock.png, id=956, 1115.16624pt x 502.87875pt>
+[40 <../images/0064 Pinbelegung.png>]
+
+LaTeX Warning: Reference `bild:Pinout' on page 41 undefined on input line 733.
+
+
+LaTeX Warning: Reference `link:Treiberdatenblatt' on page 41 undefined on input line 735.
+
+<../images/0065 Clock.png, id=567, 1115.16624pt x 502.87875pt>
 File: ../images/0065 Clock.png Graphic file (type png)
 <use ../images/0065 Clock.png>
 Package pdftex.def Info: ../images/0065 Clock.png  used on input line 737.
 (pdftex.def)             Requested size: 390.31404pt x 176.0102pt.
- (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 ) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
@@ -949,40 +1318,59 @@ LaTeX Font Warning: Font shape `OML/cmss/m/n' undefined
 (Font)              using `OML/cmm/m/it' instead
 (Font)              for symbol `textgreater' on input line 773.
 
-[43 <../images/0065 Clock.png>] [44]
+[41 <../images/0067 Pinout NUCLEO F411RE.jpeg> <../images/0065 Clock.png>]
+
+LaTeX Warning: Reference `link:MotionFX' on page 42 undefined on input line 785.
+
+[42]
 Overfull \hbox (4.34613pt too wide) in paragraph at lines 927--928
  [][] 
  []
 
-[45]
-<../images/0070 Modell 1.jpg, id=1129, 1927.2pt x 2569.6pt>
+[43]
+
+LaTeX Warning: Reference `testbench:testbench' on page 44 undefined on input line 929.
+
+<../images/0070 Modell 1.jpg, id=683, 1927.2pt x 2569.6pt>
 File: ../images/0070 Modell 1.jpg Graphic file (type jpg)
 <use ../images/0070 Modell 1.jpg>
 Package pdftex.def Info: ../images/0070 Modell 1.jpg  used on input line 932.
 (pdftex.def)             Requested size: 192.7313pt x 256.97505pt.
-
+[44]
 Underfull \hbox (badness 10000) in paragraph at lines 937--939
 
  []
 
-<../images/0063 Joystick.jpg, id=1130, 1050.92625pt x 902.37125pt>
+<../images/0063 Joystick.jpg, id=743, 1050.92625pt x 902.37125pt>
 File: ../images/0063 Joystick.jpg Graphic file (type jpg)
 <use ../images/0063 Joystick.jpg>
 Package pdftex.def Info: ../images/0063 Joystick.jpg  used on input line 941.
 (pdftex.def)             Requested size: 131.36546pt x 112.79613pt.
-[46 <../images/0070 Modell 1.jpg> <../images/0063 Joystick.jpg>]
-<../images/0088 Joystick Mode.jpg, id=1137, 1927.2pt x 2569.6pt>
+
+LaTeX Warning: Reference `bild:4' on page 45 undefined on input line 941.
+
+<../images/0088 Joystick Mode.jpg, id=744, 1927.2pt x 2569.6pt>
 File: ../images/0088 Joystick Mode.jpg Graphic file (type jpg)
 <use ../images/0088 Joystick Mode.jpg>
 Package pdftex.def Info: ../images/0088 Joystick Mode.jpg  used on input line 945.
 (pdftex.def)             Requested size: 154.17915pt x 205.5722pt.
- [47 <../images/0088 Joystick Mode.jpg>]
-<../images/0082 Akku.png, id=1175, 483.8075pt x 195.73125pt>
-File: ../images/0082 Akku.png Graphic file (type png)
-<use ../images/0082 Akku.png>
-Package pdftex.def Info: ../images/0082 Akku.png  used on input line 993.
-(pdftex.def)             Requested size: 203.19775pt x 82.20656pt.
-<../images/0087 Testbench.jpg, id=1176, 2569.6pt x 1927.2pt>
+[45 <../images/0070 Modell 1.jpg> <../images/0063 Joystick.jpg>] [46 <../images/0088 Joystick Mode.jpg>]
+
+LaTeX Warning: File `../images/0082 Akku.png' not found on input line 993.
+
+
+./sections/05 Implementierung.tex:993: Package pdftex.def Error: File `../images/0082 Akku.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.993 ...hics[scale=0.42]{../images/0082 Akku.png}
+                                                  {\\\label{Akku}S2 Akkumula...
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+<../images/0087 Testbench.jpg, id=788, 2569.6pt x 1927.2pt>
 File: ../images/0087 Testbench.jpg Graphic file (type jpg)
 <use ../images/0087 Testbench.jpg>
 Package pdftex.def Info: ../images/0087 Testbench.jpg  used on input line 997.
@@ -992,26 +1380,26 @@ Overfull \hbox (6.36055pt too wide) in paragraph at lines 1001--1003
 \OT1/cmr/m/n/12 Der Adap-tion-steil-prozess enth^^?alt alle Ar-beitss-chritte die an-fallen, wenn ein neues Teilziel definiert
  []
 
-[48 <../images/0082 Akku.png> <../images/0087 Testbench.jpg>]
-<../images/0073 Flugtest.png, id=1183, 883.3pt x 387.4475pt>
+<../images/0073 Flugtest.png, id=789, 883.3pt x 387.4475pt>
 File: ../images/0073 Flugtest.png Graphic file (type png)
 <use ../images/0073 Flugtest.png>
 Package pdftex.def Info: ../images/0073 Flugtest.png  used on input line 1004.
 (pdftex.def)             Requested size: 353.31374pt x 154.97624pt.
-<../images/0074 Flugtest.png, id=1184, 883.3pt x 387.4475pt>
+[47 <../images/0087 Testbench.jpg>]
+<../images/0074 Flugtest.png, id=795, 883.3pt x 387.4475pt>
 File: ../images/0074 Flugtest.png Graphic file (type png)
 <use ../images/0074 Flugtest.png>
 Package pdftex.def Info: ../images/0074 Flugtest.png  used on input line 1007.
 (pdftex.def)             Requested size: 353.31374pt x 154.97624pt.
-<../images/0075 Flugtest.png, id=1185, 414.54875pt x 155.58125pt>
+<../images/0075 Flugtest.png, id=796, 414.54875pt x 155.58125pt>
 File: ../images/0075 Flugtest.png Graphic file (type png)
 <use ../images/0075 Flugtest.png>
 Package pdftex.def Info: ../images/0075 Flugtest.png  used on input line 1010.
 (pdftex.def)             Requested size: 352.36809pt x 132.24467pt.
-) [49 <../images/0073 Flugtest.png> <../images/0074 Flugtest.png> <../images/0075 Flugtest.png>] [50]
+) [48 <../images/0073 Flugtest.png> <../images/0074 Flugtest.png> <../images/0075 Flugtest.png>] [49]
 \openout2 = `"sections/06 Zusammenfasssung.aux"'.
 
- (./sections/06 Zusammenfasssung.tex) [51
+ (./sections/06 Zusammenfasssung.tex) [50
 
 
 
@@ -1038,7 +1426,7 @@ Overfull \hbox (11.84799pt too wide) in paragraph at lines 21--23
 []\OT1/cmr/m/n/12 Rotation Quater-nions and how to Use Them, https://danceswithcode.net/engineeringnotes/ 
  []
 
-[52
+[51
 
 
 
@@ -1062,26 +1450,38 @@ Overfull \hbox (0.44258pt too wide) in paragraph at lines 51--52
 []\OT1/cmr/m/n/12 https://www.amazon.co.uk/Logitech-Saitek-Flight-Control-System/dp/B01M9EWQ2W,
  []
 
-[53]) [54] (./Bericht.aux (./sections/02 Einleitung.aux) (./sections/03 Informationstheoretische Vorbetrachtungen.aux) (./sections/04 Systemtheoretische Vorbetrachtungen.aux) (./sections/05 Implementierung.aux) (./sections/06 Zusammenfasssung.aux) (./sections/07 Referenzen.aux))
+[52]) [53] (./Bericht.aux (./sections/02 Einleitung.aux) (./sections/03 Informationstheoretische Vorbetrachtungen.aux) (./sections/04 Systemtheoretische Vorbetrachtungen.aux) (./sections/05 Implementierung.aux) (./sections/06 Zusammenfasssung.aux) (./sections/07 Referenzen.aux))
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package rerunfilecheck Info: File `Bericht.out' has not changed.
-(rerunfilecheck)             Checksum: 98C32BD0E12040C53F805F5179DA4EA8;10513.
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `Bericht.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `Bericht.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  98C32BD0E12040C53F805F5179DA4EA8;10513.
  ) 
 Here is how much of TeX's memory you used:
- 28326 strings out of 480171
- 554402 string characters out of 5894489
- 1068809 words of memory out of 5000000
- 45170 multiletter control sequences out of 15000+600000
- 478812 words of font info for 60 fonts, out of 8000000 for 9000
- 59 hyphenation exceptions out of 8191
+ 28354 strings out of 478287
+ 555800 string characters out of 5849289
+ 1077336 words of memory out of 5000000
+ 45446 multiletter control sequences out of 15000+600000
+ 478981 words of font info for 61 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
  100i,19n,104p,3182b,2079s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/tim/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcsi0800.600pk> </home/tim/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.600pk> </home/tim/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcss0800.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on Bericht.pdf (55 pages, 9327929 bytes).
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfsi0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfss0800.pfb>
+Output written on Bericht.pdf (54 pages, 9017513 bytes).
 PDF statistics:
- 1444 PDF objects out of 1728 (max. 8388607)
- 1241 compressed objects within 13 object streams
- 574 named destinations out of 1000 (max. 500000)
- 763 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1089 PDF objects out of 1200 (max. 8388607)
+ 897 compressed objects within 9 object streams
+ 573 named destinations out of 1000 (max. 500000)
+ 279 words of extra memory for PDF output out of 10000 (max. 10000000)
 

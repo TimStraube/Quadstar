@@ -2,24 +2,16 @@ import sys
 import pygame
 import sched
 import time
-import inspect
 import multiprocessing
 import matplotlib.patches as patches
 import config
 from quadserial import Quadserial
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication 
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QVBoxLayout
-from PyQt5.QtWidgets import QPushButton
 
-class Joystick(QWidget):
+class Joystick():
     active = True
     connected = 0
     found = False
-    # Hz
+    # [Hz]
     frequency = 30 
     # raw values or percentages
     norm = True
@@ -27,68 +19,24 @@ class Joystick(QWidget):
         "operation", 
         "testing", 
         "namespace",
-        "seriell"
+        "serial"
     }
     scheduler = sched.scheduler(time.time, time.sleep)
 
     def __init__(
         self, 
-        mode = {"operation", "seriell"}):
+        mode = {"operation", "serial"}):
         """Verbinden zum und Sampling des Joystickzustandes sowie weiterleiten der Daten an die serielle Schnittstelle
         """
 
         super(Joystick, self).__init__()
 
         self.old_axis_thrust = 0
-        self.old_axis_x = 0
-        self.old_axis_y = 0
-        self.regleran_callback = 0
+        self.roll_old = 0
+        self.pitch_old = 0
+        self.controller_active_callback = 0
         self.schubnur_callback = 0
         self.mode = mode
-
-
-    def init_render(self):
-        self.setWindowTitle('Joystick')
-        self.setWindowFlag(Qt.FramelessWindowHint) 
-        self.setStyleSheet("background-color: white;")
-
-        self.layout = QVBoxLayout()
-        
-        self.layout.setContentsMargins(0, 0, 0, 0)
-
-        self.position = QPushButton("Connect Joystick")
-        self.position.setStyleSheet(
-            "background-color: white;"
-        )
-        # self.position.clicked.connect()
-        self.layout.addWidget(self.position)
-
-        self.fig = Figure()
-        self.axes = self.fig.add_subplot(
-            111, 
-            projection='3d'
-        )
-        self.canvas = FigureCanvas(self.fig)
-        # self.canvas.set_title(
-        #     "Joystick position\nx: 0% y: 0%"
-        # )
-        # plot_joystick_position.set_xlim([-100, 100])
-        # plot_joystick_position.set_ylim([-100, 100])
-        # self.plot_joystick_position.set_aspect('equal')
-        # plot_joystick_position.axis('off')
-        rectangle = patches.Rectangle(
-            (-99, -99),
-            198, 198,
-            fill=False, edgecolor='black'
-        )
-        # self.plot_joystick_position.plot([0], [0], 'o-', color='black')
-        # self.plot_joystick_position.add_patch(rectangle)
-
-        # self.layout.addWidget(self.canvas)
-
-        self.setLayout(self.layout)
-
-        # self.show()
         
     def start(self, namespace = None, event = None):
         pygame.init()
@@ -100,8 +48,7 @@ class Joystick(QWidget):
             self.joystick = pygame.joystick.Joystick(0)
             self.joystick.init()
 
-            if config.joystick2serial:
-                self.serialPort = Quadserial()
+            self.serialPort = Quadserial()
                 
             self.joystick_connected = 1
             self.active = True
@@ -122,8 +69,6 @@ class Joystick(QWidget):
                 )
                 self.scheduler.run()
 
-        self.position.setText("Disconnect")
-
     def stop(self):
         self.scheduler.cancel()
     
@@ -133,29 +78,40 @@ class Joystick(QWidget):
     def update(self, namespace = None, event = None):
         pygame.event.pump()
         if self.norm:
-            self.axis_x = 100 * self.joystick.get_axis(0)
-            self.axis_y = -100 * self.joystick.get_axis(1)
-            self.axis_thrust = 100 * (
-                0.5 - (self.joystick.get_axis(2) / 2)
-            )
-            self.schubnur = self.joystick.get_button(24)
-            self.regleran = self.joystick.get_button(25)
+            try:
+                self.roll = 100 * self.joystick.get_axis(0)
+                self.pitch = -100 * self.joystick.get_axis(1)
+                self.axis_thrust = 100 * (
+                    0.5 - (self.joystick.get_axis(2) / 2)
+                )
+            except:
+                # print("Error: Axis could not be read.")
+                self.roll = 0
+                self.pitch = 0
+                self.axis_thrust = 0
+            try:
+                self.schubnur = self.joystick.get_button(24)
+                self.controller_active = self.joystick.get_button(25)
+            except:
+                # print("Error: Buttons could not be read.")
+                self.schubnur = 0
+                self.controller_active = 0
         else:
-            self.axis_x = self.joystick.get_axis(0)
-            self.axis_y = self.joystick.get_axis(1)
+            self.roll = self.joystick.get_axis(0)
+            self.pitch = self.joystick.get_axis(1)
             self.axis_thrust = self.joystick.get_axis
-            self.regleran = 0
+            self.controller_active = 0
             self.schubnur = 0
 
         if "operation" in self.mode:
             self.render()
         if "testing" in self.mode:
             self.test()
-        if "seriell" in self.mode:
+        if "serial" in self.mode:
             self.writeSerial()
         if "namespace" in self.mode:
-            namespace.axis_x = self.axis_x
-            namespace.axis_y = self.axis_y
+            namespace.roll = self.roll
+            namespace.pitch = self.pitch
             namespace.axis_thrust = self.axis_thrust
             event.set()
             self.scheduler.enter(
@@ -176,41 +132,33 @@ class Joystick(QWidget):
         pass
 
     def test(self):
-        print("x: " + str(self.axis_x))
-        print("y: " + str(self.axis_y))
+        print("x: " + str(self.roll))
+        print("y: " + str(self.pitch))
         print("thrust: " + str(self.axis_thrust) + "\n")
 
     def writeSerial(self):
         if (
             abs(self.old_axis_thrust - self.axis_thrust) > 0.5 or 
-            abs(self.old_axis_x - self.axis_x) > 0.5 or 
-            abs(self.old_axis_y - self.axis_y) > 0.5 or
-            self.regleran != self.regleran_callback or 
+            abs(self.roll_old - self.roll) > 0.5 or 
+            abs(self.pitch_old - self.pitch) > 0.5 or
+            self.controller_active != self.controller_active_callback or 
             self.schubnur != self.schubnur_callback):
 
-            message = f"{int(self.axis_thrust + 100)}{int(self.axis_x + 500)}{int(self.axis_y + 500)}{self.regleran}{self.schubnur}\n\r".encode()
-            print(message)
+            message = f"{int(self.axis_thrust + 100)}{int(self.roll + 500)}{int(self.pitch + 500)}{self.controller_active}{self.schubnur}\n\r".encode()
+            print("Send: " + str(message))
             self.serialPort.senden(message)
-        self.old_axis_x = self.axis_x
-        self.old_axis_y = self.axis_y
+        self.roll_old = self.roll
+        self.pitch_old = self.pitch
         self.old_axis_thrust = self.axis_thrust
-        self.regleran_callback = self.regleran
+        self.controller_active_callback = self.controller_active
         self.schubnur_callback = self.schubnur
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-
     joystick = Joystick()
 
-    process_gui = multiprocessing.Process(
+    process_joystick = multiprocessing.Process(
         target = joystick.start
     )
-    process_gui.start()
-
-    joystick.init_render()
-    
-    process_gui.join()
-
-    sys.exit(app.exec())
+    process_joystick.start()
 
    
