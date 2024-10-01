@@ -1,33 +1,30 @@
 ## Parameter
-# NED = [Norden, Osten, Unten]
-# NWU = [Norden, Westen, Oben]
-# Schrittweite [s]
-Schrittweite = 0.001
-# Initaler Zeitpunt [s]
-Episodenende = 10
-# Initaler Zeitpunkt [s]
-Episodenstart = 0
+# NED = [North, East, Down]
+# [s]
+step_interval = 0.001
+# [s]
+episode_end_time = 10
+# [s]
+episode_start_time = 0
 
 ## Quadtrain
-# Ordner des Modells 
-Ordnername = "QP-23-08-24-EIPC55-C"
-# Modell fürs Training laden
-Modell_laden = False
-# Episodenzahl Training
-Episoden = 1e8
-# Rendern von Trainingsepisoden
-render_modell = False 
-# Architektur der neuronalen Netzwerke
-Actor = [2, 2]
-Critic = [2, 2]
-# Lernrate
-Lernrate = 1e-4
-# Parallel Umwelten fürs Training
-Parallele_Umwelten = 4
-# Batchgröße
-Batchmenge = 16
+# Foldername and id for the model
+model_id = "QP-23-08-24-EIPC55-C"
+# Load model for continued training
+load_model = False
+# Maximal number of episodes
+episodes = 1e8
+# Network architecture
+actor = [2, 2]
+critic = [2, 2]
+# Gradient descent learning rate
+learning_rate = 1e-4
+# Parallel environments
+parallel_environments = 4
+# Batchsize
+batchsize = 16
 
-## Quadendezuende
+## Quadend2end
 # [Motor 1, Motor 2, Motor 3, Motor 4, Updateperiode [s]]
 Aktionsraum_EndeZuEnde = [1000, 1000, 1000, 1000, 1]
 # Position, Geschwindigkeit, Drehlage, Drehgeschwindigkeit

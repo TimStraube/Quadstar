@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from stable_baselines3 import PPO
 from quad import Quadcopter
 from wind import Wind
-from quadregler import Regler
+from quadcontroller import Regler
 from utils import utils
 from quaternion import Quaternion
 

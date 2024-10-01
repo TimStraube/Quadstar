@@ -7,22 +7,23 @@ import config
 
 class Quadserial():
     def __init__(self) -> None:
-        """Klasse für den Umgang mit der seriellen Schnittstelle zum Quadcopter welche dessen Messdaten sampled und weiterleitet sowie den Joystickzustand an den Quadcopter weiterleitet
+        """Class for handling the serial interface to the quadcopter, which samples and forwards its measurement data as well as sending the joystick state to the quadcopter using uart.
         """
         super(Quadserial, self).__init__()
 
         self.clearLine = False
-        portzahl = 0
+        portnumber = 0
         error = 1
-        while (error and portzahl < 64):
+        # Iterate 64 ports until the right one is found
+        while (error and portnumber < 64):
             try:
                 self.serialPort = serial.Serial(
-                    f"/dev/ttyACM{portzahl}",
+                    f"/dev/ttyACM{portnumber}",
                     115200
                 )
                 error = 0
             except:
-                portzahl += 1
+                portnumber += 1
                 print("Serial Error.")
 
         self.samplebezeichner = [

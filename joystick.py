@@ -6,7 +6,7 @@ import inspect
 import multiprocessing
 import matplotlib.patches as patches
 import config
-from quadseriell import Quadserial
+from quadserial import Quadserial
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt

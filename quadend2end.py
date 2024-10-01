@@ -16,11 +16,11 @@ from quaternion import Quaternion
 from wind import Wind
 from quad import Quadcopter
 
-class Quadendezuende(gymnasium.Env):
+class Quadend2end(gymnasium.Env):
     def __init__(self):
         """Famara Gymnasium Umwelt zum Training des Ende-zu-Ende-Modells
         """
-        super(Quadendezuende, self).__init__()
+        super(Quadend2end, self).__init__()
         # Quaternionklasse welche Methoden zur Umrechnung von Quaternionen und Kardanwinkeln zur Verfügung stellt
         self.quaternion = Quaternion()
         # Initialisierung der Quadcopterklasse

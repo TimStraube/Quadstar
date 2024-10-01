@@ -15,7 +15,7 @@ from gymnasium import spaces
 from wind import Wind
 from quaternion import Quaternion
 from scipy.integrate import ode
-from quadregler import Regler
+from quadcontroller import Regler
 from quad import Quadcopter
 
 

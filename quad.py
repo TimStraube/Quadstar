@@ -23,7 +23,7 @@ from numpy import sign
 from numpy.linalg import inv
 from numpy.linalg import norm
 from scipy.integrate import ode
-from quadregler import Regler
+from quadcontroller import Regler
 
 deg2rad = numpy.pi / 180.0
 

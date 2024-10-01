@@ -11,7 +11,7 @@ from flask import render_template
 from flask import request
 from flask import jsonify
 from quadtest import Testbench
-from quadseriell import Quadserial
+from quadserial import Quadserial
 from quaternion import Quaternion
 
 app = Flask(__name__)
