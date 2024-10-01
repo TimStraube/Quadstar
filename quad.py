@@ -7,14 +7,13 @@ Please feel free to use and modify this, but keep the above information. Thanks!
 """
 
 """
-author: Tim Leonard Straube
+author: Tim Straube
 email: tileone02@posteo.de
 comment: modified the file
 """
 
 import numpy
 import config as config
-import random
 from quaternion import Quaternion
 from wind import Wind
 from numpy import sin
@@ -137,26 +136,26 @@ class Quadcopter():
         return [cmd_hover, w_hover, thr_hover, tor_hover]
 
     def reset(self):
-        """Zurücksetzten der Umwelt
+        """Environment reset
         """
-        self.t = config.Episodenstart
-        self.Ti = config.Episodenstart
-        self.Ts = config.Schrittweite
+        self.t = config.episode_start_time
+        self.Ti = config.episode_start_time
+        self.Ts = config.step_size
 
         # Agent
         self.schritt = 0
 
-        # yaw [rad]
-        gierwinkel = 0 # 2 * random.random() - 1
-        # pitch [rad]
-        nickwinkel = 0 # 2 * random.random() - 1
-        # roll [rad] 
-        rollwinkel = 0 # 2 * random.random() - 1
+        # [rad]
+        yaw = 0 # 2 * random.random() - 1
+        # [rad]
+        pitch = 0 # 2 * random.random() - 1
+        # [rad] 
+        roll = 0 # 2 * random.random() - 1
 
         quat = self.quaternion.kardanwinkel2quaternion(
-            gierwinkel,
-            nickwinkel, 
-            rollwinkel
+            yaw,
+            pitch, 
+            roll
         )
 
         # Hovering motor acc
@@ -236,7 +235,7 @@ class Quadcopter():
 
         self.controller.regelschritt(
             self, 
-            config.Schrittweite,
+            config.step_size,
             self.sollgeschwindigkeit
         )
 
@@ -253,7 +252,7 @@ class Quadcopter():
         )
         self.integrator.set_initial_value(
             self.zustand, 
-            config.Episodenstart
+            config.episode_start_time
         )
 
         self.drehlage = self.quaternion.quaternion2kardanwinkel(
@@ -294,10 +293,10 @@ class Quadcopter():
         norden = s[0]
         osten = s[1]
         unten = s[2]
-        q0 = s[3]
-        q1 = s[4]
-        q2 = s[5]
-        q3 = s[6]
+        q_w = s[3]
+        q_x = s[4]
+        q_y = s[5]
+        q_z = s[6]
         xdot = s[7]
         ydot = s[8]
         zdot = s[9]
@@ -345,13 +344,13 @@ class Quadcopter():
             self.minWmotor, 
             self.maxWmotor
         )
-        schub = self.kTh * wMotor * wMotor
+        thrust = self.kTh * wMotor * wMotor
         drehmoment = self.kTo * wMotor * wMotor
     
-        ThrM1 = schub[0]
-        ThrM2 = schub[1]
-        ThrM3 = schub[2]
-        ThrM4 = schub[3]
+        ThrM1 = thrust[0]
+        ThrM2 = thrust[1]
+        ThrM3 = thrust[2]
+        ThrM4 = thrust[3]
         TorM1 = drehmoment[0]
         TorM2 = drehmoment[1]
         TorM3 = drehmoment[2]
@@ -375,13 +374,13 @@ class Quadcopter():
             [xdot],
             [ydot],
             [zdot],
-            [-0.5 * p * q1 - 0.5 * q * q2 - 0.5 * q3 * r],
-            [ 0.5 * p * q0 - 0.5 * q * q3 + 0.5 * q2 * r],
-            [ 0.5 * p * q3 + 0.5 * q * q0 - 0.5 * q1 * r],
-            [-0.5 * p * q2 + 0.5 * q * q1 + 0.5 * q0 * r],
-            [( self.Cd * sign(velW * cos(qW1) * cos(qW2) - xdot) * (velW * cos(qW1) * cos(qW2) - xdot) ** 2 - 2 * (q0 * q2 + q1 * q3) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.quadcoptermasse],
-            [( self.Cd * sign(velW * sin(qW1) * cos(qW2) - ydot) * (velW * sin(qW1) * cos(qW2) - ydot) ** 2 + 2 * (q0 * q1 - q2 * q3) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.quadcoptermasse],
-            [(-self.Cd * sign(velW * sin(qW2) + zdot) * (velW * sin(qW2) + zdot) ** 2 - (ThrM1 + ThrM2 + ThrM3 + ThrM4) * (q0 ** 2 - q1 ** 2 - q2 ** 2 + q3 ** 2) + self.gravitationskonstante * self.quadcoptermasse) / self.quadcoptermasse],
+            [-0.5 * p * q_x - 0.5 * q * q_y - 0.5 * q_z * r],
+            [ 0.5 * p * q_w - 0.5 * q * q_z + 0.5 * q_y * r],
+            [ 0.5 * p * q_z + 0.5 * q * q_w - 0.5 * q_x * r],
+            [-0.5 * p * q_y + 0.5 * q * q_x + 0.5 * q_w * r],
+            [( self.Cd * sign(velW * cos(qW1) * cos(qW2) - xdot) * (velW * cos(qW1) * cos(qW2) - xdot) ** 2 - 2 * (q_w * q_y + q_x * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.quadcoptermasse],
+            [( self.Cd * sign(velW * sin(qW1) * cos(qW2) - ydot) * (velW * sin(qW1) * cos(qW2) - ydot) ** 2 + 2 * (q_w * q_x - q_y * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.quadcoptermasse],
+            [(-self.Cd * sign(velW * sin(qW2) + zdot) * (velW * sin(qW2) + zdot) ** 2 - (ThrM1 + ThrM2 + ThrM3 + ThrM4) * (q_w ** 2 - q_x ** 2 - q_y ** 2 + q_z ** 2) + self.gravitationskonstante * self.quadcoptermasse) / self.quadcoptermasse],
             [((IByy - IBzz) * q * r + (ThrM1 - ThrM2 - ThrM3 + ThrM4) * self.dym) / IBxx],
             [((IBzz - IBxx) * p * r + (ThrM1 + ThrM2 - ThrM3 - ThrM4) * self.dxm) / IByy], 
             [((IBxx - IByy) * p * q - TorM1 + TorM2 - TorM3 + TorM4) / IBzz]])
@@ -417,7 +416,7 @@ class Quadcopter():
         return sdot
 
     def update(self, t, motorbefehle, wind):
-        """
+        """This method ensures that the quadcopter's state is continuously updated based on the given inputs, allowing for accurate simulation or control of its behavior.
         """
         geschwindigkeit_t_minus_1 = self.zustand[7:10]
         omega_t_minus_1 = self.zustand[10:13]
@@ -425,7 +424,7 @@ class Quadcopter():
         self.integrator.set_f_params(motorbefehle, wind)
         self.zustand = self.integrator.integrate(
             t, 
-            t + config.Schrittweite
+            t + config.step_size
         )
 
         self.pos = self.zustand[0:3]
@@ -441,18 +440,18 @@ class Quadcopter():
 
         self.vel_dot = (
             self.geschwindigkeit - geschwindigkeit_t_minus_1
-        ) / config.Schrittweite
+        ) / config.step_size
         self.omega_dot = (
             self.omega - omega_t_minus_1
-        ) / config.Schrittweite
+        ) / config.step_size
 
         self.extended_state()
         self.forces()
 
     def belohnung(self):
-        """Methode zum Berechnen der Belohnung basierend auf dem Quadcopterzustand und der Belohnungsgewichtung
+        """Method for calculating the reward based on the quadcopter state and reward weighting.
         """
-        geschwindigkeitsfehler = (
+        error_velocity = (
             self.zustand[7:10] -
             self.sollgeschwindigkeit
         )
@@ -460,16 +459,16 @@ class Quadcopter():
             self.zustand[10:13] - 
             [0, 0, 0]
         )
-        drehlage = self.quaternion.quaternion2kardanwinkel(
+        attitude = self.quaternion.quaternion2kardanwinkel(
             self.zustand[3:7]
         )      
-        drehlagefehler = numpy.abs(drehlage[0:3])
+        error_attitude = numpy.abs(attitude[0:3])
 
         return ( 
-            -config.belohnungsgewichtung[1] *
-            (numpy.sum(numpy.abs(geschwindigkeitsfehler))) +
-            config.belohnungsgewichtung[2] /
+            -config.reward_weights[1] *
+            (numpy.sum(numpy.abs(error_velocity))) +
+            config.reward_weights[2] /
             (1 + numpy.sum(drehgeschwindigkeitfehler ** 2)) +
-            config.belohnungsgewichtung[3] / 
-            (1 + numpy.sum(drehlagefehler ** 2))
+            config.reward_weights[3] / 
+            (1 + numpy.sum(error_attitude ** 2))
         )

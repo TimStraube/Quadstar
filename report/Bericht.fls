@@ -848,9 +848,6 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-INPUT ./Bericht.aux
-INPUT Bericht.aux
-INPUT Bericht.aux
 OUTPUT Bericht.aux
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -1125,7 +1122,21 @@ INPUT ../images/0079 Model E 3.png
 INPUT ../images/0079 Model E 3.png
 INPUT ../images/0079 Model E 3.png
 INPUT ../images/0079 Model E 3.png
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
+INPUT ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png
+INPUT ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png
+INPUT ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png
+INPUT ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png
+INPUT ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png
+INPUT ../images/0084 Ende-zu-Ende Nord Ost Unten.png
+INPUT ../images/0084 Ende-zu-Ende Nord Ost Unten.png
+INPUT ../images/0084 Ende-zu-Ende Nord Ost Unten.png
+INPUT ../images/0084 Ende-zu-Ende Nord Ost Unten.png
+INPUT ../images/0084 Ende-zu-Ende Nord Ost Unten.png
+INPUT ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png
+INPUT ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png
+INPUT ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png
+INPUT ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png
+INPUT ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png
 INPUT ../images/0064 Pinbelegung.png
 INPUT ../images/0064 Pinbelegung.png
 INPUT ../images/0064 Pinbelegung.png
@@ -1165,6 +1176,7 @@ INPUT ../images/0088 Joystick Mode.jpg
 INPUT ../images/0088 Joystick Mode.jpg
 INPUT ../images/0088 Joystick Mode.jpg
 INPUT ../images/0088 Joystick Mode.jpg
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
 INPUT ../images/0087 Testbench.jpg
 INPUT ../images/0087 Testbench.jpg
 INPUT ../images/0087 Testbench.jpg
