@@ -241,8 +241,7 @@ class Regler():
             np.dot(
                 self.sollschub[0:2].T, 
                 self.sollschub[0:2]) > 
-            thrust_max_xy ** 2
-            ):
+            thrust_max_xy ** 2):
 
             mag = norm(self.sollschub[0:2])
             self.sollschub[0:2] = (

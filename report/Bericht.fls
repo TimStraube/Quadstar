@@ -848,6 +848,27 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+INPUT ./Bericht.aux
+INPUT Bericht.aux
+INPUT Bericht.aux
+INPUT ./sections/02 Einleitung.aux
+INPUT sections/02 Einleitung.aux
+INPUT sections/02 Einleitung.aux
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.aux
+INPUT sections/03 Informationstheoretische Vorbetrachtungen.aux
+INPUT sections/03 Informationstheoretische Vorbetrachtungen.aux
+INPUT ./sections/04 Systemtheoretische Vorbetrachtungen.aux
+INPUT sections/04 Systemtheoretische Vorbetrachtungen.aux
+INPUT sections/04 Systemtheoretische Vorbetrachtungen.aux
+INPUT ./sections/05 Implementierung.aux
+INPUT sections/05 Implementierung.aux
+INPUT sections/05 Implementierung.aux
+INPUT ./sections/06 Zusammenfasssung.aux
+INPUT sections/06 Zusammenfasssung.aux
+INPUT sections/06 Zusammenfasssung.aux
+INPUT ./sections/07 Referenzen.aux
+INPUT sections/07 Referenzen.aux
+INPUT sections/07 Referenzen.aux
 OUTPUT Bericht.aux
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -921,34 +942,25 @@ INPUT /usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.st
 INPUT /usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 INPUT /usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+INPUT ./Bericht.out
+INPUT Bericht.out
+INPUT ./Bericht.out
+INPUT Bericht.out
+INPUT ./Bericht.out
+INPUT Bericht.out
+INPUT ./Bericht.out
+INPUT Bericht.out
+INPUT ./Bericht.out
+INPUT ./Bericht.out
 OUTPUT Bericht.out
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-OUTPUT Bericht.toc
-INPUT ./sections/02 Einleitung.tex
-INPUT ./sections/02 Einleitung.tex
-INPUT ./sections/02 Einleitung.tex
-OUTPUT sections/02 Einleitung.aux
-INPUT ./sections/02 Einleitung.tex
-INPUT ./sections/02 Einleitung.tex
-INPUT ./sections/02 Einleitung.tex
-INPUT sections/02 Einleitung.tex
-INPUT ./sections/02 Einleitung.tex
-INPUT sections/02 Einleitung.tex
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
-INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
-INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
-OUTPUT sections/03 Informationstheoretische Vorbetrachtungen.aux
-INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
-INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
-INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
-INPUT sections/03 Informationstheoretische Vorbetrachtungen.tex
-INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
-INPUT sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT ./Bericht.toc
+INPUT Bericht.toc
+INPUT Bericht.toc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr8.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
@@ -961,6 +973,28 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+OUTPUT Bericht.toc
+INPUT ./sections/02 Einleitung.tex
+INPUT ./sections/02 Einleitung.tex
+INPUT ./sections/02 Einleitung.tex
+OUTPUT sections/02 Einleitung.aux
+INPUT ./sections/02 Einleitung.tex
+INPUT ./sections/02 Einleitung.tex
+INPUT ./sections/02 Einleitung.tex
+INPUT sections/02 Einleitung.tex
+INPUT ./sections/02 Einleitung.tex
+INPUT sections/02 Einleitung.tex
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
+OUTPUT sections/03 Informationstheoretische Vorbetrachtungen.aux
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT ./sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT sections/03 Informationstheoretische Vorbetrachtungen.tex
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT ../images/0026 Eulerwinkel.png
 INPUT ../images/0026 Eulerwinkel.png
 INPUT ../images/0026 Eulerwinkel.png
@@ -1176,7 +1210,11 @@ INPUT ../images/0088 Joystick Mode.jpg
 INPUT ../images/0088 Joystick Mode.jpg
 INPUT ../images/0088 Joystick Mode.jpg
 INPUT ../images/0088 Joystick Mode.jpg
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm
+INPUT ../images/0082 S2 Akku.png
+INPUT ../images/0082 S2 Akku.png
+INPUT ../images/0082 S2 Akku.png
+INPUT ../images/0082 S2 Akku.png
+INPUT ../images/0082 S2 Akku.png
 INPUT ../images/0087 Testbench.jpg
 INPUT ../images/0087 Testbench.jpg
 INPUT ../images/0087 Testbench.jpg
@@ -1259,7 +1297,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb
-INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb
 INPUT /usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb
 INPUT /usr/share/texmf/fonts/type1/public/cm-super/sfsi0800.pfb
 INPUT /usr/share/texmf/fonts/type1/public/cm-super/sfss0800.pfb
