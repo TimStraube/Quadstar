@@ -363,7 +363,7 @@ Die Beobachtung enthält die Ist- und die Sollgeschwindigkeit sowie die Drehlage
 In der Simulation werden die Werte für alle Beobachtungen direkt aus dem Zustandsvektor ausgelesen. Bedeutet es wurde kein Sensorrauschen simuliert und auch das Übertragungsverhalten der Sensoren wurde nicht betrachtet. 
 
 \subsubsection{\label{Geschwindigkeitssollvektor}Geschwindigkeitssollvektor}
-Der Geschwindigkeitssollvektor welcher für das Training aller PID und Ende-zu-Ende Modelle eingesetzt wurde, enthält 8 Elemente und ermöglicht keine Bewegung auf der Unten-Dimension. Die Unten-Dimension wurde ignoriert da das Lernen von acht Sollgeschwindigkeiten als einfacher erachtet wurde als das Lernen von 27 Dimension.
+Der Geschwindigkeitssollvektor welcher für das Training aller PID und Ende-zu-Ende Modelle eingesetzt wurde, enthält 9 Elemente und ermöglicht keine Bewegung auf der Unten-Dimension. Die Unten-Dimension wurde ignoriert da das Lernen von acht Sollgeschwindigkeiten als einfacher erachtet wurde als das Lernen von 27 Dimension.
 \begin{align}
 	v_{Soll} &= \begin{pmatrix}
 		\text{randint}(-1, +1)\\

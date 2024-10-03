@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.19)  3 OCT 2024 02:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.19)  4 OCT 2024 00:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1072,7 +1072,7 @@ Package rerunfilecheck Info: File `Bericht.out' has not changed.
 Here is how much of TeX's memory you used:
  28326 strings out of 478287
  555368 string characters out of 5849289
- 1073607 words of memory out of 5000000
+ 1073606 words of memory out of 5000000
  45414 multiletter control sequences out of 15000+600000
  478812 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191

@@ -375,11 +375,12 @@ class Regler():
 
     def rate_control(self, quad):
         # Rate Control
+        # Be sure it is right sign for the D part
         rate_error = self.rate_sp - quad.zustand[10:13]
         self.drehratenstellwert = (
             self.rate_P_gain * rate_error - 
             self.rate_D_gain * quad.omega_dot
-        )    # Be sure it is right sign for the D part
+        )    
 
     def setYawWeight(self):
         """
