@@ -1,3 +1,8 @@
+"""
+author: Tim Leonard Straube
+email: hi@optimalpi.de
+"""
+
 import os
 import torch
 import shutil
@@ -40,7 +45,7 @@ class Agent():
 
     def train(self):
         # Vektorisiertes Environment
-        if config.Ordnername[1] == "M":
+        if config.model_id[1] == "M":
             env = Quadendezuende()
             check_env(env)
             self.envs = make_vec_env(
@@ -48,7 +53,7 @@ class Agent():
                 seed = 4711, 
                 n_envs = config.Parallele_Umwelten
             )
-        if config.Ordnername[1] == "P":
+        if config.model_id[1] == "P":
             env = Quadpid()
             check_env(env)
             self.envs = make_vec_env(
@@ -69,7 +74,7 @@ class Agent():
             "MlpPolicy",
             self.envs,
             tensorboard_log = (
-                f"./models/{config.Ordnername}/tensorboard"
+                f"./models/{config.model_id}/tensorboard"
             ),
             policy_kwargs=policy_kwargs,
             learning_rate = config.Lernrate,
@@ -81,7 +86,7 @@ class Agent():
         
         if config.Modell_laden: 
             model_path = (
-                f"./models/{config.Ordnername}/main.zip"
+                f"./models/{config.model_id}/main.zip"
             )
             self.model = PPO.load(model_path) 
 
@@ -89,17 +94,17 @@ class Agent():
             self.model.get_env(),
             eval_freq = config.Evaluationsfrequenz,
             best_model_save_path = (
-                f"./models/{config.Ordnername}"
+                f"./models/{config.model_id}"
             ),
             log_path = os.path.join(
-                f"./models/{config.Ordnername}", 
+                f"./models/{config.model_id}", 
                 "results"
             ),
             n_eval_episodes = config.Evaluationsinterval
         )
 
         shutil.copyfile(
-            "./config.py", f"./models/{config.Ordnername}/config.py"
+            "./config.py", f"./models/{config.model_id}/config.py"
         )
 
         self.model.learn(
@@ -111,7 +116,7 @@ class Agent():
             progress_bar = True
         )
 
-        self.model.save(f"./models/{config.Ordnername}/main")
+        self.model.save(f"./models/{config.model_id}/main")
 
 if __name__ == "__main__":
     agent = Agent()

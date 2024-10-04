@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 author: Tim Leonard Straube
-organization: HTWG Konstanz
-email: ti741str@htwg-konstanz.de
-comment: Famara Gymnasium Umwelt für das Lernen der PID-Parameter
+email: hi@optimalpi.de
 """
 
 import gymnasium
@@ -17,7 +14,6 @@ from quaternion import Quaternion
 from scipy.integrate import ode
 from quadcontroller import Regler
 from quad import Quadcopter
-
 
 class Quadpid(gymnasium.Env):
     belohnung_alt = 0
@@ -66,7 +62,7 @@ class Quadpid(gymnasium.Env):
         # Initalisierung der Zeitvariable
         self.t = 0
         # Schrittweite
-        self.Ts = config.Schrittweite
+        self.Ts = config.step_size
         # Schritt der aktuellen Episode
         self.schritt = 0
         # Sollgeschwindigkeit
@@ -82,7 +78,7 @@ class Quadpid(gymnasium.Env):
         # Berechnung der ersten Motorbefehle mit dem PID-Regler
         self.controller.regelschritt(
             self.quad, 
-            config.Schrittweite,
+            config.step_size,
             self.quad.sollgeschwindigkeit
         )
         # Windmodell
@@ -99,14 +95,14 @@ class Quadpid(gymnasium.Env):
         # Definition der Anfangsbedingungen
         self.integrator.set_initial_value(
             self.quad.zustand, 
-            config.Episodenstart
+            config.episode_start
         )
         # Drehlage = [
         #   Gierwinkel (rad),
         #   Nichwinkel (rad),
         #   Rollwinkel (rad)
         # ]
-        self.drehlage = self.quaternion.quaternion2kardanwinkel(
+        self.drehlage = self.quaternion.quaternion2cardan(
             self.quad.zustand[3:7]
         )   
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
@@ -188,7 +184,7 @@ class Quadpid(gymnasium.Env):
         #   Nichwinkel (rad),
         #   Rollwinkel (rad)
         # ]
-        self.drehlage = self.quaternion.quaternion2kardanwinkel(
+        self.drehlage = self.quaternion.quaternion2cardan(
             self.quad.zustand[3:7]
         )             
 

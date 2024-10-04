@@ -5,21 +5,19 @@ email: john.bobzwik@gmail.com
 
 """
 author: Tim Leonard Straube
-organization: HTWG Konstanz
-email: ti741str@htwg-konstanz.de
-comment: Quaternion Methods
+email: hi@optimalpi.de
 """
 
 import numpy
 
 class Quaternion():
     def __init__(self) -> None:
-        """Methoden zum Umgang mit Quaternionen
+        """Methods for modeling and transforming quaternions
         """
         pass
 
     def threeaxisrot(self, r11, r12, r21, r31, r32):
-        """Dreiachsenrotation
+        """Rotation around three axes
         """
         r1 = numpy.arctan2(r11, r12)
         r2 = numpy.arcsin(r21)
@@ -27,10 +25,10 @@ class Quaternion():
 
         return numpy.array([r1, r2, r3])
 
-    def quaternion2kardanwinkel(self, q):
-        """Transformation von Quaternionen zu Kardanwinkeln
-        params: q: Quaternion [qw, qx, qy, qz]
-        return: kardanwinkel: [gieren, nicken, rollen]
+    def quaternion2cardan(self, q):
+        """Transformation of quaternions to cardan angles
+        params: q: quaternion [qw, qx, qy, qz]
+        return: cardan: [yaw, pitch, roll]
         """
         qw = q[0]
         qx = q[1]
@@ -47,7 +45,7 @@ class Quaternion():
         return kardanwinkel
     
     def quat2Dcm(self, q):
-        """Quadternion zu Rotationsmatrix
+        """Quaternion to rotation matrix
         """
         dcm = numpy.zeros([3, 3])
 
@@ -79,10 +77,10 @@ class Quaternion():
         return dcm
     
     def kardanwinkel2quaternion(self, psi, theta, phi):
-        """Kardanwinkel zu Quaternion
-        params: psi: Gieren
-        params: theta: Nicken
-        params: phi: Rollen
+        """Cardan angles to quaternion
+        params: psi: yaw
+        params: theta: pitch
+        params: phi: roll
         """
         
         cr1 = numpy.cos(0.5 * psi)
@@ -97,20 +95,18 @@ class Quaternion():
         q2 = cr1 * sr2 * cr3 + sr1 * cr2 * sr3
         q3 = sr1 * cr2 * cr3 - cr1 * sr2 * sr3
 
-        # e0, e1, e2, e3 = qw, qx, qy, qz
         q = numpy.array([q0, q1, q2, q3])
-        # q = q * numpy.sign(e0)
         q = q / numpy.linalg.norm(q)
         return q
 
     def inverse(self, q):
-        """Inverse Quaternion
+        """Inverse quaternion 
         """
         qinv = numpy.array([q[0], -q[1], -q[2], -q[3]]) / numpy.linalg.norm(q)
         return qinv
 
     def quatMultiply(self, q, p):
-        """
+        """Multiplication of quaternions 
         """
         Q = numpy.array([
             [ q[0], -q[1], -q[2], -q[3]],
@@ -121,17 +117,17 @@ class Quaternion():
         return Q@p
 
     def vectNormalize(self, q):
-        """Normalisierung des Vektor q
-        params: q: Quaternion oder Vektor
-        return: norm: Norm des Vektors 
+        """Normalize vector
+        params: q: quaternion
+        return: norm: norm of quaternion
         """
         norm = q / numpy.linalg.norm(q)
         return norm
 
     def rotationsmatrix2quaternion(self, R):    
-        """Transformation einer Rotationsmatrix zu einer Quaternion
-        params: R: Rotationsmatrix 3x3
-        return: q: Quaternion
+        """Rotation matrix to quaternion
+        params: R: rotationsmatrix 3x3
+        return: q: quaternion
         """
         R11 = R[0, 0]
         R12 = R[0, 1]
@@ -170,7 +166,7 @@ class Quaternion():
             e1 = (R13 + R31) * r
             e2 = (R23 + R32) * r
 
-        # e0,e1,e2,e3 = qw,qx,qy,qz
+        # (e0, e1, e2, e3) = (qw, qx, qy, qz)
         q = numpy.array([e0, e1, e2, e3])
         q = q * numpy.sign(e0)
         q = q / numpy.sqrt(numpy.sum(

@@ -7,9 +7,8 @@ Please feel free to use and modify this, but keep the above information. Thanks!
 """
 
 """
-author: Tim Straube
-email: tileone02@posteo.de
-comment: modified the file
+author: Tim Leonard Straube
+email: hi@optimalpi.de
 """
 
 import numpy
@@ -255,7 +254,7 @@ class Quadcopter():
             config.episode_start_time
         )
 
-        self.drehlage = self.quaternion.quaternion2kardanwinkel(
+        self.drehlage = self.quaternion.quaternion2cardan(
             self.zustand[3:7]
         )   
 
@@ -268,7 +267,7 @@ class Quadcopter():
         )
 
         # Drehlageumrechnung zu Kardanwinkeln
-        YPR = self.quaternion.quaternion2kardanwinkel(
+        YPR = self.quaternion.quaternion2cardan(
             self.zustand[3:7]
         )
         # flip YPR so that euler state = phi, theta, psi
@@ -459,7 +458,7 @@ class Quadcopter():
             self.zustand[10:13] - 
             [0, 0, 0]
         )
-        attitude = self.quaternion.quaternion2kardanwinkel(
+        attitude = self.quaternion.quaternion2cardan(
             self.zustand[3:7]
         )      
         error_attitude = numpy.abs(attitude[0:3])

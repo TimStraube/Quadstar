@@ -6,6 +6,11 @@ license: MIT
 Please feel free to use and modify this, but keep the above information. Thanks!
 """
 
+"""
+author: Tim Leonard Straube
+email: hi@optimalpi.de
+"""
+
 import numpy as np
 from numpy import sin, cos, pi
 import random as rd

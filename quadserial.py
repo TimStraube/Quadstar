@@ -1,3 +1,8 @@
+"""
+author: Tim Leonard Straube
+email: hi@optimalpi.de
+"""
+
 import time
 import serial
 import re
@@ -26,7 +31,7 @@ class Quadserial():
                 portnumber += 1
                 print("Serial Error.")
 
-        self.samplebezeichner = [
+        self.sample_id = [
             "accx", 
             "accy", 
             "accz", 
@@ -52,11 +57,11 @@ class Quadserial():
             "w_M2",
             "w_M3"
         ]
-        self.current_sample = np.zeros((
-            len(self.samplebezeichner), 
+        self.sample_current = np.zeros((
+            len(self.sample_id), 
             1
         ))
-        self.sampleeinheiten = [
+        self.sample_units = [
             "m/s", 
             "m/s", 
             "m/s",
@@ -92,17 +97,17 @@ class Quadserial():
             if config.doclear:
                 print("\033c", end='')
 
-            for i in range(len(self.samplebezeichner)):
+            for i in range(len(self.sample_id)):
                 pattern = (
-                    f"{self.samplebezeichner[i]}:\s*(-?\d+\.\d+)"
+                    f"{self.sample_id[i]}:\s*(-?\d+\.\d+)"
                 )
                 match = re.search(pattern, line)
                 if match:
                     sample = match.group(1)
                     print(
-                        f"{self.samplebezeichner[i]}: {sample}{self.sampleeinheiten[i]}"
+                        f"{self.sample_id[i]}: {sample}{self.sample_units[i]}"
                     )
-                    self.current_sample[i] = (sample)
+                    self.sample_current[i] = (sample)
 
             pattern = r'gestimatex:\s*(-?\d+\.\d+)'
 
@@ -147,17 +152,17 @@ class Quadserial():
                 if self.clearLine:
                     print("\033c", end='')
 
-                for i in range(len(self.samplebezeichner)):
+                for i in range(len(self.sample_id)):
                     pattern = (
-                        f"{self.samplebezeichner[i]}:\s*(-?\d+\.\d+)"
+                        f"{self.sample_id[i]}:\s*(-?\d+\.\d+)"
                     )
                     match = re.search(pattern, line)
                     if match:
                         sample = match.group(1)
                         print(
-                            f"{self.samplebezeichner[i]}: {sample}{self.sampleeinheiten[i]}"
+                            f"{self.sample_id[i]}: {sample}{self.sample_units[i]}"
                         )
-                        self.current_sample[i] = (sample)
+                        self.sample_current[i] = (sample)
 
                 pattern = r'gestimatex:\s*(-?\d+\.\d+)'
 
@@ -194,7 +199,7 @@ class Quadserial():
 
                 time.sleep(0.08)
     
-    def senden(self, nachricht):
+    def send2uart(self, nachricht):
         self.serialPort.flushInput()
         self.serialPort.flushOutput()
         self.serialPort.write(

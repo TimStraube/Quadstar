@@ -14,9 +14,7 @@ Please feel free to use and modify this, but keep the above information. Thanks!
 
 """
 author: Tim Leonard Straube
-organization: HTWG Konstanz
-email: ti741str@htwg-konstanz.de
-comment: PID-Regler
+email: hi@optimalpi.de
 """
 
 import numpy as np

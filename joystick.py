@@ -1,3 +1,8 @@
+"""
+author: Tim Leonard Straube
+email: hi@optimalpi.de
+"""
+
 import sys
 import pygame
 import sched

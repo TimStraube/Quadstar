@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 author: Tim Leonard Straube
-organization: HTWG Konstanz
-email: ti741str@htwg-konstanz.de
-comment: Famara Gymnasium Umwelt für das Lernen des Ende-zu-Ende Modells
+email: hi@optimalpi.de
 """
 
 import gymnasium
@@ -33,8 +30,8 @@ class Quadend2end(gymnasium.Env):
         # Definition des Aktionsraums
         self.action_space = spaces.MultiDiscrete(
             numpy.concatenate([
-                config.aktionspace_end2end[0] * numpy.ones(4),
-                [config.aktionspace_end2end[1]]
+                config.actionspace_end2end[0] * numpy.ones(4),
+                [config.actionspace_end2end[1]]
             ])
         )
         # Definition des Beobachtungsraums
@@ -61,7 +58,7 @@ class Quadend2end(gymnasium.Env):
         # Initalisierung der Zeitvariable
         self.t = 0
         # Schrittweite
-        self.Ts = config.Schrittweite
+        self.Ts = config.step_size
         # Schritt der aktuellen Episode
         self.schritt = 0
         # Sollgeschwindigkeit
@@ -79,14 +76,14 @@ class Quadend2end(gymnasium.Env):
         #   Nichwinkel (rad),
         #   Rollwinkel (rad)
         # ]
-        self.drehlage = self.quaternion.quaternion2kardanwinkel(
+        self.attitude = self.quaternion.quaternion2cardan(
             self.quad.zustand[3:7]
         )
         
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
         self.observation[:] = numpy.float32(
             numpy.concatenate([
-                self.drehlage,
+                self.attitude,
                 self.quad.zustand[7:10], 
                 self.sollgeschwindigkeit
             ])
@@ -94,28 +91,28 @@ class Quadend2end(gymnasium.Env):
 
         return self.observation, {}
     
-    def step(self, aktion):
+    def step(self, action):
         terminated = False
         truncated = False
 
         # Das Umweltmodell wird geupdated so oft wie es der Agent will
-        for _ in range(aktion[4] + 1):
+        for _ in range(action[4] + 1):
             self.schritt += 1
             # Update des Quadcopterzustands
             self.quad.update(
                 self.t, 
-                aktion, 
+                action, 
                 self.wind
             )
             # Update der Zeit
-            self.t += config.Schrittweite
+            self.t += config.step_size
 
         # Drehlage = [
         #   Gierwinkel (rad),
         #   Nichwinkel (rad),
         #   Rollwinkel (rad)
         # ]
-        self.drehlage = self.quaternion.quaternion2kardanwinkel(
+        self.attitude = self.quaternion.quaternion2cardan(
             self.quad.zustand[3:7]
         )             
 
@@ -131,9 +128,9 @@ class Quadend2end(gymnasium.Env):
         self.array_norden.append(self.quad.zustand[0])
         self.array_osten.append(self.quad.zustand[1])
         self.array_unten.append(self.quad.zustand[2])
-        self.omega1_all.append(self.drehlage[0])
-        self.omega2_all.append(self.drehlage[1])
-        self.omega3_all.append(self.drehlage[2])
+        self.omega1_all.append(self.attitude[0])
+        self.omega2_all.append(self.attitude[1])
+        self.omega3_all.append(self.attitude[2])
 
         # Berechnen der Belohnung im aktuellen Zustand
         belohnung = self.quad.belohnung()
@@ -142,7 +139,7 @@ class Quadend2end(gymnasium.Env):
         #     truncated = True
 
         # Beenden der Episode wenn die maximale Episodenlänge erreicht wurde
-        if self.schritt >= (config.Quadtrain_finaler_Zeitpunkt / config.Schrittweite):
+        if self.schritt >= (config.Quadtrain_finaler_Zeitpunkt / config.step_size):
             truncated = True
             if config.render_modell:
                 # Zeichnen der Positions- und Drehlagetrajektorien
@@ -152,7 +149,7 @@ class Quadend2end(gymnasium.Env):
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
         self.observation[:] = numpy.float32(
             numpy.concatenate([
-                self.drehlage,
+                self.attitude,
                 self.quad.zustand[7:10], 
                 self.sollgeschwindigkeit
             ])

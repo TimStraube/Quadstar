@@ -1,7 +1,6 @@
 """
 author: Tim Leonard Straube
-email: tileone02@posteo.de
-comment: webserver for quadcopter visualization
+email: hi@optimalpi.de
 """
 
 import config
@@ -14,14 +13,16 @@ from quadtest import Testbench
 from quadserial import Quadserial
 from quaternion import Quaternion
 
+deg2rad = numpy.pi / 180.0
+
 app = Flask(__name__)
 testbench = Testbench()
 try:
     sampleSerial = Quadserial()
-    quadverbunden = True
+    quad_connected = True
 except:
     print("Für Quadtest Quadcopter verbinden.")
-    quadverbunden = False
+    quad_connected = False
 quaternion = Quaternion()
 
 @app.route('/', methods=['GET', 'POST', 'HEAD'])
@@ -29,38 +30,38 @@ def home():
     if request.method == 'POST':
 
         # Winkel in rad
-        if config.Ordnername[1] == "P":
+        if config.model_id[1] == "P":
             (
                 t, 
-                norden, 
-                osten, 
-                unten, 
-                rollen, 
-                nicken, 
-                gieren
+                north, 
+                east, 
+                down, 
+                roll, 
+                pitch, 
+                yaw
             ) = testbench.testPID()
-        elif config.Ordnername[1] == "M":
+        elif config.model_id[1] == "M":
             (
                 t, 
-                norden, 
-                osten, 
-                unten, 
-                rollen, 
-                nicken, 
-                gieren
+                north, 
+                east, 
+                down, 
+                roll, 
+                pitch, 
+                yaw
             ) = testbench.testModell()
         else:
             print("Warnung! Invalider Reglertyp.")
 
-        # Winkel in rad
+        # t [s], NED [m], Attitude [rad]
         quad_state = jsonify({
             "t" : t,
-            "norden" : norden,
-            "osten" : osten,
-            "unten" : unten,
-            "rollen" : rollen,
-            "nicken" : nicken,
-            "gieren" : gieren
+            "north" : north,
+            "east" : east,
+            "down" : down,
+            "roll" : roll,
+            "pitch" : pitch,
+            "yaw" : yaw
         })
         return quad_state
     else:
@@ -70,27 +71,28 @@ def home():
 @app.route('/sensortest/', methods=['GET', 'POST', 'HEAD'])
 def sensortest():
     if request.method == 'POST':
-        if quadverbunden:
+        if quad_connected:
             sampleSerial.startEinmalsampler()
-            samples = sampleSerial.aktuelleSample.tolist()
+            samples = sampleSerial.sample_current.tolist()
         else:
             samples = numpy.array([[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]])
 
-        kardan = quaternion.quaternion2kardanwinkel([
-            samples[16][0], 
-            samples[17][0], 
-            samples[18][0], 
-            samples[19][0]
-        ])
+        # kardan = quaternion.quaternion2cardan([
+        #     samples[16][0], 
+        #     samples[17][0], 
+        #     samples[18][0], 
+        #     samples[19][0]
+        # ])
+
         # Winkel in rad
         quad_state = jsonify({
             "t" : 0,
-            "norden" : 0,
-            "osten" : 0,
-            "unten" : 0,
-            "rollen" : float(samples[5][0]) * 3.14 / 180.0,
-            "nicken" : float(samples[4][0]) * 3.14 / 180.0,
-            "gieren" : float(samples[3][0]) * 3.14 / 180.0
+            "north" : 0,
+            "east" : 0,
+            "down" : 0,
+            "roll" : float(samples[5][0]) * deg2rad,
+            "pitch" : float(samples[4][0]) * deg2rad,
+            "yaw" : float(samples[3][0]) * deg2rad
         })
         return quad_state
     else:
@@ -98,7 +100,4 @@ def sensortest():
         return render_template('sensortest.html')
 
 if __name__ == '__main__':
-    app.run(
-        host="localhost", 
-        debug=True
-    )
+    app.run(host="localhost", debug=True)

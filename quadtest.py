@@ -1,3 +1,8 @@
+"""
+author: Tim Leonard Straube
+email: hi@optimalpi.de
+"""
+
 import config
 import numpy
 import random
@@ -22,7 +27,7 @@ class Testbench():
         """Modell laden
         """
         model_pfad = (
-            f"./Modelle/{config.Ordnername}/best_model.zip"
+            f"./Modelle/{config.model_id}/best_model.zip"
         )
         self.model = PPO.load(model_pfad)
 
@@ -41,7 +46,7 @@ class Testbench():
         # Generate First Commands
         self.controller.regelschritt(
             self.quad, 
-            config.Schrittweite,
+            config.step_size,
             self.quad.sollgeschwindigkeit
         )
         self.drehlage = [
@@ -78,7 +83,7 @@ class Testbench():
         self.sollgeschwindigkeit = [1, 0, 0]
         
     def vorhersage(self):
-        self.drehlage = self.quaternion.quaternion2kardanwinkel(
+        self.drehlage = self.quaternion.quaternion2cardan(
             self.quad.zustand[3:7]
         )             
 
@@ -95,7 +100,7 @@ class Testbench():
         )[0]
     
     def vorhersage(self):
-        self.drehlage = self.quaternion.quaternion2kardanwinkel(
+        self.drehlage = self.quaternion.quaternion2cardan(
             self.quad.zustand[3:7]
         )             
 
@@ -166,13 +171,13 @@ class Testbench():
                 self.controller.motorbefehle, 
                 self.wind
             )
-            self.t += config.Schrittweite
+            self.t += config.step_size
             self.controller.regelschritt(
                 self.quad,
-                config.Schrittweite,
+                config.step_size,
                 self.sollgeschwindigkeit
             )
-            self.drehlage = self.quaternion.quaternion2kardanwinkel(
+            self.drehlage = self.quaternion.quaternion2cardan(
                 self.quad.zustand[3:7]
             )      
             self.speichereZustand()
@@ -204,7 +209,7 @@ class Testbench():
             #         aktion_final, 
             #         self.wind
             #     )
-            #     self.t += config.Schrittweite
+            #     self.t += config.step_size
 
             # aktion_new = [random.randint(100, 700), random.randint(100, 700), random.randint(100, 700), random.randint(100, 700)]
 
@@ -214,7 +219,7 @@ class Testbench():
                     250 * aktion + 350, 
                     self.wind
                 )
-                self.t += config.Schrittweite
+                self.t += config.step_size
 
                 self.speichereZustand()
 
@@ -236,13 +241,13 @@ class Testbench():
         """
         self.t_all.append(self.t)
         self.x_soll.append(self.x_soll[-1] +
-            config.Schrittweite * self.sollgeschwindigkeit[0]
+            config.step_size * self.sollgeschwindigkeit[0]
         )
         self.y_soll.append(self.y_soll[-1] +
-            config.Schrittweite * self.sollgeschwindigkeit[1]
+            config.step_size * self.sollgeschwindigkeit[1]
         )
         self.z_soll.append(self.z_soll[-1] +
-            config.Schrittweite * self.sollgeschwindigkeit[2]
+            config.step_size * self.sollgeschwindigkeit[2]
         )
         self.geschwindigkeitssoll_x.append(self.sollgeschwindigkeit[0])
         self.geschwindigkeitssoll_y.append(self.sollgeschwindigkeit[1])
@@ -340,11 +345,11 @@ class Testbench():
 
         controller.regelschritt(
             quad, 
-            config.Schrittweite
+            config.step_size
         )
         
         # Initialize Result Matrixes
-        numTimeStep = int(Tf / config.Schrittweite + 1)
+        numTimeStep = int(Tf / config.step_size + 1)
 
         t_all = numpy.zeros(numTimeStep)
         s_all = numpy.zeros([numTimeStep, len(quad.zustand)])
@@ -448,7 +453,7 @@ class Testbench():
             t_all,
             pos_all, 
             quat_all, 
-            config.Schrittweite,
+            config.step_size,
             ifsave
         )
         plt.show()
@@ -465,16 +470,16 @@ class Testbench():
         # Dynamics (using last timestep's commands)
         quad.update(
             t, 
-            config.Schrittweite, 
+            config.step_size, 
             controller.motorbefehle, 
             wind
         )
-        t += config.Schrittweite      
+        t += config.step_size      
 
         # Generate Commands (for next iteration)
         controller.controller(
             quad, 
-            config.Schrittweite,
+            config.step_size,
             self.sollgeschwindigkeit
         )
 
@@ -483,7 +488,7 @@ class Testbench():
 if __name__ == '__main__':
     testbench = Testbench()
     # testbench.simulation()
-    modeltyp = config.Ordnername[1]
+    modeltyp = config.model_id[1]
     if modeltyp == "P":
         testbench.testPID()
     elif modeltyp == "M":

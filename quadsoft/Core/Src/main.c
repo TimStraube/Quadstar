@@ -16,6 +16,9 @@
   ******************************************************************************
   */
 
+// author: Tim Leonard Straube
+// email: hi@optimalpi.de
+
 // Bibliotheken
 // - HAL
 // - MotionFX
@@ -194,15 +197,15 @@ double attitute_p_gain[3] = {8.0, 8.0, 1.5};
 // double vel_i_gain[3] = {5.0, 5.0, 5.0};
 
 // Limits
-//	double uMax = 5.0;
-//	double vMax = 5.0;
-//	double wMax = 5.0;
-//	double pMax = 3.5;
-//	double qMax = 3.5;
-//	double rMax = 2.62;
-//	double vMaxAll = 5.0;
-//	double velMax[3] = {5.0, 5.0, 5.0};
-//	double rateMax[3] = {3.5, 3.5, 2.62};
+// double uMax = 5.0;
+// double vMax = 5.0;
+// double wMax = 5.0;
+// double pMax = 3.5;
+// double qMax = 3.5;
+// double rMax = 2.62;
+// double vMaxAll = 5.0;
+// double velMax[3] = {5.0, 5.0, 5.0};
+// double rateMax[3] = {3.5, 3.5, 2.62};
 double minWMotor = 0.0;
 double maxWMotor = 1000.0;
 // double minThr = 300.0;
@@ -246,7 +249,7 @@ double sollschub_norm;
 // UART
 char buffer[50];
 
-
+// Quaternion methods
 double normQuaternion(Quaternion q) {
 	return sqrt(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
 }
