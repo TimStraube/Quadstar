@@ -46,9 +46,9 @@ class Quadend2end(gymnasium.Env):
         self.reset()
 
     def reset(self, seed = None):
-        self.sollgeschwindigkeitsarray_norden = []
-        self.sollgeschwindigkeitsarray_osten = []
-        self.sollgeschwindigkeitsarray_unten = []
+        self.velocity_setsarray_norden = []
+        self.velocity_setsarray_osten = []
+        self.velocity_setsarray_unten = []
         self.array_norden = []
         self.array_osten = []
         self.array_unten = []
@@ -58,11 +58,11 @@ class Quadend2end(gymnasium.Env):
         # Initalisierung der Zeitvariable
         self.t = 0
         # Schrittweite
-        self.Ts = config.step_size
+        self.step_size = config.step_size
         # Schritt der aktuellen Episode
-        self.schritt = 0
+        self.step_current = 0
         # Sollgeschwindigkeit
-        self.sollgeschwindigkeit = numpy.array([
+        self.velocity_set = numpy.array([
             random.randint(-1, 1),
             random.randint(-1, 1),
             0
@@ -85,7 +85,7 @@ class Quadend2end(gymnasium.Env):
             numpy.concatenate([
                 self.attitude,
                 self.quad.zustand[7:10], 
-                self.sollgeschwindigkeit
+                self.velocity_set
             ])
         )
 
@@ -97,7 +97,7 @@ class Quadend2end(gymnasium.Env):
 
         # Das Umweltmodell wird geupdated so oft wie es der Agent will
         for _ in range(action[4] + 1):
-            self.schritt += 1
+            self.step_current += 1
             # Update des Quadcopterzustands
             self.quad.update(
                 self.t, 
@@ -116,14 +116,14 @@ class Quadend2end(gymnasium.Env):
             self.quad.zustand[3:7]
         )             
 
-        self.sollgeschwindigkeitsarray_norden.append(
-            self.t * self.sollgeschwindigkeit[0]
+        self.velocity_setsarray_norden.append(
+            self.t * self.velocity_set[0]
         )
-        self.sollgeschwindigkeitsarray_osten.append(
-            self.t * self.sollgeschwindigkeit[1]
+        self.velocity_setsarray_osten.append(
+            self.t * self.velocity_set[1]
         )
-        self.sollgeschwindigkeitsarray_unten.append(
-            self.t * self.sollgeschwindigkeit[2]
+        self.velocity_setsarray_unten.append(
+            self.t * self.velocity_set[2]
         )
         self.array_norden.append(self.quad.zustand[0])
         self.array_osten.append(self.quad.zustand[1])
@@ -135,11 +135,11 @@ class Quadend2end(gymnasium.Env):
         # Berechnen der Belohnung im aktuellen Zustand
         belohnung = self.quad.belohnung()
 
-        # if numpy.max(numpy.abs(self.zustand[0:3])) > 2:
+        # if numpy.max(numpy.abs(self.state[0:3])) > 2:
         #     truncated = True
 
         # Beenden der Episode wenn die maximale Episodenlänge erreicht wurde
-        if self.schritt >= (config.Quadtrain_finaler_Zeitpunkt / config.step_size):
+        if self.step_current >= (config.Quadtrain_finaler_Zeitpunkt / config.step_size):
             truncated = True
             if config.render_modell:
                 # Zeichnen der Positions- und Drehlagetrajektorien
@@ -151,7 +151,7 @@ class Quadend2end(gymnasium.Env):
             numpy.concatenate([
                 self.attitude,
                 self.quad.zustand[7:10], 
-                self.sollgeschwindigkeit
+                self.velocity_set
             ])
         )
 
@@ -170,13 +170,13 @@ class Quadend2end(gymnasium.Env):
             sharex = True
         )
         ax1.plot(self.array_norden)
-        ax1.plot(self.sollgeschwindigkeitsarray_norden)
+        ax1.plot(self.velocity_setsarray_norden)
         ax1.set_title('North/m')
         ax2.plot(self.array_osten)
-        ax2.plot(self.sollgeschwindigkeitsarray_osten)
+        ax2.plot(self.velocity_setsarray_osten)
         ax2.set_title('East/m')
         ax3.plot(self.array_unten)
-        ax3.plot(self.sollgeschwindigkeitsarray_unten)
+        ax3.plot(self.velocity_setsarray_unten)
         ax3.set_title('Down/m')
         ax4.plot(self.omega1_all)
         ax4.set_title('Roll/rad')

@@ -8,7 +8,7 @@ import torch
 import shutil
 import config
 from quadpid import Quadpid
-from quadend2end import Quadendezuende
+from quadend2end import Quadend2end
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
@@ -46,7 +46,7 @@ class Agent():
     def train(self):
         # Vektorisiertes Environment
         if config.model_id[1] == "M":
-            env = Quadendezuende()
+            env = Quadend2end()
             check_env(env)
             self.envs = make_vec_env(
                 Quadendezuende, 

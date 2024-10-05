@@ -18,18 +18,18 @@
 \contentsline {subsubsection}{\numberline {3.2.1}Regelungsproblem}{13}{subsubsection.3.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.2}Fehler}{13}{subsubsection.3.2.2}%
 \contentsline {subsubsection}{\numberline {3.2.3}Regler}{13}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}PID-Regler}{13}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.4}PID-Regler}{14}{subsubsection.3.2.4}%
 \contentsline {subsubsection}{\numberline {3.2.5}Quadcopterregelungsproblem}{14}{subsubsection.3.2.5}%
 \contentsline {subsection}{\numberline {3.3}Tiefes verstärkendes Lernen}{15}{subsection.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.1}Lernproblem}{15}{subsubsection.3.3.1}%
 \contentsline {subsubsection}{\numberline {3.3.2}Analogien zur Regelungstechnik}{15}{subsubsection.3.3.2}%
 \contentsline {subsubsection}{\numberline {3.3.3}Vokabular des tiefen verstärkenden Lernens}{16}{subsubsection.3.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.4}Tiefe Netzwerke}{16}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.4}Tiefe Netzwerke}{17}{subsubsection.3.3.4}%
 \contentsline {subsubsection}{\numberline {3.3.5}Mehrschichtiges Perzeptronennetzwerk}{17}{subsubsection.3.3.5}%
 \contentsline {subsubsection}{\numberline {3.3.6}Fehlerückführungsalgorithmus}{17}{subsubsection.3.3.6}%
 \contentsline {subsection}{\numberline {3.4}Proximal-Policy-Optimization}{18}{subsection.3.4}%
 \contentsline {subsection}{\numberline {3.5}Stable-Baselines3}{19}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Famara Gymnasium}{20}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.6}Famara Gymnasium}{21}{subsection.3.6}%
 \contentsline {subsection}{\numberline {3.7}Tensorboard}{21}{subsection.3.7}%
 \contentsline {subsection}{\numberline {3.8}Zustandsobservation mit einer Inertialen Messeinheit}{22}{subsection.3.8}%
 \contentsline {subsection}{\numberline {3.9}Pulsweitenmodulation und Motoransteuerung}{22}{subsection.3.9}%

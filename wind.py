@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 author: John Bass
 email: john.bobzwik@gmail.com

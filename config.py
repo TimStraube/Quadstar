@@ -3,13 +3,13 @@
 # [s]
 step_size = 0.001
 # [s]
-episode_end_time = 10
+episode_end_time = 4
 # [s]
 episode_start_time = 0
 
 ## Quadtrain
 # Foldername and id for the model
-model_id = "QP-23-08-24-EIPC55-C"
+model_id = "QP-23-08-24-EIPC55-D"
 # Load model for continued training
 load_model = False
 # Maximal number of episodes

@@ -27,9 +27,13 @@ class Testbench():
         """Modell laden
         """
         model_pfad = (
-            f"./Modelle/{config.model_id}/best_model.zip"
+            f"./models/{config.model_id}/best_model.zip"
         )
         self.model = PPO.load(model_pfad)
+        self.model.set_parameters(
+            self.model.get_parameters()
+        )
+        self.model.policy.eval()
 
     def reset(self):
         """Quadcopter zurücksetzen
@@ -47,7 +51,7 @@ class Testbench():
         self.controller.regelschritt(
             self.quad, 
             config.step_size,
-            self.quad.sollgeschwindigkeit
+            self.quad.velocity_set
         )
         self.drehlage = [
             0, 0, 0
@@ -80,18 +84,18 @@ class Testbench():
             dtype=numpy.float32
         )
         # Sollvektor [Norden (m), Osten (m), Unten (m)]
-        self.sollgeschwindigkeit = [1, 0, 0]
+        self.velocity_set = [1, 0, 0]
         
     def vorhersage(self):
         self.drehlage = self.quaternion.quaternion2cardan(
-            self.quad.zustand[3:7]
+            self.quad.state[3:7]
         )             
 
         self.beobachtung[:] = numpy.float32(
             numpy.concatenate([
                 self.drehlage,
-                self.quad.zustand[7:10], 
-                self.sollgeschwindigkeit
+                self.quad.state[7:10], 
+                self.velocity_set
             ])
         )
 
@@ -101,14 +105,14 @@ class Testbench():
     
     def vorhersage(self):
         self.drehlage = self.quaternion.quaternion2cardan(
-            self.quad.zustand[3:7]
+            self.quad.state[3:7]
         )             
 
         self.beobachtung[:] = numpy.float32(
             numpy.concatenate([
                 self.drehlage,
-                self.quad.zustand[7:10], 
-                self.sollgeschwindigkeit
+                self.quad.state[7:10], 
+                self.velocity_set
             ])
         )
 
@@ -120,22 +124,26 @@ class Testbench():
         """Methode zur Simulation mit den gelernten PID-Paramter oder optional den Default PID-Paramtern
         """
         aktion = self.vorhersage()
-        print(aktion)
         # aktion = (
         #     (config.Aktionsinterval_PID[1] / 2) * (aktion + config.Aktionsinterval_PID[0] + 1)
         # )
-        aktion = 9.9 * aktion + 11
-        self.controller.vel_P_gain[0] = 1 # aktion[0] 
-        self.controller.vel_P_gain[1] = 1 # aktion[0] 
-        self.controller.vel_P_gain[2] = 1 # aktion[1] 
+        aktion = 4.9 * aktion + 5
+        # aktion = numpy.random.uniform(
+        #     low=0.1, 
+        #     high=9.9, 
+        #     size=aktion.shape
+        # )
+        self.controller.vel_P_gain[0] = aktion[0] 
+        self.controller.vel_P_gain[1] = aktion[0] 
+        self.controller.vel_P_gain[2] = aktion[1] 
 
-        self.controller.vel_I_gain[0] = 1 # aktion[2]
-        self.controller.vel_I_gain[1] = 1 # aktion[2]
-        self.controller.vel_I_gain[2] = 1 # aktion[3]
+        self.controller.vel_I_gain[0] = aktion[2]
+        self.controller.vel_I_gain[1] = aktion[2]
+        self.controller.vel_I_gain[2] = aktion[3]
 
-        self.controller.vel_D_gain[0] = 0.1 # aktion[4]
-        self.controller.vel_D_gain[1] = 0.1 # aktion[4] 
-        self.controller.vel_D_gain[2] = 0.1 # aktion[5]
+        self.controller.vel_D_gain[0] = aktion[4]
+        self.controller.vel_D_gain[1] = aktion[4] 
+        self.controller.vel_D_gain[2] = aktion[5]
 
         # self.controller.attitute_p_gain[0] = aktion[6]
         # self.controller.attitute_p_gain[1] = aktion[6]
@@ -160,8 +168,8 @@ class Testbench():
         while (aktiv):
 
             # Norden, Osten, Unten
-            self.sollgeschwindigkeit = [
-                0 + 1 * numpy.sin(1 * self.t), 
+            self.velocity_set = [
+                1 + 0 * numpy.sin(1 * self.t), 
                 0,
                 0
             ]
@@ -175,21 +183,21 @@ class Testbench():
             self.controller.regelschritt(
                 self.quad,
                 config.step_size,
-                self.sollgeschwindigkeit
+                self.velocity_set
             )
             self.drehlage = self.quaternion.quaternion2cardan(
-                self.quad.zustand[3:7]
+                self.quad.state[3:7]
             )      
             self.speichereZustand()
             
-            if (self.t > config.Episodenende):
+            if (self.t > config.episode_end_time):
                 aktiv = 0
 
         return (
             self.t,
-            self.quad.zustand[0],
-            self.quad.zustand[1],
-            self.quad.zustand[2],
+            self.quad.state[0],
+            self.quad.state[1],
+            self.quad.state[2],
             self.drehlage[2],
             -self.drehlage[1],
             self.drehlage[0]
@@ -223,14 +231,14 @@ class Testbench():
 
                 self.speichereZustand()
 
-                if (self.t > config.Episodenende):
+                if (self.t > config.episode_end_time):
                     aktiv = 0
 
         return (
             self.t,
-            self.quad.zustand[0],
-            self.quad.zustand[1],
-            self.quad.zustand[2],
+            self.quad.state[0],
+            self.quad.state[1],
+            self.quad.state[2],
             self.drehlage[2],
             -self.drehlage[1],
             self.drehlage[0]
@@ -241,23 +249,23 @@ class Testbench():
         """
         self.t_all.append(self.t)
         self.x_soll.append(self.x_soll[-1] +
-            config.step_size * self.sollgeschwindigkeit[0]
+            config.step_size * self.velocity_set[0]
         )
         self.y_soll.append(self.y_soll[-1] +
-            config.step_size * self.sollgeschwindigkeit[1]
+            config.step_size * self.velocity_set[1]
         )
         self.z_soll.append(self.z_soll[-1] +
-            config.step_size * self.sollgeschwindigkeit[2]
+            config.step_size * self.velocity_set[2]
         )
-        self.geschwindigkeitssoll_x.append(self.sollgeschwindigkeit[0])
-        self.geschwindigkeitssoll_y.append(self.sollgeschwindigkeit[1])
-        self.geschwindigkeitssoll_z.append(self.sollgeschwindigkeit[2])
-        self.geschwindigkeitsvektor_x.append(self.quad.zustand[7])
-        self.geschwindigkeitsvektor_y.append(self.quad.zustand[8])
-        self.geschwindigkeitsvektor_z.append(self.quad.zustand[9])
-        self.x_all.append(self.quad.zustand[0])
-        self.y_all.append(self.quad.zustand[1])
-        self.z_all.append(self.quad.zustand[2])
+        self.geschwindigkeitssoll_x.append(self.velocity_set[0])
+        self.geschwindigkeitssoll_y.append(self.velocity_set[1])
+        self.geschwindigkeitssoll_z.append(self.velocity_set[2])
+        self.geschwindigkeitsvektor_x.append(self.quad.state[7])
+        self.geschwindigkeitsvektor_y.append(self.quad.state[8])
+        self.geschwindigkeitsvektor_z.append(self.quad.state[9])
+        self.x_all.append(self.quad.state[0])
+        self.y_all.append(self.quad.state[1])
+        self.z_all.append(self.quad.state[2])
         self.omega1_all.append(self.drehlage[0])
         self.omega2_all.append(-self.drehlage[1])
         self.omega3_all.append(self.drehlage[2])
@@ -352,24 +360,24 @@ class Testbench():
         numTimeStep = int(Tf / config.step_size + 1)
 
         t_all = numpy.zeros(numTimeStep)
-        s_all = numpy.zeros([numTimeStep, len(quad.zustand)])
+        s_all = numpy.zeros([numTimeStep, len(quad.state)])
         pos_all = numpy.zeros(
-            [numTimeStep, len(quad.zustand[0:3])]
+            [numTimeStep, len(quad.state[0:3])]
         )
         vel_all = numpy.zeros(
-            [numTimeStep, len(quad.zustand[7:10])]
+            [numTimeStep, len(quad.state[7:10])]
         )
         quat_all = numpy.zeros(
-            [numTimeStep, len(quad.zustand[3:7])]
+            [numTimeStep, len(quad.state[3:7])]
         )
         omega_all = numpy.zeros(
-            [numTimeStep, len(quad.zustand[10:13])]
+            [numTimeStep, len(quad.state[10:13])]
         )
         euler_all = numpy.zeros(
             [numTimeStep, len(quad.euler)]
         )
         sDes_calc_all = numpy.zeros(
-            [numTimeStep, len(self.sollgeschwindigkeit)]
+            [numTimeStep, len(self.velocity_set)]
         )
         w_cmd_all = numpy.zeros(
             [numTimeStep, len(controller.motorbefehle)]
@@ -381,13 +389,13 @@ class Testbench():
         tor_all = numpy.zeros([numTimeStep, len(quad.tor)])
 
         t_all[0]            = Ti
-        s_all[0,:]          = quad.zustand
-        pos_all[0,:]        = quad.zustand[0:3]
-        vel_all[0,:]        = quad.zustand[7:10]
-        quat_all[0,:]       = quad.zustand[3:7]
-        omega_all[0,:]      = quad.zustand[10:13]
+        s_all[0,:]          = quad.state
+        pos_all[0,:]        = quad.state[0:3]
+        vel_all[0,:]        = quad.state[7:10]
+        quat_all[0,:]       = quad.state[3:7]
+        omega_all[0,:]      = quad.state[10:13]
         euler_all[0,:]      = quad.euler
-        sDes_calc_all[0,:]  = self.sollgeschwindigkeit
+        sDes_calc_all[0,:]  = self.velocity_set
         w_cmd_all[0,:]      = controller.motorbefehle
         wMotor_all[0,:]     = quad.wMotor
         thr_all[0,:]        = quad.thr
@@ -409,13 +417,13 @@ class Testbench():
             
             # print("{:.3f}".format(t))
             t_all[i]             = t
-            s_all[i,:]           = quad.zustand
-            pos_all[i,:]         = quad.zustand[0:3]
-            vel_all[i,:]         = quad.zustand[7:10]
-            quat_all[i,:]        = quad.zustand[3:7]
-            omega_all[i,:]       = quad.zustand[10:13]
+            s_all[i,:]           = quad.state
+            pos_all[i,:]         = quad.state[0:3]
+            vel_all[i,:]         = quad.state[7:10]
+            quat_all[i,:]        = quad.state[3:7]
+            omega_all[i,:]       = quad.state[10:13]
             euler_all[i,:]       = quad.euler
-            sDes_calc_all[i,:]   = self.sollgeschwindigkeit
+            sDes_calc_all[i,:]   = self.velocity_set
             w_cmd_all[i,:]       = controller.motorbefehle
             wMotor_all[i,:]      = quad.wMotor
             thr_all[i,:]         = quad.thr
@@ -480,7 +488,7 @@ class Testbench():
         controller.controller(
             quad, 
             config.step_size,
-            self.sollgeschwindigkeit
+            self.velocity_set
         )
 
         return t

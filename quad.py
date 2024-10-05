@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 author: John Bass
 email: john.bobzwik@gmail.com
@@ -27,15 +26,15 @@ deg2rad = numpy.pi / 180.0
 
 class Quadcopter():
     def __init__(self):
-        """Quadcopter Parameter und Flugdynamikmodell 
+        """Quadcopter including parameter and dynamics
         """
         super(Quadcopter, self).__init__()
         # total reward
         self.total_reward = 0
         # mass (kg)
-        self.quadcoptermasse = 1
+        self.mass = 1
         # gravity (m/s^2)
-        self.gravitationskonstante = 9.81
+        self.g = 9.81
         # arm length (m)
         self.dxm = 0.36      
         # arm length (m)
@@ -128,7 +127,7 @@ class Quadcopter():
         """Berechnung des initalen Motorbefehls aus der Quadcoptermasse, der Graviation und Motorparametern
         """
         # w = cmd * c1 + c0 and m * g / 4 = kTh * w ^ 2 and torque = kTo * w ^ 2
-        thr_hover = self.quadcoptermasse * self.gravitationskonstante / 4.0
+        thr_hover = self.mass * self.g / 4.0
         w_hover = numpy.sqrt(thr_hover / self.kTh)
         tor_hover = self.kTo * w_hover * w_hover
         cmd_hover = (w_hover - self.motorc0) / self.motorc1
@@ -163,69 +162,69 @@ class Quadcopter():
         self.sollposition = [0, 0, 0]
 
         # Sollgeschwindigkeit
-        self.sollgeschwindigkeit = numpy.array([
+        self.velocity_set = numpy.array([
             1,
             0,
             0
         ])
 
         # Zustandsvektorinitialisierung
-        self.zustand = numpy.zeros(21)
+        self.state = numpy.zeros(21)
 
         # Norden [m]
-        self.zustand[0] = 0
+        self.state[0] = 0
         # Osten [m]
-        self.zustand[1] = 0
+        self.state[1] = 0
         # Unten [m]
-        self.zustand[2] = 0
+        self.state[2] = 0
 
         # Quaternion Realteil
-        self.zustand[3] = quat[0]
+        self.state[3] = quat[0]
         # Quaternion erster Imaginärteil 
-        self.zustand[4] = quat[1]  
+        self.state[4] = quat[1]  
         # Quaternion zweiter Imaginärteil
-        self.zustand[5] = quat[2]  
+        self.state[5] = quat[2]  
         # Quaternion dritter Imaginärteil  
-        self.zustand[6] = quat[3]  
+        self.state[6] = quat[3]  
         # Geschwindigkeit nach Norden [m/s]
-        self.zustand[7] = 0.0    
+        self.state[7] = 0.0    
         # Geschwindigkeit nach Osten [m/s]
-        self.zustand[8] = 0.0    
+        self.state[8] = 0.0    
         # Geschindigkeit nach Unten [m/s]
-        self.zustand[9] = 0.0    
+        self.state[9] = 0.0    
         # Rollen [rad/s]
-        self.zustand[10] = 0.0    
+        self.state[10] = 0.0    
         # Nicken [rad/s]
-        self.zustand[11] = 0.0    
+        self.state[11] = 0.0    
         # Gieren [rad/s]
-        self.zustand[12] = 0.0
+        self.state[12] = 0.0
         # Motor 1 Drehgeschwindigkeit [rad/s]
-        self.zustand[13] = self.w_hover
+        self.state[13] = self.w_hover
         # Motor 1 Beschleunigung [rad/s^2]
-        self.zustand[14] = self.wdot_hover
+        self.state[14] = self.wdot_hover
         # Motor 2 Drehgeschwindigkeit [rad/s]
-        self.zustand[15] = self.w_hover
+        self.state[15] = self.w_hover
         # Motor 2 Beschleunigung [rad/s^2]
-        self.zustand[16] = self.wdot_hover
+        self.state[16] = self.wdot_hover
         # Motor 3 Drehgeschwindigkeit [rad/s]
-        self.zustand[17] = self.w_hover
+        self.state[17] = self.w_hover
         # Motor 3 Beschleunigung [rad/s^2]
-        self.zustand[18] = self.wdot_hover
+        self.state[18] = self.wdot_hover
         # Motor 4 Drehgeschwindigkeit [rad/s]
-        self.zustand[19] = self.w_hover
+        self.state[19] = self.w_hover
         # Motor 4 Beschleunigung [rad/s^2]
-        self.zustand[20] = self.wdot_hover
+        self.state[20] = self.wdot_hover
 
         # Initiale Motorgeschwindigkeit
         self.wMotor = numpy.array([
-            self.zustand[13],
-            self.zustand[15],
-            self.zustand[17],
-            self.zustand[19]
+            self.state[13],
+            self.state[15],
+            self.state[17],
+            self.state[19]
         ])
         self.vel_dot = numpy.zeros(3)
         self.omega_dot = numpy.zeros(3)
-        self.beschleunigung = numpy.zeros(3)
+        self.acceleration = numpy.zeros(3)
 
         self.extended_state()
         self.forces()
@@ -235,14 +234,14 @@ class Quadcopter():
         self.controller.regelschritt(
             self, 
             config.step_size,
-            self.sollgeschwindigkeit
+            self.velocity_set
         )
 
         # wind model
         self.wind = Wind('NONE', 0.0, 0, -15)
 
         self.integrator = ode(
-            self.zustandsänderung
+            self.state_dot
         ).set_integrator(
             'dopri5',
             first_step='0.00005',
@@ -250,12 +249,12 @@ class Quadcopter():
             rtol='10e-6'
         )
         self.integrator.set_initial_value(
-            self.zustand, 
+            self.state, 
             config.episode_start_time
         )
 
         self.drehlage = self.quaternion.quaternion2cardan(
-            self.zustand[3:7]
+            self.state[3:7]
         )   
 
     def extended_state(self):
@@ -263,12 +262,12 @@ class Quadcopter():
         """
         # Drehlageumrechnung zu einer Rotationsmatrix
         self.dcm = self.quaternion.quat2Dcm(
-            self.zustand[3:7]
+            self.state[3:7]
         )
 
         # Drehlageumrechnung zu Kardanwinkeln
         YPR = self.quaternion.quaternion2cardan(
-            self.zustand[3:7]
+            self.state[3:7]
         )
         # flip YPR so that euler state = phi, theta, psi
         self.euler = YPR[::-1] 
@@ -284,7 +283,7 @@ class Quadcopter():
         # Drehmomentberechnung aus der Motordrehzahl
         self.tor = self.kTo * self.wMotor * self.wMotor
 
-    def zustandsänderung(self, t, s, motorbefehle, wind):
+    def state_dot(self, t, s, motorbefehle, wind):
         """
         """
     
@@ -377,9 +376,9 @@ class Quadcopter():
             [ 0.5 * p * q_w - 0.5 * q * q_z + 0.5 * q_y * r],
             [ 0.5 * p * q_z + 0.5 * q * q_w - 0.5 * q_x * r],
             [-0.5 * p * q_y + 0.5 * q * q_x + 0.5 * q_w * r],
-            [( self.Cd * sign(velW * cos(qW1) * cos(qW2) - xdot) * (velW * cos(qW1) * cos(qW2) - xdot) ** 2 - 2 * (q_w * q_y + q_x * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.quadcoptermasse],
-            [( self.Cd * sign(velW * sin(qW1) * cos(qW2) - ydot) * (velW * sin(qW1) * cos(qW2) - ydot) ** 2 + 2 * (q_w * q_x - q_y * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.quadcoptermasse],
-            [(-self.Cd * sign(velW * sin(qW2) + zdot) * (velW * sin(qW2) + zdot) ** 2 - (ThrM1 + ThrM2 + ThrM3 + ThrM4) * (q_w ** 2 - q_x ** 2 - q_y ** 2 + q_z ** 2) + self.gravitationskonstante * self.quadcoptermasse) / self.quadcoptermasse],
+            [( self.Cd * sign(velW * cos(qW1) * cos(qW2) - xdot) * (velW * cos(qW1) * cos(qW2) - xdot) ** 2 - 2 * (q_w * q_y + q_x * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.mass],
+            [( self.Cd * sign(velW * sin(qW1) * cos(qW2) - ydot) * (velW * sin(qW1) * cos(qW2) - ydot) ** 2 + 2 * (q_w * q_x - q_y * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.mass],
+            [(-self.Cd * sign(velW * sin(qW2) + zdot) * (velW * sin(qW2) + zdot) ** 2 - (ThrM1 + ThrM2 + ThrM3 + ThrM4) * (q_w ** 2 - q_x ** 2 - q_y ** 2 + q_z ** 2) + self.g * self.mass) / self.mass],
             [((IByy - IBzz) * q * r + (ThrM1 - ThrM2 - ThrM3 + ThrM4) * self.dym) / IBxx],
             [((IBzz - IBxx) * p * r + (ThrM1 + ThrM2 - ThrM3 - ThrM4) * self.dxm) / IByy], 
             [((IBxx - IByy) * p * q - TorM1 + TorM2 - TorM3 + TorM4) / IBzz]])
@@ -408,33 +407,33 @@ class Quadcopter():
         sdot[19] = wdotM4
         sdot[20] = wddotM4
 
-        self.beschleunigung = sdot[7:10]
+        self.acceleration = sdot[7:10]
 
-        # self.zustand = sdot
+        # self.state = sdot
 
         return sdot
 
     def update(self, t, motorbefehle, wind):
         """This method ensures that the quadcopter's state is continuously updated based on the given inputs, allowing for accurate simulation or control of its behavior.
         """
-        geschwindigkeit_t_minus_1 = self.zustand[7:10]
-        omega_t_minus_1 = self.zustand[10:13]
+        geschwindigkeit_t_minus_1 = self.state[7:10]
+        omega_t_minus_1 = self.state[10:13]
 
         self.integrator.set_f_params(motorbefehle, wind)
-        self.zustand = self.integrator.integrate(
+        self.state = self.integrator.integrate(
             t, 
             t + config.step_size
         )
 
-        self.pos = self.zustand[0:3]
-        self.quat = self.zustand[3:7]
-        self.geschwindigkeit = self.zustand[7:10]
-        self.omega = self.zustand[10:13]
+        self.pos = self.state[0:3]
+        self.quat = self.state[3:7]
+        self.geschwindigkeit = self.state[7:10]
+        self.omega = self.state[10:13]
         self.wMotor = numpy.array([
-            self.zustand[13], 
-            self.zustand[15], 
-            self.zustand[17],
-            self.zustand[19]
+            self.state[13], 
+            self.state[15], 
+            self.state[17],
+            self.state[19]
         ])
 
         self.vel_dot = (
@@ -451,15 +450,15 @@ class Quadcopter():
         """Method for calculating the reward based on the quadcopter state and reward weighting.
         """
         error_velocity = (
-            self.zustand[7:10] -
-            self.sollgeschwindigkeit
+            self.state[7:10] -
+            self.velocity_set
         )
         drehgeschwindigkeitfehler = (
-            self.zustand[10:13] - 
+            self.state[10:13] - 
             [0, 0, 0]
         )
         attitude = self.quaternion.quaternion2cardan(
-            self.zustand[3:7]
+            self.state[3:7]
         )      
         error_attitude = numpy.abs(attitude[0:3])
 

@@ -75,6 +75,10 @@ Das Modell berechnet den Zustandsänderungsvektor $\dot{s}$ welcher mit der Moto
 \begin{align}
 	F_G &= \sum_{M=1}^4 F_M
 \end{align}
+und den rotationsdimensionsabhängigen Kraftdifferenzen 
+\begin{align}
+	F_{D} &= \sum_{M=1}^4 v_{D,M}F_M
+\end{align}
 berechnet wird zu
 \begin{align}\label{zustandsvektor:zustandsvektor}
 	\dot{s} &= 
@@ -89,9 +93,9 @@ berechnet wird zu
 		\dot{v}_x\\
 		\dot{v}_y\\
 		\dot{v}_z\\
-		\ddot{\phi}\\
-		\ddot{\theta}\\
-		\ddot{\psi}
+		\dot{\phi}\\
+		\dot{\theta}\\
+		\dot{\psi}
 	\end{pmatrix} = 
 	\begin{pmatrix}
 		\dot{p}_x\\
@@ -104,9 +108,38 @@ berechnet wird zu
 		-2(q_wq_y + q_xq_z) F_G \frac{1}{m}\\
 		+2(q_wq_x - q_yq_z) F_G \frac{1}{m}\\
 		(-(q_w^2-q_x^2-q_y^2+q_z^2) F_G + mg) \frac{1}{m}\\
-		((I_{B,yy} - I_{B,zz}) \theta \psi + (T_{M1} - T_{M2} - T_{M3} + T_{M4}) w) \frac{1}{I_{B,xx}}\\
-		((I_{B,zz} - I_{B,xx}) \phi \psi + (T_{M1} + T_{M2} - T_{M3} - T_{M4}) l) \frac{1}{I_{B,yy}}\\
-		((I_{B,xx} - I_{B,yy}) \phi \theta - T_{M1} + T_{M2} - T_{M3} + T_{M4})\frac{1}{I_{Bzz}}
+		((I_{B,yy} - I_{B,zz}) \theta \psi + F_{\phi} w) \frac{1}{I_{B,xx}}\\
+		((I_{B,zz} - I_{B,xx}) \phi \psi + F_{\theta} l) \frac{1}{I_{B,yy}}\\
+		((I_{B,xx} - I_{B,yy}) \phi \theta + F_{\psi})\frac{1}{I_{Bzz}}
+	\end{pmatrix}.
+\end{align}
+Die Vorzeichenvektoren für die Roll-, Nick- und Gierachsen sind
+\begin{align}
+	v_{\phi} &= \begin{pmatrix}
+		v_{\phi, M1}\\
+		v_{\phi, M2}\\
+		v_{\phi, M3}\\
+		v_{\phi, M4}
+	\end{pmatrix} =
+	\begin{pmatrix}
+		1\\
+		-1\\
+		-1\\
+		1
+	\end{pmatrix},\
+	v_{\theta} =
+	\begin{pmatrix}
+		1\\
+		1\\
+		-1\\
+		-1
+	\end{pmatrix},\
+	v_{\psi} =
+	\begin{pmatrix}
+		-1\\
+		1\\
+		-1\\
+		1
 	\end{pmatrix}.
 \end{align}
 Die Rotordrehlage und -geschwindigkeit jedes Motors welche auch Element des Zustandsvektors sind, können mithilfe von einer Differenzialgleichung

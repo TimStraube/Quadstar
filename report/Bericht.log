@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.19)  4 OCT 2024 00:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.19)  4 OCT 2024 21:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -741,62 +741,62 @@ Package pdftex.def Info: ../images/0027 Gimbel Lock.png  used on input line 107.
 
 
 
-] [11]
-<../images/0047 Eulerwinkel Zufällige Aktionen.png, id=458, 1517.67pt x 544.0325pt>
+] [11] [12]
+<../images/0047 Eulerwinkel Zufällige Aktionen.png, id=474, 1517.67pt x 544.0325pt>
 File: ../images/0047 Eulerwinkel Zufällige Aktionen.png Graphic file (type png)
 <use ../images/0047 Eulerwinkel Zufällige Aktionen.png>
-Package pdftex.def Info: ../images/0047 Eulerwinkel Zufällige Aktionen.png  used on input line 133.
+Package pdftex.def Info: ../images/0047 Eulerwinkel Zufällige Aktionen.png  used on input line 166.
 (pdftex.def)             Requested size: 455.30452pt x 163.211pt.
- [12] [13 <../images/0047 Eulerwinkel Zufällige Aktionen.png>] [14]
-<../images/0001 Quadcopterregler.png, id=500, 445.665pt x 124.465pt>
+ [13 <../images/0047 Eulerwinkel Zufällige Aktionen.png>] [14]
+<../images/0001 Quadcopterregler.png, id=501, 445.665pt x 124.465pt>
 File: ../images/0001 Quadcopterregler.png Graphic file (type png)
 <use ../images/0001 Quadcopterregler.png>
-Package pdftex.def Info: ../images/0001 Quadcopterregler.png  used on input line 170.
+Package pdftex.def Info: ../images/0001 Quadcopterregler.png  used on input line 203.
 (pdftex.def)             Requested size: 347.6173pt x 97.0823pt.
-<../images/0046 Weltmodell ohne Hintergrund.png, id=503, 579.16376pt x 434.62375pt>
+<../images/0046 Weltmodell ohne Hintergrund.png, id=504, 579.16376pt x 434.62375pt>
 File: ../images/0046 Weltmodell ohne Hintergrund.png Graphic file (type png)
 <use ../images/0046 Weltmodell ohne Hintergrund.png>
-Package pdftex.def Info: ../images/0046 Weltmodell ohne Hintergrund.png  used on input line 188.
+Package pdftex.def Info: ../images/0046 Weltmodell ohne Hintergrund.png  used on input line 221.
 (pdftex.def)             Requested size: 150.57903pt x 112.9995pt.
- [15 <../images/0001 Quadcopterregler.png> <../images/0046 Weltmodell ohne Hintergrund.png>] [16]
-<../images/0032 multi-layer-perzeptron.png, id=527, 911.405pt x 624.3325pt>
+ [15 <../images/0001 Quadcopterregler.png>] [16 <../images/0046 Weltmodell ohne Hintergrund.png>]
+<../images/0032 multi-layer-perzeptron.png, id=528, 911.405pt x 624.3325pt>
 File: ../images/0032 multi-layer-perzeptron.png Graphic file (type png)
 <use ../images/0032 multi-layer-perzeptron.png>
-Package pdftex.def Info: ../images/0032 multi-layer-perzeptron.png  used on input line 237.
+Package pdftex.def Info: ../images/0032 multi-layer-perzeptron.png  used on input line 270.
 (pdftex.def)             Requested size: 338.58632pt x 231.94254pt.
  [17 <../images/0032 multi-layer-perzeptron.png>] [18]
-Overfull \hbox (0.12453pt too wide) in paragraph at lines 378--379
+Overfull \hbox (0.12453pt too wide) in paragraph at lines 411--412
 \OT1/cmr/m/n/12 Diese Einf^^?uhrung zu Proximal-Policy-Optimization hat nicht den Anspruch eine vol-lumf^^?angliche
  []
 
 [19] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
-LaTeX Font Info:    Trying to load font information for OMS+cmss on input line 398.
-LaTeX Font Info:    No file OMScmss.fd. on input line 398.
+LaTeX Font Info:    Trying to load font information for OMS+cmss on input line 431.
+LaTeX Font Info:    No file OMScmss.fd. on input line 431.
 
 
 LaTeX Font Warning: Font shape `OMS/cmss/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 398.
+(Font)              for symbol `textbraceleft' on input line 431.
 
 LaTeX Font Info:    Font shape `OT1/cmss/m/it' in size <8> not available
-(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 402.
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 435.
 [20]
-LaTeX Font Info:    Trying to load font information for TS1+cmss on input line 456.
+LaTeX Font Info:    Trying to load font information for TS1+cmss on input line 489.
  (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmss.fd
 File: ts1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-<../images/0058 Tensorboard.png, id=621, 1927.2pt x 952.55875pt>
+<../images/0058 Tensorboard.png, id=623, 1927.2pt x 952.55875pt>
 File: ../images/0058 Tensorboard.png Graphic file (type png)
 <use ../images/0058 Tensorboard.png>
-Package pdftex.def Info: ../images/0058 Tensorboard.png  used on input line 482.
+Package pdftex.def Info: ../images/0058 Tensorboard.png  used on input line 515.
 (pdftex.def)             Requested size: 474.02086pt x 234.28737pt.
- [21 <../images/0058 Tensorboard.png>] [22]
-<../images/0062 ThreeJS Beispielselektor.png, id=673, 1927.2pt x 953.5625pt>
+ [21] [22 <../images/0058 Tensorboard.png>]
+<../images/0062 ThreeJS Beispielselektor.png, id=672, 1927.2pt x 953.5625pt>
 File: ../images/0062 ThreeJS Beispielselektor.png Graphic file (type png)
 <use ../images/0062 ThreeJS Beispielselektor.png>
-Package pdftex.def Info: ../images/0062 ThreeJS Beispielselektor.png  used on input line 511.
+Package pdftex.def Info: ../images/0062 ThreeJS Beispielselektor.png  used on input line 544.
 (pdftex.def)             Requested size: 435.32422pt x 215.38622pt.
 ) [23 <../images/0062 ThreeJS Beispielselektor.png>]
 \openout2 = `"sections/05 Implementierung.aux"'.
@@ -806,13 +806,13 @@ Package pdftex.def Info: ../images/0062 ThreeJS Beispielselektor.png  used on in
 
 
 ] [25]
-<../images/0002 nucleo-f411re.png, id=708, 579.16376pt x 434.62375pt>
+<../images/0002 nucleo-f411re.png, id=710, 579.16376pt x 434.62375pt>
 File: ../images/0002 nucleo-f411re.png Graphic file (type png)
 <use ../images/0002 nucleo-f411re.png>
 Package pdftex.def Info: ../images/0002 nucleo-f411re.png  used on input line 37.
 (pdftex.def)             Requested size: 347.50093pt x 260.77626pt.
  [26 <../images/0002 nucleo-f411re.png>] [27] [28] [29]
-<../images/0068 Quadlive 1.png, id=833, 633.36626pt x 702.625pt>
+<../images/0068 Quadlive 1.png, id=835, 633.36626pt x 702.625pt>
 File: ../images/0068 Quadlive 1.png Graphic file (type png)
 <use ../images/0068 Quadlive 1.png>
 Package pdftex.def Info: ../images/0068 Quadlive 1.png  used on input line 289.
@@ -823,39 +823,39 @@ Overfull \hbox (2.1074pt too wide) in paragraph at lines 386--388
  []
 
 [32] [33]
-<../images/0089 PID Lernen.png, id=873, 1251.67625pt x 479.7925pt>
+<../images/0089 PID Lernen.png, id=875, 1251.67625pt x 479.7925pt>
 File: ../images/0089 PID Lernen.png Graphic file (type png)
 <use ../images/0089 PID Lernen.png>
 Package pdftex.def Info: ../images/0089 PID Lernen.png  used on input line 514.
 (pdftex.def)             Requested size: 475.64192pt x 182.32303pt.
  [34 <../images/0089 PID Lernen.png>]
-<../images/0096 Geschwindigkeit.png, id=882, 1504.62125pt x 833.1125pt>
+<../images/0096 Geschwindigkeit.png, id=884, 1504.62125pt x 833.1125pt>
 File: ../images/0096 Geschwindigkeit.png Graphic file (type png)
 <use ../images/0096 Geschwindigkeit.png>
 Package pdftex.def Info: ../images/0096 Geschwindigkeit.png  used on input line 519.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0098 Position.png, id=883, 1504.62125pt x 833.1125pt>
+<../images/0098 Position.png, id=885, 1504.62125pt x 833.1125pt>
 File: ../images/0098 Position.png Graphic file (type png)
 <use ../images/0098 Position.png>
 Package pdftex.def Info: ../images/0098 Position.png  used on input line 522.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0097 Drehlage.png, id=884, 1523.6925pt x 553.06625pt>
+<../images/0097 Drehlage.png, id=886, 1523.6925pt x 553.06625pt>
 File: ../images/0097 Drehlage.png Graphic file (type png)
 <use ../images/0097 Drehlage.png>
 Package pdftex.def Info: ../images/0097 Drehlage.png  used on input line 525.
 (pdftex.def)             Requested size: 380.9222pt x 138.26622pt.
  [35 <../images/0096 Geschwindigkeit.png> <../images/0098 Position.png> <../images/0097 Drehlage.png>]
-<../images/0093 Geschwindigkeit.png, id=892, 1504.62125pt x 833.1125pt>
+<../images/0093 Geschwindigkeit.png, id=894, 1504.62125pt x 833.1125pt>
 File: ../images/0093 Geschwindigkeit.png Graphic file (type png)
 <use ../images/0093 Geschwindigkeit.png>
 Package pdftex.def Info: ../images/0093 Geschwindigkeit.png  used on input line 530.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0094 Position.png, id=893, 1504.62125pt x 833.1125pt>
+<../images/0094 Position.png, id=895, 1504.62125pt x 833.1125pt>
 File: ../images/0094 Position.png Graphic file (type png)
 <use ../images/0094 Position.png>
 Package pdftex.def Info: ../images/0094 Position.png  used on input line 533.
 (pdftex.def)             Requested size: 376.15439pt x 208.27762pt.
-<../images/0095 Drehlage.png, id=894, 1519.6775pt x 540.0175pt>
+<../images/0095 Drehlage.png, id=896, 1519.6775pt x 540.0175pt>
 File: ../images/0095 Drehlage.png Graphic file (type png)
 <use ../images/0095 Drehlage.png>
 Package pdftex.def Info: ../images/0095 Drehlage.png  used on input line 536.
@@ -866,13 +866,13 @@ Overfull \hbox (1.46893pt too wide) in paragraph at lines 541--542
  []
 
 [37]
-<../images/0091 Ende-zu-Ende 1.png, id=910, 1262.7175pt x 429.605pt>
+<../images/0091 Ende-zu-Ende 1.png, id=912, 1262.7175pt x 429.605pt>
 File: ../images/0091 Ende-zu-Ende 1.png Graphic file (type png)
 <use ../images/0091 Ende-zu-Ende 1.png>
 Package pdftex.def Info: ../images/0091 Ende-zu-Ende 1.png  used on input line 672.
 (pdftex.def)             Requested size: 454.57796pt x 154.65767pt.
  [38]
-<../images/0092 Ende-zu-Ende 2.png, id=916, 1262.7175pt x 429.605pt>
+<../images/0092 Ende-zu-Ende 2.png, id=918, 1262.7175pt x 429.605pt>
 File: ../images/0092 Ende-zu-Ende 2.png Graphic file (type png)
 <use ../images/0092 Ende-zu-Ende 2.png>
 Package pdftex.def Info: ../images/0092 Ende-zu-Ende 2.png  used on input line 675.
@@ -888,50 +888,50 @@ Overfull \hbox (32.91953pt too wide) in paragraph at lines 702--703
  []
 
 [39 <../images/0091 Ende-zu-Ende 1.png> <../images/0092 Ende-zu-Ende 2.png>]
-<../images/0081 Model E 1.png, id=923, 1498.59875pt x 854.19125pt>
+<../images/0081 Model E 1.png, id=925, 1498.59875pt x 854.19125pt>
 File: ../images/0081 Model E 1.png Graphic file (type png)
 <use ../images/0081 Model E 1.png>
 Package pdftex.def Info: ../images/0081 Model E 1.png  used on input line 704.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0080 Model E 2.png, id=924, 1498.59875pt x 854.19125pt>
+<../images/0080 Model E 2.png, id=926, 1498.59875pt x 854.19125pt>
 File: ../images/0080 Model E 2.png Graphic file (type png)
 <use ../images/0080 Model E 2.png>
 Package pdftex.def Info: ../images/0080 Model E 2.png  used on input line 707.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0079 Model E 3.png, id=925, 1524.69624pt x 541.02126pt>
+<../images/0079 Model E 3.png, id=927, 1524.69624pt x 541.02126pt>
 File: ../images/0079 Model E 3.png Graphic file (type png)
 <use ../images/0079 Model E 3.png>
 Package pdftex.def Info: ../images/0079 Model E 3.png  used on input line 710.
 (pdftex.def)             Requested size: 381.17313pt x 135.25497pt.
  [40 <../images/0081 Model E 1.png> <../images/0080 Model E 2.png> <../images/0079 Model E 3.png>]
-<../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png, id=933, 1498.59875pt x 854.19125pt>
+<../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png, id=935, 1498.59875pt x 854.19125pt>
 File: ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png Graphic file (type png)
 <use ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png>
 Package pdftex.def Info: ../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png  used on input line 714.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0084 Ende-zu-Ende Nord Ost Unten.png, id=934, 1498.59875pt x 854.19125pt>
+<../images/0084 Ende-zu-Ende Nord Ost Unten.png, id=936, 1498.59875pt x 854.19125pt>
 File: ../images/0084 Ende-zu-Ende Nord Ost Unten.png Graphic file (type png)
 <use ../images/0084 Ende-zu-Ende Nord Ost Unten.png>
 Package pdftex.def Info: ../images/0084 Ende-zu-Ende Nord Ost Unten.png  used on input line 717.
 (pdftex.def)             Requested size: 374.64877pt x 213.54729pt.
-<../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png, id=935, 1512.65125pt x 532.99126pt>
+<../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png, id=937, 1512.65125pt x 532.99126pt>
 File: ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png Graphic file (type png)
 <use ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png>
 Package pdftex.def Info: ../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png  used on input line 720.
 (pdftex.def)             Requested size: 378.16188pt x 133.24748pt.
  [41 <../images/0085 Ende-zu-Ende Nordgeschwindigkeit Ostgeschwindigkeit Untengeschwindigkeit.png> <../images/0084 Ende-zu-Ende Nord Ost Unten.png> <../images/0086 Ende-zu-Ende Rolllage Nickrate Gierrate.png>]
-<../images/0064 Pinbelegung.png, id=944, 551.05875pt x 506.89375pt>
+<../images/0064 Pinbelegung.png, id=947, 551.05875pt x 506.89375pt>
 File: ../images/0064 Pinbelegung.png Graphic file (type png)
 <use ../images/0064 Pinbelegung.png>
 Package pdftex.def Info: ../images/0064 Pinbelegung.png  used on input line 729.
 (pdftex.def)             Requested size: 275.52869pt x 253.44626pt.
-<../images/0067 Pinout NUCLEO F411RE.jpeg, id=945, 1927.2pt x 1445.4pt>
+<../images/0067 Pinout NUCLEO F411RE.jpeg, id=948, 1927.2pt x 1445.4pt>
 File: ../images/0067 Pinout NUCLEO F411RE.jpeg Graphic file (type jpg)
 <use ../images/0067 Pinout NUCLEO F411RE.jpeg>
 Package pdftex.def Info: ../images/0067 Pinout NUCLEO F411RE.jpeg  used on input line 733.
 (pdftex.def)             Requested size: 269.80617pt x 202.35461pt.
  [42 <../images/0064 Pinbelegung.png> <../images/0067 Pinout NUCLEO F411RE.jpeg>]
-<../images/0065 Clock.png, id=956, 1115.16624pt x 502.87875pt>
+<../images/0065 Clock.png, id=958, 1115.16624pt x 502.87875pt>
 File: ../images/0065 Clock.png Graphic file (type png)
 <use ../images/0065 Clock.png>
 Package pdftex.def Info: ../images/0065 Clock.png  used on input line 737.
@@ -955,7 +955,7 @@ Overfull \hbox (4.34613pt too wide) in paragraph at lines 927--928
  []
 
 [45]
-<../images/0070 Modell 1.jpg, id=1129, 1927.2pt x 2569.6pt>
+<../images/0070 Modell 1.jpg, id=1131, 1927.2pt x 2569.6pt>
 File: ../images/0070 Modell 1.jpg Graphic file (type jpg)
 <use ../images/0070 Modell 1.jpg>
 Package pdftex.def Info: ../images/0070 Modell 1.jpg  used on input line 932.
@@ -965,24 +965,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 937--939
 
  []
 
-<../images/0063 Joystick.jpg, id=1130, 1050.92625pt x 902.37125pt>
+<../images/0063 Joystick.jpg, id=1132, 1050.92625pt x 902.37125pt>
 File: ../images/0063 Joystick.jpg Graphic file (type jpg)
 <use ../images/0063 Joystick.jpg>
 Package pdftex.def Info: ../images/0063 Joystick.jpg  used on input line 941.
 (pdftex.def)             Requested size: 131.36546pt x 112.79613pt.
 [46 <../images/0070 Modell 1.jpg> <../images/0063 Joystick.jpg>]
-<../images/0088 Joystick Mode.jpg, id=1137, 1927.2pt x 2569.6pt>
+<../images/0088 Joystick Mode.jpg, id=1139, 1927.2pt x 2569.6pt>
 File: ../images/0088 Joystick Mode.jpg Graphic file (type jpg)
 <use ../images/0088 Joystick Mode.jpg>
 Package pdftex.def Info: ../images/0088 Joystick Mode.jpg  used on input line 945.
 (pdftex.def)             Requested size: 154.17915pt x 205.5722pt.
  [47 <../images/0088 Joystick Mode.jpg>]
-<../images/0082 S2 Akku.png, id=1175, 483.8075pt x 195.73125pt>
+<../images/0082 S2 Akku.png, id=1177, 483.8075pt x 195.73125pt>
 File: ../images/0082 S2 Akku.png Graphic file (type png)
 <use ../images/0082 S2 Akku.png>
 Package pdftex.def Info: ../images/0082 S2 Akku.png  used on input line 993.
 (pdftex.def)             Requested size: 203.19775pt x 82.20656pt.
-<../images/0087 Testbench.jpg, id=1176, 2569.6pt x 1927.2pt>
+<../images/0087 Testbench.jpg, id=1178, 2569.6pt x 1927.2pt>
 File: ../images/0087 Testbench.jpg Graphic file (type jpg)
 <use ../images/0087 Testbench.jpg>
 Package pdftex.def Info: ../images/0087 Testbench.jpg  used on input line 997.
@@ -993,17 +993,17 @@ Overfull \hbox (6.36055pt too wide) in paragraph at lines 1001--1003
  []
 
 [48 <../images/0082 S2 Akku.png> <../images/0087 Testbench.jpg>]
-<../images/0073 Flugtest.png, id=1183, 883.3pt x 387.4475pt>
+<../images/0073 Flugtest.png, id=1185, 883.3pt x 387.4475pt>
 File: ../images/0073 Flugtest.png Graphic file (type png)
 <use ../images/0073 Flugtest.png>
 Package pdftex.def Info: ../images/0073 Flugtest.png  used on input line 1004.
 (pdftex.def)             Requested size: 353.31374pt x 154.97624pt.
-<../images/0074 Flugtest.png, id=1184, 883.3pt x 387.4475pt>
+<../images/0074 Flugtest.png, id=1186, 883.3pt x 387.4475pt>
 File: ../images/0074 Flugtest.png Graphic file (type png)
 <use ../images/0074 Flugtest.png>
 Package pdftex.def Info: ../images/0074 Flugtest.png  used on input line 1007.
 (pdftex.def)             Requested size: 353.31374pt x 154.97624pt.
-<../images/0075 Flugtest.png, id=1185, 414.54875pt x 155.58125pt>
+<../images/0075 Flugtest.png, id=1187, 414.54875pt x 155.58125pt>
 File: ../images/0075 Flugtest.png Graphic file (type png)
 <use ../images/0075 Flugtest.png>
 Package pdftex.def Info: ../images/0075 Flugtest.png  used on input line 1010.
@@ -1070,18 +1070,18 @@ Package rerunfilecheck Info: File `Bericht.out' has not changed.
 (rerunfilecheck)             Checksum: 98C32BD0E12040C53F805F5179DA4EA8;10513.
  ) 
 Here is how much of TeX's memory you used:
- 28326 strings out of 478287
- 555368 string characters out of 5849289
- 1073606 words of memory out of 5000000
+ 28328 strings out of 478287
+ 555394 string characters out of 5849289
+ 1073608 words of memory out of 5000000
  45414 multiletter control sequences out of 15000+600000
  478812 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  100i,19n,104p,3182b,2079s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfsi0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfss0800.pfb>
-Output written on Bericht.pdf (55 pages, 9334005 bytes).
+Output written on Bericht.pdf (55 pages, 9334726 bytes).
 PDF statistics:
- 1442 PDF objects out of 1728 (max. 8388607)
- 1239 compressed objects within 13 object streams
- 574 named destinations out of 1000 (max. 500000)
+ 1444 PDF objects out of 1728 (max. 8388607)
+ 1241 compressed objects within 13 object streams
+ 576 named destinations out of 1000 (max. 500000)
  763 words of extra memory for PDF output out of 10000 (max. 10000000)
 

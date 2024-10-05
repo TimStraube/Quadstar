@@ -50,9 +50,9 @@ class Quadpid(gymnasium.Env):
     def reset(self, seed = None):
         """Zurücksetzten des Quadcopters und Initalisierung von Variablen
         """
-        self.sollgeschwindigkeitsarray_norden = []
-        self.sollgeschwindigkeitsarray_osten = []
-        self.sollgeschwindigkeitsarray_unten = []
+        self.velocity_setsarray_norden = []
+        self.velocity_setsarray_osten = []
+        self.velocity_setsarray_unten = []
         self.array_norden = []
         self.array_osten = []
         self.array_unten = []
@@ -192,14 +192,14 @@ class Quadpid(gymnasium.Env):
 
         # print(self.belohnung_alt)
 
-        # self.sollgeschwindigkeitsarray_norden.append(
-        #     self.t * self.sollgeschwindigkeit[0]
+        # self.velocity_setsarray_norden.append(
+        #     self.t * self.velocity_set[0]
         # )
-        # self.sollgeschwindigkeitsarray_osten.append(
-        #     self.t * self.sollgeschwindigkeit[1]
+        # self.velocity_setsarray_osten.append(
+        #     self.t * self.velocity_set[1]
         # )
-        # self.sollgeschwindigkeitsarray_unten.append(
-        #     self.t * self.sollgeschwindigkeit[2]
+        # self.velocity_setsarray_unten.append(
+        #     self.t * self.velocity_set[2]
         # )
         # self.array_norden.append(self.quad.zustand[0])
         # self.array_osten.append(self.quad.zustand[1])
@@ -208,7 +208,7 @@ class Quadpid(gymnasium.Env):
         # self.omega2_all.append(self.drehlage[1])
         # self.omega3_all.append(self.drehlage[2])
 
-        # if numpy.max(numpy.abs(self.zustand[0:3])) > 2:
+        # if numpy.max(numpy.abs(self.state[0:3])) > 2:
         #     truncated = True
 
         # if belohnung != 0:
