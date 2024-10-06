@@ -107,7 +107,7 @@ class Regler():
 
         # Initalisierung der Motorbefehle
         self.motorbefehle = np.ones(4) * quadcopter.w_hover
-        self.schubintegral = np.zeros(3)
+        self.thrust_integral = np.zeros(3)
 
         # if (yawType == 0):
         #     self.attitute_p_gain[2] = 0
@@ -177,12 +177,12 @@ class Regler():
             self.velocity_set[2] - 
             quadcopter.state[9]
         )
-        sollschub_z = (
+        thrust_set_down = (
             self.vel_P_gain[DOWN] * velocity_error_down - 
             self.vel_D_gain[DOWN] * quadcopter.acceleration[DOWN] + 
             (quadcopter.velocity_set[2] - quadcopter.mass) * 
             quadcopter.g + 
-            self.schubintegral[2]
+            self.thrust_integral[2]
         )
         
         # Get thrust limits
@@ -192,34 +192,36 @@ class Regler():
 
         # Apply Anti-Windup in D-direction
         stop_int_D = (
-            (sollschub_z >= uMax and velocity_error_down >= 0.0) or 
-            (sollschub_z <= uMin and velocity_error_down <= 0.0)
+            (thrust_set_down >= uMax and velocity_error_down >= 0.0) or 
+            (thrust_set_down <= uMin and velocity_error_down <= 0.0)
         )
 
         # Calculate integral part
         # if not (stop_int_D):
-        #     self.schubintegral[2] += (
+        #     self.thrust_integral[2] += (
         #         self.vel_I_gain[2] * velocity_error_down * step_size * quadcopter.useIntergral
         #     )
         #     # Limit thrust integral
-        #     self.schubintegral[2] = (
-        #         min(abs(self.schubintegral[2]), quadcopter.maxThr) * 
-        #         np.sign(self.schubintegral[2])
+        #     self.thrust_integral[2] = (
+        #         min(abs(self.thrust_integral[2]), quadcopter.maxThr) * 
+        #         np.sign(self.thrust_integral[2])
         #     )
 
         # Saturate thrust setpoint in D-direction
-        self.thrust_set[2] = np.clip(sollschub_z, uMin, uMax)
+        self.thrust_set[2] = np.clip(thrust_set_down, uMin, uMax)
     
     def controller_north_east(self, quadcopter, step_size):
         """
         Geschwindigkeitsregler für die Geschwindigkeit auf der Nord- und Ost-Achse
         """
         # XY Velocity Control (Thrust in NE-direction)
-        geschwindigkeitsfehler_xy = self.velocity_set[0:2] - quadcopter.state[7:9]
-        thrust_xy_sp = (
-            self.vel_P_gain[0:2] * geschwindigkeitsfehler_xy - 
+        velocity_error_north_east = (
+            self.velocity_set[0:2] - quadcopter.state[7:9]
+        )
+        thrust_set_north_east = (
+            self.vel_P_gain[0:2] * velocity_error_north_east - 
             self.vel_D_gain[0:2] * quadcopter.acceleration[0:2] + 
-            self.schubintegral[0:2]
+            self.thrust_integral[0:2]
         )
 
         # Max allowed thrust in NE based on tilt and excess thrust
@@ -237,7 +239,7 @@ class Regler():
         )
 
         # Saturate thrust in NE-direction
-        self.thrust_set[0:2] = thrust_xy_sp
+        self.thrust_set[0:2] = thrust_set_north_east
         if (
             np.dot(
                 self.thrust_set[0:2].T, 
@@ -246,17 +248,17 @@ class Regler():
 
             mag = norm(self.thrust_set[0:2])
             self.thrust_set[0:2] = (
-                thrust_xy_sp / mag * thrust_max_xy
+                thrust_set_north_east / mag * thrust_max_xy
             )
         
         # Use tracking Anti-Windup for NE-direction: during saturation, the integrator is used to unsaturate the output
         # see Anti-Reset Windup for PID controllers, L.Rundqwist, 1990
         arw_gain = 2.0 / self.vel_P_gain[0:2]
         vel_err_lim = (
-            geschwindigkeitsfehler_xy - 
-            (thrust_xy_sp - self.thrust_set[0:2]) * arw_gain
+            velocity_error_north_east - 
+            (thrust_set_north_east - self.thrust_set[0:2]) * arw_gain
         )
-        self.schubintegral[0:2] += (
+        self.thrust_integral[0:2] += (
             self.vel_I_gain[0:2] * 
             vel_err_lim * 
             step_size * 
@@ -265,7 +267,7 @@ class Regler():
     
     def thrust2attitude(self):
         # Create Full Desired Quaternion Based on Thrust Setpoint and Desired Yaw Angle
-        sollgieren = self.eul_sp[DOWN]
+        yaw_set = self.eul_sp[DOWN]
 
         # Desired body_z axis direction
         body_z = -self.quaternion.vectNormalize(
@@ -274,8 +276,8 @@ class Regler():
         
         # Vector of desired Yaw direction in XY plane, rotated by pi/2 (fake body_y axis)
         y_C = np.array([
-            -sin(sollgieren), 
-            cos(sollgieren), 
+            -sin(yaw_set), 
+            cos(yaw_set), 
             0.0
         ])
         
@@ -287,10 +289,10 @@ class Regler():
         body_y = np.cross(body_z, body_x)
 
         # Sollrotationsmatrix
-        R_sp = np.array([body_x, body_y, body_z]).T
+        R_set = np.array([body_x, body_y, body_z]).T
 
         # Full desired quaternion (full because it considers the desired Yaw angle)
-        self.qd_full = self.quaternion.rotationsmatrix2quaternion(R_sp)
+        self.qd_full = self.quaternion.rotationsmatrix2quaternion(R_set)
         
     def controller_attitude(self, quadcopter):
         # Current thrust orientation e_z and desired thrust orientation e_z_d
@@ -300,24 +302,24 @@ class Regler():
         )
 
         # Quaternionfehler zwei Vektoren
-        fehlerquaternion_reduziert = np.zeros(4)
-        fehlerquaternion_reduziert[0] = np.dot(
+        quaternion_error_without_yaw = np.zeros(4)
+        quaternion_error_without_yaw[0] = np.dot(
             e_z, e_z_d
         ) + sqrt(
             norm(e_z) ** 2 * 
             norm(e_z_d) ** 2
         )
-        fehlerquaternion_reduziert[1:4] = np.cross(
+        quaternion_error_without_yaw[1:4] = np.cross(
             e_z, 
             e_z_d
         )
-        fehlerquaternion_reduziert = self.quaternion.vectNormalize(
-            fehlerquaternion_reduziert
+        quaternion_error_without_yaw = self.quaternion.vectNormalize(
+            quaternion_error_without_yaw
         )
         
         # Reduzierte Sollquaternion ohne den Yaw Winkel 
         self.sollquaternion_reduziert = self.quaternion.quatMultiply(
-            fehlerquaternion_reduziert, 
+            quaternion_error_without_yaw, 
             quadcopter.state[3:7]
         )
 
