@@ -10,7 +10,6 @@ import time
 import matplotlib.pyplot as plt
 from stable_baselines3 import PPO
 from quad import Quadcopter
-from wind import Wind
 from quadcontroller import ControllerPID
 from utils import utils
 from quaternion import Quaternion
@@ -41,7 +40,6 @@ class Testbench():
         self.quad = Quadcopter()
         self.quad.reset()
         self.t = 0
-        self.wind = Wind('NONE', 0.0, 0, 0)
         self.pid_gesetzt = False
 
         self.controller = ControllerPID(
@@ -176,8 +174,7 @@ class Testbench():
 
             self.quad.update(
                 self.t, 
-                self.controller.motorbefehle, 
-                self.wind
+                self.controller.motorbefehle
             )
             self.t += config.step_size
             self.controller.regelschritt(
@@ -224,8 +221,7 @@ class Testbench():
             for _ in range(1):
                 self.quad.update(
                     self.t, 
-                    250 * aktion + 350, 
-                    self.wind
+                    250 * aktion + 350
                 )
                 self.t += config.step_size
 
@@ -257,12 +253,24 @@ class Testbench():
         self.z_soll.append(self.z_soll[-1] +
             config.step_size * self.velocity_set[2]
         )
-        self.geschwindigkeitssoll_x.append(self.velocity_set[0])
-        self.geschwindigkeitssoll_y.append(self.velocity_set[1])
-        self.geschwindigkeitssoll_z.append(self.velocity_set[2])
-        self.geschwindigkeitsvektor_x.append(self.quad.state[7])
-        self.geschwindigkeitsvektor_y.append(self.quad.state[8])
-        self.geschwindigkeitsvektor_z.append(self.quad.state[9])
+        self.geschwindigkeitssoll_x.append(
+            self.velocity_set[0]
+        )
+        self.geschwindigkeitssoll_y.append(
+            self.velocity_set[1]
+        )
+        self.geschwindigkeitssoll_z.append(
+            self.velocity_set[2]
+        )
+        self.geschwindigkeitsvektor_x.append(
+            self.quad.state[7]
+        )
+        self.geschwindigkeitsvektor_y.append(
+            self.quad.state[8]
+        )
+        self.geschwindigkeitsvektor_z.append(
+            self.quad.state[9]
+        )
         self.x_all.append(self.quad.state[0])
         self.y_all.append(self.quad.state[1])
         self.z_all.append(self.quad.state[2])
@@ -271,7 +279,7 @@ class Testbench():
         self.omega3_all.append(self.drehlage[2])
 
     def render(self):
-        """Rendern
+        """Render
         """
         # Create two subplots and unpack the output array immediately
         f, (ax1, ax2, ax3) = plt.subplots(
@@ -349,7 +357,6 @@ class Testbench():
 
         quad = Quadcopter()
         controller = ControllerPID(quad)
-        wind = Wind('None', 2.0, 90, -15)
 
         controller.regelschritt(
             quad, 
@@ -411,8 +418,7 @@ class Testbench():
             t = self.quad_sim(
                 t, 
                 quad, 
-                controller, 
-                wind
+                controller
             )
             
             # print("{:.3f}".format(t))
@@ -470,8 +476,7 @@ class Testbench():
         self, 
         t, 
         quad, 
-        controller, 
-        wind):
+        controller):
         """
         """
     
@@ -479,8 +484,7 @@ class Testbench():
         quad.update(
             t, 
             config.step_size, 
-            controller.motorbefehle, 
-            wind
+            controller.motorbefehle
         )
         t += config.step_size      
 

@@ -10,7 +10,6 @@ import random
 import matplotlib.pyplot as plt
 from gymnasium import spaces
 from quaternion import Quaternion
-from wind import Wind
 from quad import Quadcopter
 
 class Quadend2end(gymnasium.Env):
@@ -69,8 +68,6 @@ class Quadend2end(gymnasium.Env):
         ])
 
         self.quad.reset()
-        # wind model
-        self.wind = Wind('NONE', 0.0, 0, -15)
         # Drehlage = [
         #   Gierwinkel (rad),
         #   Nichwinkel (rad),
@@ -101,8 +98,7 @@ class Quadend2end(gymnasium.Env):
             # Update des Quadcopterzustands
             self.quad.update(
                 self.t, 
-                action, 
-                self.wind
+                action
             )
             # Update der Zeit
             self.t += config.step_size

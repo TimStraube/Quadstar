@@ -66,7 +66,7 @@ class Quadpid(gymnasium.Env):
         # Schritt der aktuellen Episode
         self.schritt = 0
         # Sollgeschwindigkeit
-        self.quad.sollgeschwindigkeit = numpy.array([
+        self.quad.velocity_set = numpy.array([
             1,
             0,
             0
@@ -79,10 +79,8 @@ class Quadpid(gymnasium.Env):
         self.controller.regelschritt(
             self.quad, 
             config.step_size,
-            self.quad.sollgeschwindigkeit
+            self.quad.velocity_set
         )
-        # Windmodell
-        self.wind = Wind('NONE', 0.0, 0, -15)
         # Initalisierung der Differenzialgleichungen des Quadcopters
         self.integrator = ode(
             self.quad.zustandsänderung
@@ -94,23 +92,23 @@ class Quadpid(gymnasium.Env):
         )
         # Definition der Anfangsbedingungen
         self.integrator.set_initial_value(
-            self.quad.zustand, 
-            config.episode_start
+            self.quad.state, 
+            config.episode_start_time
         )
         # Drehlage = [
         #   Gierwinkel (rad),
         #   Nichwinkel (rad),
         #   Rollwinkel (rad)
         # ]
-        self.drehlage = self.quaternion.quaternion2cardan(
-            self.quad.zustand[3:7]
+        self.attitude = self.quaternion.quaternion2cardan(
+            self.quad.state[3:7]
         )   
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
         self.beobachtung[:] = numpy.float32(
             numpy.concatenate([
-                self.drehlage,
-                self.quad.zustand[7:10], 
-                self.quad.sollgeschwindigkeit
+                self.attitude,
+                self.quad.state[7:10], 
+                self.quad.velocity_set
             ])
         )
 
@@ -155,13 +153,12 @@ class Quadpid(gymnasium.Env):
 
             self.quad.update(
                 self.t, 
-                self.controller.motorbefehle, 
-                self.wind
+                self.controller.motorbefehle
             )
             
             self.t += self.Ts
             
-            self.quad.sollgeschwindigkeit = numpy.array([
+            self.quad.velocity_set = numpy.array([
                 random.randint(0, 2),
                 0,
                 0
@@ -170,13 +167,13 @@ class Quadpid(gymnasium.Env):
             self.controller.regelschritt(
                 self.quad,
                 self.Ts,
-                self.quad.sollgeschwindigkeit
+                self.quad.velocity_set
             )
 
             # Berechnen der Belohnung im aktuellen Zustand
             belohnung += self.quad.belohnung()
 
-            if (self.t > config.Episodenende):
+            if (self.t > config.episode_end_time):
                 truncated = True
                 terminated = True
         # Drehlage = [
@@ -185,7 +182,7 @@ class Quadpid(gymnasium.Env):
         #   Rollwinkel (rad)
         # ]
         self.drehlage = self.quaternion.quaternion2cardan(
-            self.quad.zustand[3:7]
+            self.quad.state[3:7]
         )             
 
         # print(belohnung)
@@ -223,8 +220,8 @@ class Quadpid(gymnasium.Env):
         self.beobachtung[:] = numpy.float32(
             numpy.concatenate([
                 self.drehlage,
-                self.quad.zustand[7:10], 
-                self.quad.sollgeschwindigkeit
+                self.quad.state[7:10], 
+                self.quad.velocity_set
             ])
         )
 

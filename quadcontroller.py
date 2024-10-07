@@ -65,7 +65,7 @@ class ControllerPID():
             0.1
         ])
 
-        # Maximale Geschwindigkeit
+        # Max velocity
         self.uMax = 5.0
         self.vMax = 5.0
         self.wMax = 5.0

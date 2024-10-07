@@ -13,7 +13,6 @@ email: hi@optimalpi.de
 import numpy
 import config as config
 from quaternion import Quaternion
-from wind import Wind
 from numpy import sin
 from numpy import cos
 from numpy import sign
@@ -156,12 +155,12 @@ class Quadcopter():
             roll
         )
 
-        # Hovering motor acc
+        # Hovering motor
         self.wdot_hover = 0.0 
 
         self.sollposition = [0, 0, 0]
 
-        # Sollgeschwindigkeit
+        # Velocity setpoint
         self.velocity_set = numpy.array([
             1,
             0,
@@ -237,9 +236,6 @@ class Quadcopter():
             self.velocity_set
         )
 
-        # wind model
-        self.wind = Wind('NONE', 0.0, 0, -15)
-
         self.integrator = ode(
             self.state_dot
         ).set_integrator(
@@ -283,7 +279,7 @@ class Quadcopter():
         # Drehmomentberechnung aus der Motordrehzahl
         self.tor = self.kTo * self.wMotor * self.wMotor
 
-    def state_dot(self, t, s, motorbefehle, wind):
+    def state_dot(self, t, s, motorbefehle):
         """
         """
     
@@ -353,14 +349,6 @@ class Quadcopter():
         TorM2 = drehmoment[1]
         TorM3 = drehmoment[2]
         TorM4 = drehmoment[3]
-
-        # Windmodel
-        [velW, qW1, qW2] = wind.randomWind(t)
-        # velW = 0
-
-        # velW = 5          # m/s
-        # qW1 = 0 * deg2rad    # Wind heading
-        # qW2 = 60 * deg2rad     # Wind elevation (positive = upwards wind in NED, positive = downwards wind in ENU)
     
         # Inertialtensor
         IBxx = self.IB[0, 0]
@@ -413,13 +401,13 @@ class Quadcopter():
 
         return sdot
 
-    def update(self, t, motorbefehle, wind):
+    def update(self, t, motorbefehle):
         """This method ensures that the quadcopter's state is continuously updated based on the given inputs, allowing for accurate simulation or control of its behavior.
         """
         geschwindigkeit_t_minus_1 = self.state[7:10]
         omega_t_minus_1 = self.state[10:13]
 
-        self.integrator.set_f_params(motorbefehle, wind)
+        self.integrator.set_f_params(motorbefehle)
         self.state = self.integrator.integrate(
             t, 
             t + config.step_size

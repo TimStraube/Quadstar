@@ -3,13 +3,10 @@ author: Tim Leonard Straube
 email: hi@optimalpi.de
 """
 
-import sys
 import pygame
 import sched
 import time
 import multiprocessing
-import matplotlib.patches as patches
-import config
 from quadserial import Quadserial
 
 class Joystick():
