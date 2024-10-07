@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from stable_baselines3 import PPO
 from quad import Quadcopter
 from wind import Wind
-from quadcontroller import Regler
+from quadcontroller import ControllerPID
 from utils import utils
 from quaternion import Quaternion
 
@@ -44,7 +44,7 @@ class Testbench():
         self.wind = Wind('NONE', 0.0, 0, 0)
         self.pid_gesetzt = False
 
-        self.controller = Regler(
+        self.controller = ControllerPID(
             self.quad
         )
         # Generate First Commands
@@ -128,22 +128,22 @@ class Testbench():
         #     (config.Aktionsinterval_PID[1] / 2) * (aktion + config.Aktionsinterval_PID[0] + 1)
         # )
         aktion = 4.9 * aktion + 5
-        # aktion = numpy.random.uniform(
-        #     low=0.1, 
-        #     high=9.9, 
-        #     size=aktion.shape
-        # )
-        self.controller.vel_P_gain[0] = aktion[0] 
-        self.controller.vel_P_gain[1] = aktion[0] 
-        self.controller.vel_P_gain[2] = aktion[1] 
+        aktion = numpy.random.uniform(
+            low=0.1, 
+            high=9.9, 
+            size=aktion.shape
+        )
+        # self.controller.vel_P_gain[0] = aktion[0] 
+        # self.controller.vel_P_gain[1] = aktion[0] 
+        # self.controller.vel_P_gain[2] = aktion[1] 
 
-        self.controller.vel_I_gain[0] = aktion[2]
-        self.controller.vel_I_gain[1] = aktion[2]
-        self.controller.vel_I_gain[2] = aktion[3]
+        # self.controller.vel_I_gain[0] = aktion[2]
+        # self.controller.vel_I_gain[1] = aktion[2]
+        # self.controller.vel_I_gain[2] = aktion[3]
 
-        self.controller.vel_D_gain[0] = aktion[4]
-        self.controller.vel_D_gain[1] = aktion[4] 
-        self.controller.vel_D_gain[2] = aktion[5]
+        # self.controller.vel_D_gain[0] = aktion[4]
+        # self.controller.vel_D_gain[1] = aktion[4] 
+        # self.controller.vel_D_gain[2] = aktion[5]
 
         # self.controller.attitute_p_gain[0] = aktion[6]
         # self.controller.attitute_p_gain[1] = aktion[6]
@@ -348,7 +348,7 @@ class Testbench():
         ifsave = 0
 
         quad = Quadcopter()
-        controller = Regler(quad)
+        controller = ControllerPID(quad)
         wind = Wind('None', 2.0, 90, -15)
 
         controller.regelschritt(

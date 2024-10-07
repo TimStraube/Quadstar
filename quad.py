@@ -20,7 +20,7 @@ from numpy import sign
 from numpy.linalg import inv
 from numpy.linalg import norm
 from scipy.integrate import ode
-from quadcontroller import Regler
+from quadcontroller import ControllerPID
 
 deg2rad = numpy.pi / 180.0
 
@@ -229,7 +229,7 @@ class Quadcopter():
         self.extended_state()
         self.forces()
 
-        self.controller = Regler(self)
+        self.controller = ControllerPID(self)
 
         self.controller.regelschritt(
             self, 

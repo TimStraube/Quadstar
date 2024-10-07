@@ -51,7 +51,7 @@ def home():
                 yaw
             ) = testbench.testModell()
         else:
-            print("Warnung! Invalider Reglertyp.")
+            print("Invalid controller type.")
 
         # t [s], NED [m], Attitude [rad]
         quad_state = jsonify({

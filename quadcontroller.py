@@ -34,7 +34,7 @@ ROLL = 0
 PITCH = 1
 YAW = 2
 
-class Regler():
+class ControllerPID():
     def __init__(self, quadcopter):
         """PID-Quadcopterregler
         :param quadcopter: Quadcopter
@@ -43,12 +43,9 @@ class Regler():
         self.step_current = 0
         self.deg2rad = pi / 180.0
 
-        self.pos_P_gain = np.array([1.0, 1.0, 1.0])
-
+        # NED
         self.vel_P_gain = np.array([5.0, 5.0, 4.0])
-
         self.vel_D_gain = np.array([0.5, 0.5, 0.5])
-
         self.vel_I_gain = np.array([5.0, 5.0, 5.0])
 
         # Attitude P gains
@@ -57,24 +54,15 @@ class Regler():
             8.0, 
             1.5
         ])
-
-        # Rate P-D gains
-        self.Pp = 1.5
-        self.Dp = 0.04
-        self.Pq = self.Pp
-        self.Dq = self.Dp
-        self.Pr = 1.0
-        self.Dr = 0.1
-
         self.rate_P_gain = np.array([
-            self.Pp, 
-            self.Pq, 
-            self.Pr
+            1.5, 
+            1.5, 
+            1.0
         ])
         self.rate_D_gain = np.array([
-            self.Dp, 
-            self.Dq, 
-            self.Dr
+            0.04, 
+            0.04, 
+            0.1
         ])
 
         # Maximale Geschwindigkeit
@@ -105,7 +93,7 @@ class Regler():
             self.rMax
         ])
 
-        # Initalisierung der Motorbefehle
+        # Initalization of motor commands
         self.motorbefehle = np.ones(4) * quadcopter.w_hover
         self.thrust_integral = np.zeros(3)
 
@@ -129,10 +117,10 @@ class Regler():
         step_size, 
         velocity_set):
 
-        """ Berechnung der Motorbefehle aus dem Quadcopterstatesvektor und der Sollgeschwindigkeit
+        """Calculate the motor commands from the velocity setpoint
         :param quadcopter: Quadcopter
-        :param step_size: Schrittweite
-        :param velocity_set: Sollgeschwindigkeit
+        :param step_size: step size
+        :param velocity_set: velocity setpoint
         :return: 
         """
         self.velocity_set[:] = velocity_set
@@ -208,7 +196,11 @@ class Regler():
         #     )
 
         # Saturate thrust setpoint in D-direction
-        self.thrust_set[2] = np.clip(thrust_set_down, uMin, uMax)
+        self.thrust_set[2] = np.clip(
+            thrust_set_down, 
+            uMin, 
+            uMax
+        )
     
     def controller_north_east(self, quadcopter, step_size):
         """
@@ -318,7 +310,7 @@ class Regler():
         )
         
         # Reduzierte Sollquaternion ohne den Yaw Winkel 
-        self.sollquaternion_reduziert = self.quaternion.quatMultiply(
+        self.quaternion_set_without_yaw = self.quaternion.quatMultiply(
             quaternion_error_without_yaw, 
             quadcopter.state[3:7]
         )
@@ -326,7 +318,7 @@ class Regler():
         # Mixed desired quaternion (between reduced and full) and resulting desired quaternion qd
         q_mix = self.quaternion.quatMultiply(
             self.quaternion.inverse(
-                self.sollquaternion_reduziert
+                self.quaternion_set_without_yaw
             ), 
             self.qd_full
         )
@@ -334,7 +326,7 @@ class Regler():
         q_mix[0] = np.clip(q_mix[0], -1.0, 1.0)
         q_mix[3] = np.clip(q_mix[3], -1.0, 1.0)
         self.qd = self.quaternion.quatMultiply(
-            self.sollquaternion_reduziert, 
+            self.quaternion_set_without_yaw, 
             np.array([
                 cos(self.yaw_w * np.arccos(q_mix[0])), 
                 0, 
@@ -380,14 +372,13 @@ class Regler():
         # Rate Control
         # Be sure it is right sign for the D part
         rate_error = self.rate_sp - quadcopter.state[10:13]
-        self.drehratenstellwert = (
+        self.rate_set = (
             self.rate_P_gain * rate_error - 
             self.rate_D_gain * quadcopter.omega_dot
         )    
 
     def setYawWeight(self):
-        """
-        Berechnung des Gewichts vom Gierkontrollgain
+        """Calculate weights of the yaw gain
         """
         roll_pitch_gain = (
             0.5 * (
@@ -403,14 +394,14 @@ class Regler():
         self.attitute_p_gain[YAW] = roll_pitch_gain
 
     def rate2cmd(self, quadcopter):
-        """
+        """Mix desired rates to motor commands
         """
         # Mixer
         t = np.array([
             norm(self.thrust_set), 
-            self.drehratenstellwert[0], 
-            self.drehratenstellwert[1], 
-            self.drehratenstellwert[2]
+            self.rate_set[0], 
+            self.rate_set[1], 
+            self.rate_set[2]
         ])
         self.motorbefehle = np.sqrt(np.clip(
             np.dot(quadcopter.mixerFMinv, t),

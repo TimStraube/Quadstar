@@ -12,7 +12,7 @@ from gymnasium import spaces
 from wind import Wind
 from quaternion import Quaternion
 from scipy.integrate import ode
-from quadcontroller import Regler
+from quadcontroller import ControllerPID
 from quad import Quadcopter
 
 class Quadpid(gymnasium.Env):
@@ -74,7 +74,7 @@ class Quadpid(gymnasium.Env):
         # Reset des Quadcopterzustands
         self.quad.reset()
         # Initialisierung des PID-Reglers
-        self.controller = Regler(self.quad)
+        self.controller = ControllerPID(self.quad)
         # Berechnung der ersten Motorbefehle mit dem PID-Regler
         self.controller.regelschritt(
             self.quad, 
