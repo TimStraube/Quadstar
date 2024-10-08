@@ -7,6 +7,8 @@ import os
 import torch
 import shutil
 import config
+import sqlite3
+import json
 from quadpid import Quadpid
 from quadend2end import Quadend2end
 from stable_baselines3.common.env_checker import check_env
@@ -49,9 +51,9 @@ class Agent():
             env = Quadend2end()
             check_env(env)
             self.envs = make_vec_env(
-                Quadendezuende, 
+                Quadend2end, 
                 seed = 4711, 
-                n_envs = config.Parallele_Umwelten
+                n_envs = config.parallel_environments
             )
         if config.model_id[1] == "P":
             env = Quadpid()
@@ -59,14 +61,14 @@ class Agent():
             self.envs = make_vec_env(
                 Quadpid, 
                 seed = 4711, 
-                n_envs = config.Parallele_Umwelten
+                n_envs = config.parallel_environments
             )
         # Architektur des Neuronalen Netzwerks
         policy_kwargs = dict(
             activation_fn = torch.nn.Tanh,
             net_arch = dict(
-                pi = config.Actor, 
-                vf = config.Critic
+                pi = config.actor, 
+                vf = config.critic
             )
         )
         # Proximal policy optimization Initialisierung
@@ -77,14 +79,14 @@ class Agent():
                 f"./models/{config.model_id}/tensorboard"
             ),
             policy_kwargs=policy_kwargs,
-            learning_rate = config.Lernrate,
-            batch_size = config.Batchmenge,
+            learning_rate = config.learning_rate,
+            batch_size = config.batchsize,
             gamma = 1.0,
             max_grad_norm = 10,
             verbose = 1
         )
         
-        if config.Modell_laden: 
+        if config.load_model: 
             model_path = (
                 f"./models/{config.model_id}/main.zip"
             )
@@ -92,7 +94,7 @@ class Agent():
 
         save_best_model_callback = EvalCallback(
             self.model.get_env(),
-            eval_freq = config.Evaluationsfrequenz,
+            eval_freq = config.evaluation_frequency,
             best_model_save_path = (
                 f"./models/{config.model_id}"
             ),
@@ -100,15 +102,96 @@ class Agent():
                 f"./models/{config.model_id}", 
                 "results"
             ),
-            n_eval_episodes = config.Evaluationsinterval
+            n_eval_episodes = config.evaluation_step_size
         )
 
-        shutil.copyfile(
-            "./config.py", f"./models/{config.model_id}/config.py"
-        )
+        conn = None
+        try:
+            # Ensure the models folder exists
+            os.makedirs("models", exist_ok=True)
+
+            # Path to the database file
+            database_path = os.path.join(
+                "models", 
+                "config.db"
+            )
+
+            conn = sqlite3.connect(database_path)
+            cursor = conn.cursor()
+            # Create table with name based on model_id
+            table_name = f"model_{config.model_id.replace('-', '_')}" 
+            create_table_query = f"""
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    step_size FLOAT,
+                    episode_end_time FLOAT,
+                    episode_start_time FLOAT,
+                    load_model BOOLEAN,
+                    episodes BIGINT,
+                    actor JSON,
+                    critic JSON,
+                    learning_rate FLOAT,
+                    parallel_environments INT,
+                    batchsize INT,
+                    aktionspace_end2end JSON,
+                    reward_weights JSON,
+                    aktionspace_pid JSON,
+                    aktions INT,
+                    pid_values_update_step_size FLOAT,
+                    evaluation_step_size INT
+                )
+            """
+            cursor.execute(create_table_query)
+            
+            # Insert model metadata and file path
+            insert_query = f"""
+                INSERT INTO {table_name} (
+                    step_size,
+                    episode_end_time,
+                    episode_start_time,
+                    load_model,
+                    episodes,
+                    actor,
+                    critic,
+                    learning_rate,
+                    parallel_environments,
+                    batchsize,
+                    aktionspace_end2end,
+                    reward_weights,
+                    aktionspace_pid,
+                    aktions,
+                    pid_values_update_step_size,
+                    evaluation_step_size
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
+            cursor.execute(
+                insert_query, 
+                (
+                    config.step_size,
+                    config.episode_end_time,
+                    config.episode_start_time,
+                    config.load_model,
+                    config.episodes,
+                    json.dumps(config.actor),
+                    json.dumps(config.critic),
+                    config.learning_rate,
+                    config.parallel_environments,
+                    config.batchsize,
+                    json.dumps(config.aktionspace_end2end),
+                    json.dumps(config.reward_weights),
+                    json.dumps(config.aktionspace_pid),
+                    config.aktions,
+                    config.pid_values_update_step_size,
+                    config.evaluation_step_size
+                )
+            )
+            
+            # Commit the transaction
+            conn.commit()
+        except sqlite3.Error as e:
+            print("SQLite error: " + str(e))
 
         self.model.learn(
-            config.Episoden,
+            config.episodes,
             callback = CallbackList([
                 HyperparameterParamCallback(),
                 save_best_model_callback

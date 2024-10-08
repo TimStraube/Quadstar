@@ -9,14 +9,13 @@ import config
 import random
 import matplotlib.pyplot as plt
 from gymnasium import spaces
-from wind import Wind
 from quaternion import Quaternion
 from scipy.integrate import ode
 from quadcontroller import ControllerPID
 from quad import Quadcopter
 
 class Quadpid(gymnasium.Env):
-    belohnung_alt = 0
+    reward_tminus1 = 0
 
     def __init__(self):
         """Famara Gymnasium Umwelt zum Training der PID-Parameter des Quadcopterreglers
@@ -83,7 +82,7 @@ class Quadpid(gymnasium.Env):
         )
         # Initalisierung der Differenzialgleichungen des Quadcopters
         self.integrator = ode(
-            self.quad.zustandsänderung
+            self.quad.state_dot
         ).set_integrator(
             'dopri5',
             first_step='0.00005',
@@ -146,7 +145,7 @@ class Quadpid(gymnasium.Env):
         # self.controller.rate_D_gain[1] = aktion[16] / 5 + 0.01
         # self.controller.rate_D_gain[2] = aktion[17] / 5 + 0.01
 
-        belohnung = 0
+        reward = 0
 
         while not (terminated or truncated):
             self.schritt += 1
@@ -171,7 +170,7 @@ class Quadpid(gymnasium.Env):
             )
 
             # Berechnen der Belohnung im aktuellen Zustand
-            belohnung += self.quad.belohnung()
+            reward += self.quad.reward()
 
             if (self.t > config.episode_end_time):
                 truncated = True
@@ -185,9 +184,9 @@ class Quadpid(gymnasium.Env):
             self.quad.state[3:7]
         )             
 
-        # print(belohnung)
+        # print(reward)
 
-        # print(self.belohnung_alt)
+        # print(self.reward_tminus1)
 
         # self.velocity_setsarray_norden.append(
         #     self.t * self.velocity_set[0]
@@ -208,11 +207,11 @@ class Quadpid(gymnasium.Env):
         # if numpy.max(numpy.abs(self.state[0:3])) > 2:
         #     truncated = True
 
-        # if belohnung != 0:
-        #     belohnung = belohnung - self.belohnung_alt
-        #     self.belohnung_alt = belohnung
+        # if reward != 0:
+        #     reward = reward - self.reward_tminus1
+        #     self.reward_tminus1 = reward
         # else:
-        #     belohnung = -1e5
+        #     reward = -1e5
 
         # self.render()
 
@@ -227,7 +226,7 @@ class Quadpid(gymnasium.Env):
 
         return (
             self.beobachtung, 
-            belohnung, 
+            reward, 
             terminated, 
             truncated, 
             {}

@@ -9,7 +9,7 @@ episode_start_time = 0
 
 ## Quadtrain
 # Foldername and id for the model
-model_id = "QP-23-08-24-EIPC55-D"
+model_id = "QP-07-10-24-TPP52S-C"
 # Load model for continued training
 load_model = False
 # Maximal number of episodes
@@ -55,11 +55,3 @@ pid_values_update_step_size = 0.01
 evaluation_step_size = 2
 # Schritte bis zur Evaluation
 evaluation_frequency = 10000
-
-## Quadserial
-# Serialport für Linux
-serialname = "/dev/ttyACM2" 
-# Aufräumen der Konsole nach jedem neuen Zustand
-doclear = False
-# Zustand auf der Konsole visualisieren
-doprint = False

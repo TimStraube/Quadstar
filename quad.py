@@ -364,9 +364,9 @@ class Quadcopter():
             [ 0.5 * p * q_w - 0.5 * q * q_z + 0.5 * q_y * r],
             [ 0.5 * p * q_z + 0.5 * q * q_w - 0.5 * q_x * r],
             [-0.5 * p * q_y + 0.5 * q * q_x + 0.5 * q_w * r],
-            [( self.Cd * sign(velW * cos(qW1) * cos(qW2) - xdot) * (velW * cos(qW1) * cos(qW2) - xdot) ** 2 - 2 * (q_w * q_y + q_x * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.mass],
-            [( self.Cd * sign(velW * sin(qW1) * cos(qW2) - ydot) * (velW * sin(qW1) * cos(qW2) - ydot) ** 2 + 2 * (q_w * q_x - q_y * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.mass],
-            [(-self.Cd * sign(velW * sin(qW2) + zdot) * (velW * sin(qW2) + zdot) ** 2 - (ThrM1 + ThrM2 + ThrM3 + ThrM4) * (q_w ** 2 - q_x ** 2 - q_y ** 2 + q_z ** 2) + self.g * self.mass) / self.mass],
+            [( self.Cd * sign(- xdot) * (- xdot) ** 2 - 2 * (q_w * q_y + q_x * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.mass],
+            [( self.Cd * sign(- ydot) * (- ydot) ** 2 + 2 * (q_w * q_x - q_y * q_z) * (ThrM1 + ThrM2 + ThrM3 + ThrM4)) / self.mass],
+            [(-self.Cd * sign(+ zdot) * (zdot) ** 2 - (ThrM1 + ThrM2 + ThrM3 + ThrM4) * (q_w ** 2 - q_x ** 2 - q_y ** 2 + q_z ** 2) + self.g * self.mass) / self.mass],
             [((IByy - IBzz) * q * r + (ThrM1 - ThrM2 - ThrM3 + ThrM4) * self.dym) / IBxx],
             [((IBzz - IBxx) * p * r + (ThrM1 + ThrM2 - ThrM3 - ThrM4) * self.dxm) / IByy], 
             [((IBxx - IByy) * p * q - TorM1 + TorM2 - TorM3 + TorM4) / IBzz]])
@@ -434,7 +434,7 @@ class Quadcopter():
         self.extended_state()
         self.forces()
 
-    def belohnung(self):
+    def reward(self):
         """Method for calculating the reward based on the quadcopter state and reward weighting.
         """
         error_velocity = (

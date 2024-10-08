@@ -74,14 +74,14 @@ class Quadend2end(gymnasium.Env):
         #   Rollwinkel (rad)
         # ]
         self.attitude = self.quaternion.quaternion2cardan(
-            self.quad.zustand[3:7]
+            self.quad.state[3:7]
         )
         
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
         self.observation[:] = numpy.float32(
             numpy.concatenate([
                 self.attitude,
-                self.quad.zustand[7:10], 
+                self.quad.state[7:10], 
                 self.velocity_set
             ])
         )
@@ -109,7 +109,7 @@ class Quadend2end(gymnasium.Env):
         #   Rollwinkel (rad)
         # ]
         self.attitude = self.quaternion.quaternion2cardan(
-            self.quad.zustand[3:7]
+            self.quad.state[3:7]
         )             
 
         self.velocity_setsarray_norden.append(
@@ -121,39 +121,38 @@ class Quadend2end(gymnasium.Env):
         self.velocity_setsarray_unten.append(
             self.t * self.velocity_set[2]
         )
-        self.array_norden.append(self.quad.zustand[0])
-        self.array_osten.append(self.quad.zustand[1])
-        self.array_unten.append(self.quad.zustand[2])
+        self.array_norden.append(self.quad.state[0])
+        self.array_osten.append(self.quad.state[1])
+        self.array_unten.append(self.quad.state[2])
         self.omega1_all.append(self.attitude[0])
         self.omega2_all.append(self.attitude[1])
         self.omega3_all.append(self.attitude[2])
 
         # Berechnen der Belohnung im aktuellen Zustand
-        belohnung = self.quad.belohnung()
+        reward = self.quad.reward()
 
         # if numpy.max(numpy.abs(self.state[0:3])) > 2:
         #     truncated = True
 
         # Beenden der Episode wenn die maximale Episodenlänge erreicht wurde
-        if self.step_current >= (config.Quadtrain_finaler_Zeitpunkt / config.step_size):
+        if self.step_current >= (config.episode_end_time / config.step_size):
             truncated = True
-            if config.render_modell:
-                # Zeichnen der Positions- und Drehlagetrajektorien
-                print("\033c", end='')
-                self.render()
+            # Zeichnen der Positions- und Drehlagetrajektorien
+            # print("\033c", end='')
+            # self.render()
 
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
         self.observation[:] = numpy.float32(
             numpy.concatenate([
                 self.attitude,
-                self.quad.zustand[7:10], 
+                self.quad.state[7:10], 
                 self.velocity_set
             ])
         )
 
         return (
             self.observation, 
-            belohnung, 
+            reward, 
             terminated, 
             truncated, 
             {}
