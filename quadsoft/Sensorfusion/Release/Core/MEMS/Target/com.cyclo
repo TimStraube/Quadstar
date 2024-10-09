@@ -1,0 +1,3 @@
+../Core/MEMS/Target/com.c:48:5:UART_ReceivedMSG	56
+../Core/MEMS/Target/com.c:138:6:UART_SendMsg	1
+../Core/MEMS/Target/com.c:156:6:UART_StartReceiveMsg	1

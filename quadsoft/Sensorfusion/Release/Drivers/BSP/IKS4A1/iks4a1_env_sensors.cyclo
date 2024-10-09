@@ -1,0 +1,9 @@
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:138:9:IKS4A1_ENV_SENSOR_Init	47
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:584:9:IKS4A1_ENV_SENSOR_DeInit	2
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:610:9:IKS4A1_ENV_SENSOR_GetCapabilities	2
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:636:9:IKS4A1_ENV_SENSOR_ReadID	2
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:665:9:IKS4A1_ENV_SENSOR_Enable	3
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:704:9:IKS4A1_ENV_SENSOR_Disable	3
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:744:9:IKS4A1_ENV_SENSOR_GetOutputDataRate	3
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:784:9:IKS4A1_ENV_SENSOR_SetOutputDataRate	3
+../Drivers/BSP/IKS4A1/iks4a1_env_sensors.c:824:9:IKS4A1_ENV_SENSOR_GetValue	3

@@ -1,0 +1,5 @@
+../Core/MEMS/Target/com.c:48:5:UART_ReceivedMSG	10
+../Core/MEMS/Target/com.c:138:6:UART_SendMsg	1
+../Core/MEMS/Target/com.c:156:6:UART_StartReceiveMsg	1
+../Core/MEMS/Target/com.c:175:17:Get_DMA_Flag_Status	52
+../Core/MEMS/Target/com.c:185:17:Get_DMA_Counter	1
