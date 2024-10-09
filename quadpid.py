@@ -63,7 +63,7 @@ class Quadpid(gymnasium.Env):
         # Schrittweite
         self.Ts = config.step_size
         # Schritt der aktuellen Episode
-        self.schritt = 0
+        self.n = 0
         # Sollgeschwindigkeit
         self.quad.velocity_set = numpy.array([
             1,
@@ -75,7 +75,7 @@ class Quadpid(gymnasium.Env):
         # Initialisierung des PID-Reglers
         self.controller = ControllerPID(self.quad)
         # Berechnung der ersten Motorbefehle mit dem PID-Regler
-        self.controller.regelschritt(
+        self.controller.controller_step(
             self.quad, 
             config.step_size,
             self.quad.velocity_set
@@ -148,11 +148,11 @@ class Quadpid(gymnasium.Env):
         reward = 0
 
         while not (terminated or truncated):
-            self.schritt += 1
+            self.n += 1
 
             self.quad.update(
                 self.t, 
-                self.controller.motorbefehle
+                self.controller.motor_commands
             )
             
             self.t += self.Ts
@@ -163,7 +163,7 @@ class Quadpid(gymnasium.Env):
                 0
             ])
 
-            self.controller.regelschritt(
+            self.controller.controller_step(
                 self.quad,
                 self.Ts,
                 self.quad.velocity_set
@@ -176,11 +176,11 @@ class Quadpid(gymnasium.Env):
                 truncated = True
                 terminated = True
         # Drehlage = [
-        #   Gierwinkel (rad),
-        #   Nichwinkel (rad),
-        #   Rollwinkel (rad)
+        #   roll (rad),
+        #   pitch (rad),
+        #   yaw (rad)
         # ]
-        self.drehlage = self.quaternion.quaternion2cardan(
+        self.attitude = self.quaternion.quaternion2cardan(
             self.quad.state[3:7]
         )             
 
@@ -200,9 +200,9 @@ class Quadpid(gymnasium.Env):
         # self.array_norden.append(self.quad.zustand[0])
         # self.array_osten.append(self.quad.zustand[1])
         # self.array_unten.append(self.quad.zustand[2])
-        # self.omega1_all.append(self.drehlage[0])
-        # self.omega2_all.append(self.drehlage[1])
-        # self.omega3_all.append(self.drehlage[2])
+        # self.omega1_all.append(self.attitude[0])
+        # self.omega2_all.append(self.attitude[1])
+        # self.omega3_all.append(self.attitude[2])
 
         # if numpy.max(numpy.abs(self.state[0:3])) > 2:
         #     truncated = True
@@ -218,7 +218,7 @@ class Quadpid(gymnasium.Env):
         # Beobachtung bestehend aus der Drehlage, der Geschwindigkeit und der Sollgeschwindigkeit
         self.beobachtung[:] = numpy.float32(
             numpy.concatenate([
-                self.drehlage,
+                self.attitude,
                 self.quad.state[7:10], 
                 self.quad.velocity_set
             ])

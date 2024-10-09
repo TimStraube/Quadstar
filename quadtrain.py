@@ -134,8 +134,8 @@ class Agent():
                     batchsize INT,
                     aktionspace_end2end JSON,
                     reward_weights JSON,
-                    aktionspace_pid JSON,
-                    aktions INT,
+                    actionspace_pid JSON,
+                    actions INT,
                     pid_values_update_step_size FLOAT,
                     evaluation_step_size INT
                 )
@@ -155,10 +155,10 @@ class Agent():
                     learning_rate,
                     parallel_environments,
                     batchsize,
-                    aktionspace_end2end,
+                    actionspace_end2end,
                     reward_weights,
-                    aktionspace_pid,
-                    aktions,
+                    actionspace_pid,
+                    actions,
                     pid_values_update_step_size,
                     evaluation_step_size
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -176,10 +176,10 @@ class Agent():
                     config.learning_rate,
                     config.parallel_environments,
                     config.batchsize,
-                    json.dumps(config.aktionspace_end2end),
+                    json.dumps(config.actionspace_end2end),
                     json.dumps(config.reward_weights),
-                    json.dumps(config.aktionspace_pid),
-                    config.aktions,
+                    json.dumps(config.actionspace_pid),
+                    config.actions,
                     config.pid_values_update_step_size,
                     config.evaluation_step_size
                 )

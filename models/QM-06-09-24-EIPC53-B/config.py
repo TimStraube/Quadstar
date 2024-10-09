@@ -1,64 +1,54 @@
 ## Parameter
-# NED = [Norden, Osten, Unten]
-# NWU = [Norden, Westen, Oben]
-Orientierung = "NED"
-usePrecession = bool(False)
-# Schrittweite [s]
-Schrittweite = 0.001
-# Initaler Zeitpunt [s]
-Finaler_Zeitpunkt = 20
-# Initaler Zeitpunkt [s]
-Initaler_Zeitpunkt = 0
+# NED = [North, East, Down]
+# [s]
+step_size = 0.001
+# [s]
+episode_end_time = 20
+# [s]
+episode_start_time = 0
 
 ## Quadlive
 #
 port = 5001
 # 
-Quadlive_Schrittweite = 1
+quadlive_step_size = 1
 
 ## Quadtest
-# Schrittzahl bis Plot [s]
-Quadtest_Finaler_Zeitpunkt = 5
-# Verwenden der Default PID-Parameter
-Quadtest_Default_PID = False
+# [s]
+quadtest_final_time = 5
+# Use default PID parameters
+quadtest_default_pid = False
 
 ## Quadtrain
-# Ordner des Modells 
-Ordnername = "QM-06-09-24-EIPC53-B"
-# Modell fürs Training laden
-Model_laden = False
-# Episodenzahl Training
-Episoden = 1e9
-# Finaler Zeitpunkt einer Trainingsepisode in s
-Quadtrain_finaler_Zeitpunkt = 10
-# Rendern von Trainingsepisoden
-render_modell = False 
-# Architektur der neuronalen Netzwerke
-pi = [2, 2, 2, 2]
-vf = [2, 2, 2, 2]
+# Foldername and id for the model
+model_id = "QM-06-09-24-EIPC53-B"
+# Load model for continued training
+load_model = False
+# Maximal number of episodes
+episodes = 1e9
+# Network architecture
+actor = [2, 2, 2, 2]
+critic = [2, 2, 2, 2]
+# Gradient descent learning rate
+learning_rate = 1e-6
+# Parallel environments
+parallel_environments = 4
+# Batchsize
+batchsize = 16
 
-## Quadtrain
-# Lernrate
-lernrate = 1e-6
-# Parallel Umwelten fürs Training
-paralleleumwelten = 4
-# Batchgröße
-batchmenge = 16
-
-## Quadendezuende
-# [Motor 1, Motor 2, Motor 3, Motor 4, Updateperiode [s]]
-Aktionsraum_EndeZuEnde = [1000, 1000, 1000, 1000, 1]
-# Schritte bis das Modell einen neuen Parameter lernt
-render_fortschrittsanzeige = True
-# Position, Geschwindigkeit, Drehlage, Drehgeschwindigkeit
-belohnungsgewichtung = [0.0, 0.1, 0.1, 0.8]
+## Quadend2end
+# [Max motor rps [rad/s], Update step size [s]]
+actionspace_end2end = [1000, 1000, 1000, 1000, 1]
+# Position, velocity, attitude, angular rate
+reward_weights = [0.0, 0.1, 0.1, 0.8]
 
 ## Quadpid
-Aktionsinterval_PID = [0, 10]
-# Zahl der zulernenden PID-Parameter
-Aktionen = 6
-# Updateperiode [s]
-Updateperiode_PID = 0.01
+# PID-parameter interval
+actionspace_pid = [0, 10]
+# Number of PID-parameters which are controlled
+actions = 6
+# [s]
+pid_values_update_step_size = 0.01
 # Auszug der zulernenden PID-Parameter
 # self.controller.vel_P_gain[0] = aktion[0]
 # self.controller.vel_P_gain[1] = aktion[0]
@@ -74,18 +64,6 @@ Updateperiode_PID = 0.01
 
 ## Liveevaluation des Trainings
 # Anzahl der evaluierten Epiosden
-evaluationsinterval = 2
+evaluation_step_size = 2
 # Schritte bis zur Evaluation
-evaluationsfrequenz = 10000
-
-## Quadserial
-# Serialport für Linux
-serialname = "/dev/ttyACM2" 
-# Aufräumen der Konsole nach jedem neuen Zustand
-doclear = False
-# Zustand auf der Konsole visualisieren
-doprint = False
-
-## Joystick
-# Weiterleiten des Joystickzustandes an die serielle Schnittstelle
-joystick2serial = True
+evaluation_frequency = 10000

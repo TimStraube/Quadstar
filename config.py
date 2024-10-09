@@ -1,40 +1,43 @@
 ## Parameter
 # NED = [North, East, Down]
 # [s]
-step_size = 0.001
+step_size = 0.0005
 # [s]
-episode_end_time = 4
+episode_end_time = 20
 # [s]
 episode_start_time = 0
 
 ## Quadtrain
 # Foldername and id for the model
-model_id = "QP-07-10-24-TPP52S-C"
+model_id = "QM-15-08-24-EIPC55-D"
 # Load model for continued training
 load_model = False
 # Maximal number of episodes
-episodes = 1e8
+episodes = 1e3
 # Network architecture
 actor = [2, 2]
 critic = [2, 2]
 # Gradient descent learning rate
-learning_rate = 1e-4
+learning_rate = 1e-6
 # Parallel environments
 parallel_environments = 4
 # Batchsize
 batchsize = 16
 
+# selbstorchestriert = True
+# selbstorchestriert_interval = [115, 120]
+
 ## Quadend2end
 # [Max motor rps [rad/s], Update step size [s]]
-aktionspace_end2end = [1000, 1]
+actionspace_end2end = [1000, 1000, 1000, 1000, 120]
 # Position, velocity, attitude, angular rate
-reward_weights = [0.0, 0.4, 0.2, 0.2]
+reward_weights = [0.0, 0.2, 0.8, 0.0]
 
 ## Quadpid
 # PID-parameter interval
-aktionspace_pid = [0, 10]
+actionspace_pid = [0, 10]
 # Number of PID-parameters which are controlled
-aktions = 6
+actions = 6
 # [s]
 pid_values_update_step_size = 0.01
 # Auszug der zulernenden PID-Parameter

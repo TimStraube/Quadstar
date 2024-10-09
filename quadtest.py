@@ -5,7 +5,6 @@ email: hi@optimalpi.de
 
 import config
 import numpy
-import random
 import time
 import matplotlib.pyplot as plt
 from stable_baselines3 import PPO
@@ -46,7 +45,7 @@ class Testbench():
             self.quad
         )
         # Generate First Commands
-        self.controller.regelschritt(
+        self.controller.controller_step(
             self.quad, 
             config.step_size,
             self.quad.velocity_set
@@ -57,25 +56,22 @@ class Testbench():
         self.x_soll = [0]
         self.y_soll = [0]
         self.z_soll = [0]
-        self.geschwindigkeitssoll_x = []
-        self.geschwindigkeitssoll_y = []
-        self.geschwindigkeitssoll_z = []
+        self.velocity_set_x = []
+        self.velocity_set_y = []
+        self.velocity_set_z = []
         self.t_all = []
         self.x_all = []
         self.y_all = []
         self.z_all = []
-        self.geschwindigkeitsvektor_x = []
-        self.geschwindigkeitsvektor_y = []
-        self.geschwindigkeitsvektor_z = []
-        self.omega1_all = []
-        self.omega2_all = []
-        self.omega3_all = []
+        self.velocity_x = []
+        self.velocity_y = []
+        self.velocity_z = []
+        self.roll_vector = []
+        self.pitch_vector = []
+        self.yaw_vector = []
         self.x = 0
         self.y = 0
         self.z = 0
-        self.omega1 = 0
-        self.omega2 = 0
-        self.omega3 = 0
 
         self.beobachtung = numpy.zeros(
             9, 
@@ -101,7 +97,7 @@ class Testbench():
             self.beobachtung
         )[0]
     
-    def vorhersage(self):
+    def prediction(self):
         self.drehlage = self.quaternion.quaternion2cardan(
             self.quad.state[3:7]
         )             
@@ -174,10 +170,10 @@ class Testbench():
 
             self.quad.update(
                 self.t, 
-                self.controller.motorbefehle
+                self.controller.motor_commands
             )
             self.t += config.step_size
-            self.controller.regelschritt(
+            self.controller.controller_step(
                 self.quad,
                 config.step_size,
                 self.velocity_set
@@ -207,7 +203,7 @@ class Testbench():
         aktiv = 1
         while (aktiv):
 
-            aktion = self.vorhersage()
+            action = self.prediction()
             # for _ in range(int(aktion[4] + 1)):
             #     self.quad.update(
             #         self.t, 
@@ -221,7 +217,7 @@ class Testbench():
             for _ in range(1):
                 self.quad.update(
                     self.t, 
-                    250 * aktion + 350
+                    250 * action + 350
                 )
                 self.t += config.step_size
 
@@ -253,30 +249,30 @@ class Testbench():
         self.z_soll.append(self.z_soll[-1] +
             config.step_size * self.velocity_set[2]
         )
-        self.geschwindigkeitssoll_x.append(
+        self.velocity_set_x.append(
             self.velocity_set[0]
         )
-        self.geschwindigkeitssoll_y.append(
+        self.velocity_set_y.append(
             self.velocity_set[1]
         )
-        self.geschwindigkeitssoll_z.append(
+        self.velocity_set_z.append(
             self.velocity_set[2]
         )
-        self.geschwindigkeitsvektor_x.append(
+        self.velocity_x.append(
             self.quad.state[7]
         )
-        self.geschwindigkeitsvektor_y.append(
+        self.velocity_y.append(
             self.quad.state[8]
         )
-        self.geschwindigkeitsvektor_z.append(
+        self.velocity_z.append(
             self.quad.state[9]
         )
         self.x_all.append(self.quad.state[0])
         self.y_all.append(self.quad.state[1])
         self.z_all.append(self.quad.state[2])
-        self.omega1_all.append(self.drehlage[0])
-        self.omega2_all.append(-self.drehlage[1])
-        self.omega3_all.append(self.drehlage[2])
+        self.roll_vector.append(self.drehlage[0])
+        self.pitch_vector.append(-self.drehlage[1])
+        self.yaw_vector.append(self.drehlage[2])
 
     def render(self):
         """Render
@@ -316,30 +312,30 @@ class Testbench():
         ax3.set_title('Unten/m') 
         ax3.set_xlabel('t/ms')
 
-        ax4.plot(self.omega1_all, self.t_all)
+        ax4.plot(self.roll_vector, self.t_all)
         ax4.set_title('Rollen')
         ax4.set_xlabel('t/s')
 
-        ax5.plot(self.omega2_all, self.t_all)
+        ax5.plot(self.pitch_vector, self.t_all)
         ax5.set_title('Nicken')
         ax5.set_xlabel('t/s')
 
-        ax6.plot(self.omega3_all, self.t_all)
+        ax6.plot(self.yaw_vector, self.t_all)
         ax6.set_title('Gieren')
         ax6.set_xlabel('t/s')
 
-        ax7.plot(self.geschwindigkeitsvektor_x)
-        ax7.plot(self.geschwindigkeitssoll_x, 'g')
+        ax7.plot(self.velocity_x)
+        ax7.plot(self.velocity_set_x, 'g')
         ax7.set_title('Norden (m/s)')
         ax7.set_xlabel('t/ms')
 
-        ax8.plot(self.geschwindigkeitsvektor_y)
-        ax8.plot(self.geschwindigkeitssoll_y, 'g')
+        ax8.plot(self.velocity_y)
+        ax8.plot(self.velocity_set_y, 'g')
         ax8.set_title('Osten (m/s)')
         ax8.set_xlabel('t/ms')
 
-        ax9.plot(self.geschwindigkeitsvektor_z)
-        ax9.plot(self.geschwindigkeitssoll_z, 'g')
+        ax9.plot(self.velocity_z)
+        ax9.plot(self.velocity_set_z, 'g')
         ax9.set_title('Unten (m/s)')
         ax9.set_xlabel('t/ms')
 
@@ -358,7 +354,7 @@ class Testbench():
         quad = Quadcopter()
         controller = ControllerPID(quad)
 
-        controller.regelschritt(
+        controller.controller_step(
             quad, 
             config.step_size
         )
@@ -387,7 +383,7 @@ class Testbench():
             [numTimeStep, len(self.velocity_set)]
         )
         w_cmd_all = numpy.zeros(
-            [numTimeStep, len(controller.motorbefehle)]
+            [numTimeStep, len(controller.motor_commands)]
         )
         wMotor_all = numpy.zeros(
             [numTimeStep, len(quad.wMotor)]
@@ -403,7 +399,7 @@ class Testbench():
         omega_all[0,:]      = quad.state[10:13]
         euler_all[0,:]      = quad.euler
         sDes_calc_all[0,:]  = self.velocity_set
-        w_cmd_all[0,:]      = controller.motorbefehle
+        w_cmd_all[0,:]      = controller.motor_commands
         wMotor_all[0,:]     = quad.wMotor
         thr_all[0,:]        = quad.thr
         tor_all[0,:]        = quad.tor
@@ -430,7 +426,7 @@ class Testbench():
             omega_all[i,:]       = quad.state[10:13]
             euler_all[i,:]       = quad.euler
             sDes_calc_all[i,:]   = self.velocity_set
-            w_cmd_all[i,:]       = controller.motorbefehle
+            w_cmd_all[i,:]       = controller.motor_commands
             wMotor_all[i,:]      = quad.wMotor
             thr_all[i,:]         = quad.thr
             tor_all[i,:]         = quad.tor
@@ -484,12 +480,12 @@ class Testbench():
         quad.update(
             t, 
             config.step_size, 
-            controller.motorbefehle
+            controller.motor_commands
         )
         t += config.step_size      
 
         # Generate Commands (for next iteration)
-        controller.controller(
+        controller.controller_step(
             quad, 
             config.step_size,
             self.velocity_set

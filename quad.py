@@ -92,7 +92,7 @@ class Quadcopter():
         # Value for second order system for Motor dynamics
         self.kp = 1.0  
         # Value for second order system for Motor dynamics  
-        self.dämpfung = 1.0  
+        self.damping = 1.0  
         # w (rad/s) = cmd * c1 + c0 (cmd in %)
         self.motorc1 = 8.49  
         self.motorc0 = 74.7
@@ -230,7 +230,7 @@ class Quadcopter():
 
         self.controller = ControllerPID(self)
 
-        self.controller.regelschritt(
+        self.controller.controller_step(
             self, 
             config.step_size,
             self.velocity_set
@@ -279,7 +279,7 @@ class Quadcopter():
         # Drehmomentberechnung aus der Motordrehzahl
         self.tor = self.kTo * self.wMotor * self.wMotor
 
-    def state_dot(self, t, s, motorbefehle):
+    def state_dot(self, t, s, motor_commands):
         """
         """
     
@@ -312,24 +312,24 @@ class Quadcopter():
         # Motor Dynamics and Rotor forces (Second Order System: https://apmonitor.com/pdc/index.php/Main/SecondOrderSystems)
         
         wddotM1 = (
-            -2.0 * self.dämpfung * self.tau * wdotM1 - 
+            -2.0 * self.damping * self.tau * wdotM1 - 
             wM1 + 
-            self.kp * motorbefehle[0]
+            self.kp * motor_commands[0]
         ) / (self.tau ** 2)
         wddotM2 = (
-            -2.0 * self.dämpfung * self.tau * wdotM2 - 
+            -2.0 * self.damping * self.tau * wdotM2 - 
             wM2 + 
-            self.kp * motorbefehle[1]
+            self.kp * motor_commands[1]
         ) / (self.tau ** 2)
         wddotM3 = (
-            -2.0 * self.dämpfung * self.tau * wdotM3 - 
+            -2.0 * self.damping * self.tau * wdotM3 - 
             wM3 + 
-            self.kp * motorbefehle[2]
+            self.kp * motor_commands[2]
         ) / (self.tau ** 2)
         wddotM4 = (
-            -2.0 * self.dämpfung * self.tau * wdotM4 - 
+            -2.0 * self.damping * self.tau * wdotM4 - 
             wM4 + 
-            self.kp * motorbefehle[3]
+            self.kp * motor_commands[3]
         ) / (self.tau ** 2)
     
         wMotor = numpy.array([wM1, wM2, wM3, wM4])
@@ -401,13 +401,13 @@ class Quadcopter():
 
         return sdot
 
-    def update(self, t, motorbefehle):
+    def update(self, t, motor_commands):
         """This method ensures that the quadcopter's state is continuously updated based on the given inputs, allowing for accurate simulation or control of its behavior.
         """
-        geschwindigkeit_t_minus_1 = self.state[7:10]
+        velocity_previous = self.state[7:10]
         omega_t_minus_1 = self.state[10:13]
 
-        self.integrator.set_f_params(motorbefehle)
+        self.integrator.set_f_params(motor_commands)
         self.state = self.integrator.integrate(
             t, 
             t + config.step_size
@@ -415,7 +415,7 @@ class Quadcopter():
 
         self.pos = self.state[0:3]
         self.quat = self.state[3:7]
-        self.geschwindigkeit = self.state[7:10]
+        self.velocity = self.state[7:10]
         self.omega = self.state[10:13]
         self.wMotor = numpy.array([
             self.state[13], 
@@ -425,7 +425,7 @@ class Quadcopter():
         ])
 
         self.vel_dot = (
-            self.geschwindigkeit - geschwindigkeit_t_minus_1
+            self.velocity - velocity_previous
         ) / config.step_size
         self.omega_dot = (
             self.omega - omega_t_minus_1
@@ -441,7 +441,7 @@ class Quadcopter():
             self.state[7:10] -
             self.velocity_set
         )
-        drehgeschwindigkeitfehler = (
+        error_rate = (
             self.state[10:13] - 
             [0, 0, 0]
         )
@@ -454,7 +454,7 @@ class Quadcopter():
             -config.reward_weights[1] *
             (numpy.sum(numpy.abs(error_velocity))) +
             config.reward_weights[2] /
-            (1 + numpy.sum(drehgeschwindigkeitfehler ** 2)) +
+            (1 + numpy.sum(error_rate ** 2)) +
             config.reward_weights[3] / 
             (1 + numpy.sum(error_attitude ** 2))
         )

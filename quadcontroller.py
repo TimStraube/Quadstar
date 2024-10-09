@@ -94,7 +94,7 @@ class ControllerPID():
         ])
 
         # Initalization of motor commands
-        self.motorbefehle = np.ones(4) * quadcopter.w_hover
+        self.motor_commands = np.ones(4) * quadcopter.w_hover
         self.thrust_integral = np.zeros(3)
 
         # if (yawType == 0):
@@ -111,7 +111,7 @@ class ControllerPID():
 
         self.quaternion = Quaternion()
     
-    def regelschritt(
+    def controller_step(
         self, 
         quadcopter, 
         step_size, 
@@ -403,7 +403,7 @@ class ControllerPID():
             self.rate_set[1], 
             self.rate_set[2]
         ])
-        self.motorbefehle = np.sqrt(np.clip(
+        self.motor_commands = np.sqrt(np.clip(
             np.dot(quadcopter.mixerFMinv, t),
             quadcopter.minWmotor ** 2, 
             quadcopter.maxWmotor ** 2
