@@ -8,7 +8,7 @@
 ### Config
 
 All volatile parameters on the user side can be controlled from a single file.
-When a new model is trained the current config is used for training and is saved in the respective model folder.
+When a new model is trained the current config is used for training and is saved in models/config.db a SQLite database.
 
 ### Plot of quadcopter trajectories
 
