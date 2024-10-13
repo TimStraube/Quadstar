@@ -175,8 +175,8 @@ class ControllerPID():
         
         # Get thrust limits
         # The Thrust limits are negated and swapped due to NED-frame
-        uMax = -quadcopter.minThr
-        uMin = -quadcopter.maxThr
+        uMax = -quadcopter.thrust_min
+        uMin = -quadcopter.thrust_max
 
         # Apply Anti-Windup in D-direction
         stop_int_D = (
@@ -191,7 +191,7 @@ class ControllerPID():
         #     )
         #     # Limit thrust integral
         #     self.thrust_integral[2] = (
-        #         min(abs(self.thrust_integral[2]), quadcopter.maxThr) * 
+        #         min(abs(self.thrust_integral[2]), quadcopter.thrust_max) * 
         #         np.sign(self.thrust_integral[2])
         #     )
 
@@ -222,7 +222,7 @@ class ControllerPID():
             np.tan(self.tiltMax)
         )
         thrust_max_xy = sqrt(
-            quadcopter.maxThr ** 2 - 
+            quadcopter.thrust_max ** 2 - 
             self.thrust_set[DOWN] ** 2
         )
         thrust_max_xy = min(
@@ -405,6 +405,6 @@ class ControllerPID():
         ])
         self.motor_commands = np.sqrt(np.clip(
             np.dot(quadcopter.mixerFMinv, t),
-            quadcopter.minWmotor ** 2, 
-            quadcopter.maxWmotor ** 2
+            quadcopter.rate_motor_min ** 2, 
+            quadcopter.rate_motor_max ** 2
         ))

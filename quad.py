@@ -80,13 +80,13 @@ class Quadcopter():
 
         self.mixerFMinv = inv(self.mixerFM)
         # Minimum total thrust
-        self.minThr = 0.4    
+        self.thrust_min = 0.4    
         # Maximum total thrust
-        self.maxThr = 4 * 9.18 * 4   
+        self.thrust_max = 4 * 9.18 * 4   
         # Minimum motor rotation speed (rad/s)
-        self.minWmotor = 0       
+        self.rate_motor_min = 0       
         # Maximum motor rotation speed (rad/s)
-        self.maxWmotor = 1000      
+        self.rate_motor_max = 1000      
         # Value for second order system for Motor dynamics
         self.tau = 0.015    
         # Value for second order system for Motor dynamics
@@ -335,8 +335,8 @@ class Quadcopter():
         wMotor = numpy.array([wM1, wM2, wM3, wM4])
         wMotor = numpy.clip(
             wMotor, 
-            self.minWmotor, 
-            self.maxWmotor
+            self.rate_motor_min, 
+            self.rate_motor_max
         )
         thrust = self.kTh * wMotor * wMotor
         drehmoment = self.kTo * wMotor * wMotor
