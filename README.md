@@ -3,16 +3,16 @@
 ## Targets of the project
 
 1. Build a airworthy quadcopter from scratch which can be controlled with a joystick
-2. Learn PID-parameters in a simulation
-3. Deploy the learned PID-parameters and compare the performance to manually set ones
+2. Learn PID parameters in a simulation
+3. Deploy the learned PID parameters and compare the performance to manually set ones
 4. Learn a control policy 
-5. Deploy the control policy and compare the performance to the PID-controller
+5. Deploy the control policy and compare the performance to the PID controller
 
 ## Controller architecture
 
-### PID-controller
+### PID controller
 
-### End2end-policy
+### End2end policy
 
 ## Hardware
 
@@ -69,4 +69,4 @@ python3 joystick.py
 
 ## Credit
 
-The PID-controller as well as the flight dynamic model inplementation from quadcopter_simcon have been modified for this reposiory. Big thanks to the creator.  
+The PID controller as well as the flight dynamic model inplementation from `[quadcopter_simcon](https://github.com/yourusername/quadcopter_simcon)` have been modified for this reposiory. Big thanks to the creator.  
