@@ -69,4 +69,4 @@ python3 joystick.py
 
 ## Credit
 
-The PID controller as well as the flight dynamic model inplementation from [quadcopter_simcon](https://github.com/yourusername/quadcopter_simcon) have been modified for this reposiory. Big thanks to the creator.  
+The PID controller as well as the flight dynamic model inplementation from [quadcopter_simcon](https://github.com/bobzwik/Quadcopter_SimCon) have been modified for this reposiory. Big thanks to the creator.  
