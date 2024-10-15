@@ -108,12 +108,17 @@ typedef struct {
 } Quaternion;
 
 typedef struct {
-    double rollen, nicken, gieren;
+    double roll, pitch, yaw;
 } Eulerangle;
 
 typedef struct {
-    double NORTH, EAST, DOWN;
-} velocity;
+    double north, east, down;
+} NED;
+
+typedef struct {
+    double front_left, front_right, back_right, back_left;
+} Motors_clockwise;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -163,8 +168,7 @@ MFX_output_t data_out;
 MFX_output_t *fusionout = &data_out;
 
 // Volatile Parameter
-double acceleration[3] = {0};
-double velocity[3] = {0};
+NED acceleration;
 Quaternion attitude;
 
 // Umweltparameter
@@ -186,11 +190,11 @@ double mixerFM[4][4] = {
 };
 
 // PID-Parameter
-double vel_p_gain[3] = {5.0, 5.0, 4.0};
-double vel_d_gain[3] = {0.5, 0.5, 0.5};
-double rate_p_gain[3] = {1.5, 1.5, 1.0};
-double rate_d_gain[3] = {0.04, 0.04, 0.1};
-double attitute_p_gain[3] = {8.0, 8.0, 1.5};
+NED vel_p_gain = {5.0, 5.0, 4.0};
+NED vel_d_gain = {0.5, 0.5, 0.5};
+NED rate_p_gain = {1.5, 1.5, 1.0};
+NED rate_d_gain = {0.04, 0.04, 0.1};
+NED attitute_p_gain = {8.0, 8.0, 1.5};
 // double vel_i_gain[3] = {5.0, 5.0, 5.0};
 
 // Limits
@@ -208,15 +212,16 @@ double maxWMotor = 1000.0;
 // double minThr = 300.0;
 double maxThr = 500.0;
 double tiltMax = 0.8;
-velocity velocity_error_limit;
-velocity velocity_set;
+NED velocity_error_limit;
+NED velocity_set;
 float thrust = 0.0f;
 
 // Sollpunkte
-double thrust_set[3] = {0.0, 0.0, 0.0};
+NED thrust_set[3];
 Eulerangle rate_set_value;
 double yaw_setpoint = 0.0;
-double acc_setpoint[3] = {0.0, 0.0, 0.0};
+NED acc_setpoint;
+NED velocity_quad;
 
 double delta_t_s;
 Eulerangle attitude_previous;
@@ -230,10 +235,10 @@ int thrust_only = 1;
 double e_z[3];
 double e_z_d[3];
 Quaternion quaternion_error_without_yaw;
-double motor_commands[4];
-double motor_commands_tminus1[4];
-double motor_commands_tminus2[4];
-double velocity_error[3] = {0.0, 0.0, 0.0};
+Motors_clockwise motor_commands[4];
+Motors_clockwise motor_commands_tminus1[4];
+Motors_clockwise motor_commands_tminus2[4];
+NED velocity_error;
 double yaw_w = 0.0;
 Eulerangle rate_error;
 Eulerangle rate_set;
@@ -245,7 +250,6 @@ double thrust_set_norm;
 
 // UART
 char buffer[50];
-
 
 double normQuaternion(Quaternion q) {
 	return sqrt(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
@@ -297,13 +301,13 @@ Quaternion kreuzproduktQuaternion(Quaternion q1, Quaternion q2) {
 	return returnQuaternion;
 }
 
-Quaternion kardanwinkel2quaternion(double gierwinkel, double nickwinkel, double rollwinkel) {
-	double cr1 = cos(0.5 * gierwinkel);
-	double cr2 = cos(0.5 * nickwinkel);
-	double cr3 = cos(0.5 * rollwinkel);
-	double sr1 = sin(0.5 * gierwinkel);
-	double sr2 = sin(0.5 * nickwinkel);
-	double sr3 = sin(0.5 * rollwinkel);
+Quaternion kardanangle2quaternion(double gierangle, double nickangle, double rollangle) {
+	double cr1 = cos(0.5 * gierangle);
+	double cr2 = cos(0.5 * nickangle);
+	double cr3 = cos(0.5 * rollangle);
+	double sr1 = sin(0.5 * gierangle);
+	double sr2 = sin(0.5 * nickangle);
+	double sr3 = sin(0.5 * rollangle);
 
 	Quaternion q;
 	q.w = cr1 * cr2 * cr3 + sr1 * sr2 * sr3;
@@ -877,18 +881,18 @@ void controller_step(void) {
 	READ_MAG();
 
 	/* Convert angular velocity from [md/s] to [deg/s] */
-	// Gieren (Uhrzeigersinn)
+	// yaw (Uhrzeigersinn)
 	data_in.gyro[0] = (float) GyrValue.x * FROM_MDPS_TO_DPS;
-	// Nicken (Nase nach DOWN ist negatives nicken)
+	// pitch (Nase nach DOWN ist negatives pitch)
 	data_in.gyro[1] = (float) GyrValue.y * FROM_MDPS_TO_DPS;
-	// Rollen (Mit Blick von hinten im Uhrzeigersinn)
+	// roll (Mit Blick von hinten im Uhrzeigersinn)
 	data_in.gyro[2] = (float) GyrValue.z * FROM_MDPS_TO_DPS;
 
-	// NORTH in g
+	// North in g
 	data_in.acc[0] = (float) AccValue.x * FROM_MG_TO_G;
-	// EAST in g
+	// East in g
 	data_in.acc[1] = (float) AccValue.y * FROM_MG_TO_G;
-	// Oben in g
+	// Down in g
 	data_in.acc[2] = (float) AccValue.z * FROM_MG_TO_G;
 
 	data_in.mag[0] = (float) MagValue.x * FROM_MGAUSS_TO_UT50;
@@ -900,23 +904,23 @@ void controller_step(void) {
 
 	MotionFX_manager_run(fusionin, fusionout, 0.01f);
 
-	velocity_set.NORTH = pitch_joystick / 50.0f;
-	velocity_set.EAST = roll_joystick / 50.0f;
-	velocity_set.DOWN = -thrust_joystick / 50.0f;
+	velocity_set.north = pitch_joystick / 50.0f;
+	velocity_set.east = roll_joystick / 50.0f;
+	velocity_set.down = -thrust_joystick / 50.0f;
 
 	// [m/s]
-	velocity[NORTH] += delta_t_s * fusionout->linear_acceleration[NORTH_SENSOR] / 9.81f;
+	velocity_quad.north += delta_t_s * fusionout->linear_acceleration[NORTH_SENSOR] / 9.81f;
 	// [m/s]
-	velocity[EAST] += delta_t_s * fusionout->linear_acceleration[WEST_SENSOR] / 9.81f;
+	velocity_quad.east += delta_t_s * fusionout->linear_acceleration[WEST_SENSOR] / 9.81f;
 	// [m/s]
-	velocity[DOWN] += delta_t_s * fusionout->linear_acceleration[UP_SENSOR] / 9.81f;
+	velocity_quad.down += delta_t_s * fusionout->linear_acceleration[UP_SENSOR] / 9.81f;
 
 	attitude.w = fusionout->quaternion[QW];
 	attitude.x = fusionout->quaternion[QX];
 	attitude.y = fusionout->quaternion[QY];
 	attitude.z = fusionout->quaternion[QZ];
 
-//	attitude = kardanwinkel2quaternion(
+//	attitude = kardanangle2quaternion(
 //			0.0f * fusionout->rotation[0] * 3.14f / 180.0f,
 //			-fusionout->rotation[1] * 3.14f / 180.0f,
 //			fusionout->rotation[2] * 3.14f / 180.0f
@@ -929,30 +933,30 @@ void controller_step(void) {
 	}
 
 	// Controller
-	// Rollwinkel [deg/s]
-	drehrate.rollen = (fusionout->rotation[2] - attitude_previous.rollen) / delta_t_s;
-	// Nickwinkel [deg/s]
-	drehrate.nicken = (fusionout->rotation[1] - attitude_previous.nicken) / delta_t_s;
-	// Gierwinkel [deg/s]
-	drehrate.gieren = 0.0f * data_in.gyro[0];
+	// Rollangle [deg/s]
+	drehrate.roll = (fusionout->rotation[2] - attitude_previous.roll) / delta_t_s;
+	// Nickangle [deg/s]
+	drehrate.pitch = (fusionout->rotation[1] - attitude_previous.pitch) / delta_t_s;
+	// Gierangle [deg/s]
+	drehrate.yaw = 0.0f * data_in.gyro[0];
 
-	attitude_previous.rollen = fusionout->rotation[2];
-	attitude_previous.nicken = fusionout->rotation[1];
+	attitude_previous.roll = fusionout->rotation[2];
+	attitude_previous.pitch = fusionout->rotation[1];
 
-	omega_dot.rollen = 0.0f; // (drehrate.rollen - rate_previous.rollen) / delta_t_s;
-	omega_dot.nicken = 0.0f; // (drehrate.nicken - rate_previous.nicken) / delta_t_s;
-	omega_dot.gieren = 0.0f;
+	omega_dot.roll = 0.0f; // (drehrate.roll - rate_previous.roll) / delta_t_s;
+	omega_dot.pitch = 0.0f; // (drehrate.pitch - rate_previous.pitch) / delta_t_s;
+	omega_dot.yaw = 0.0f;
 
-	rate_previous.rollen = drehrate.rollen;
-	rate_previous.nicken = drehrate.nicken;
+	rate_previous.roll = drehrate.roll;
+	rate_previous.pitch = drehrate.pitch;
 
 
 	// velocitysregler
 
 	// m/s
-	velocity_error[DOWN] = 0.0f; // velocity_set.DOWN - velocity[DOWN];
+	velocity_error.down = 0.0f; // velocity_set.DOWN - velocity_quad.DOWN;
 
-	thrust_set[DOWN] = vel_p_gain[DOWN] * velocity_error[DOWN] - vel_d_gain[DOWN] * acceleration[DOWN] + mass * (acc_setpoint[DOWN] - gravitation_constant) + thr_int[DOWN];
+	thrust_set[DOWN] = vel_p_gain[DOWN] * velocity_error.down - vel_d_gain[DOWN] * acceleration[DOWN] + mass * (acc_setpoint[DOWN] - gravitation_constant) + thr_int[DOWN];
 
 	double uMax = -0.4;
 	double uMin = -16 * gravitation_constant;
@@ -966,16 +970,16 @@ void controller_step(void) {
 	}
 
 	// XY Velocity Control (Thrust in NE-direction)
-	velocity_error[NORTH] = velocity_set.NORTH - velocity[NORTH];
-	velocity_error[EAST] = velocity_set.EAST - velocity[EAST];
+	velocity_error.north = velocity_set.north - velocity_quad.north;
+	velocity_error.east = velocity_set.east - velocity_quad.east;
 	thrust_set[X] = (
-		vel_p_gain[NORTH] * velocity_error[NORTH] -
+		vel_p_gain[NORTH] * velocity_error.north -
 		vel_d_gain[NORTH] *  acceleration[NORTH] +
 		mass * acc_setpoint[NORTH] +
 		thr_int[NORTH]
 	);
 	thrust_set[Y] = (
-		vel_p_gain[EAST] * velocity_error[EAST] -
+		vel_p_gain[EAST] * velocity_error.east -
 		vel_d_gain[EAST] *  acceleration[EAST] +
 		mass * acc_setpoint[EAST] +
 		thr_int[EAST]
@@ -1013,10 +1017,10 @@ void controller_step(void) {
 	// Use tracking Anti-Windup for NE-direction: during saturation, the integrator is used to unsaturate the output
 	// see Anti-Reset Windup for PID controllers, L.Rundqwist, 1990
 
-	velocity_error_limit.NORTH = velocity_error[NORTH] - (
+	velocity_error_limit.north = velocity_error[NORTH] - (
 		thrust_set[NORTH] - thrust_set[NORTH]
 		) * 2.0 / vel_p_gain[NORTH];
-	velocity_error_limit.EAST = velocity_error[EAST] - (
+	velocity_error_limit.east = velocity_error[EAST] - (
 		thrust_set[EAST] - thrust_set[EAST]
 		) * 2.0 / vel_p_gain[EAST];
 
@@ -1146,7 +1150,7 @@ void controller_step(void) {
 	e_z[1] = 0.0;
 	e_z[2] = 1.0;
 
-	double thrust_set_norm = sqrt(
+	thrust_set_norm = sqrt(
 		thrust_set[0] * thrust_set[0] +
 		thrust_set[1] * thrust_set[1] +
 		thrust_set[2] * thrust_set[2]
@@ -1282,30 +1286,30 @@ void controller_step(void) {
 	attitude_error = kreuzproduktQuaternion(attitude_inverse, quaternion_set);
 
 	if (attitude_error.w > 0) {
-		rate_set_value.rollen = (2.0 * attitude_error.x * attitute_p_gain[0]);
-		rate_set_value.nicken = (2.0 * attitude_error.y * attitute_p_gain[1]);
-		rate_set_value.gieren = (2.0 * attitude_error.z * attitute_p_gain[2]);
+		rate_set_value.roll = (2.0 * attitude_error.x * attitute_p_gain[0]);
+		rate_set_value.pitch = (2.0 * attitude_error.y * attitute_p_gain[1]);
+		rate_set_value.yaw = (2.0 * attitude_error.z * attitute_p_gain[2]);
 	} else {
-		rate_set_value.rollen = -(2.0 * attitude_error.x * attitute_p_gain[0]);
-		rate_set_value.nicken = -(2.0 * attitude_error.y * attitute_p_gain[1]);
-		rate_set_value.gieren = -(2.0 * attitude_error.z * attitute_p_gain[2]);
+		rate_set_value.roll = -(2.0 * attitude_error.x * attitute_p_gain[0]);
+		rate_set_value.pitch = -(2.0 * attitude_error.y * attitute_p_gain[1]);
+		rate_set_value.yaw = -(2.0 * attitude_error.z * attitute_p_gain[2]);
 	}
 
 	// Rate Control
-	rate_error.rollen = rate_set_value.rollen - drehrate.rollen;
-	rate_set.rollen = (
-		rate_p_gain[0] * rate_error.rollen -
-		rate_d_gain[0] * omega_dot.rollen
+	rate_error.roll = rate_set_value.roll - drehrate.roll;
+	rate_set.roll = (
+		rate_p_gain[0] * rate_error.roll -
+		rate_d_gain[0] * omega_dot.roll
 	);
-	rate_error.nicken = rate_set_value.nicken - drehrate.nicken;
-	rate_set.nicken = (
-		rate_p_gain[1] * rate_error.nicken -
-		rate_d_gain[1] * omega_dot.nicken
+	rate_error.pitch = rate_set_value.pitch - drehrate.pitch;
+	rate_set.pitch = (
+		rate_p_gain[1] * rate_error.pitch -
+		rate_d_gain[1] * omega_dot.pitch
 	);
-	rate_error.gieren = rate_set_value.gieren - drehrate.gieren;
-	rate_set.gieren = (
-		rate_p_gain[2] * rate_error.gieren -
-		rate_d_gain[2] * omega_dot.gieren
+	rate_error.yaw = rate_set_value.yaw - drehrate.yaw;
+	rate_set.yaw = (
+		rate_p_gain[2] * rate_error.yaw -
+		rate_d_gain[2] * omega_dot.yaw
 	);
 
 	thrust_set_norm = sqrt(
@@ -1316,27 +1320,27 @@ void controller_step(void) {
 
 	motor_commands[M1] = (
 		mixerFM[0][0] * thrust_set_norm +
-		mixerFM[0][1] * rate_set.rollen +
-		mixerFM[0][2] * rate_set.nicken +
-		mixerFM[0][3] * rate_set.gieren
+		mixerFM[0][1] * rate_set.roll +
+		mixerFM[0][2] * rate_set.pitch +
+		mixerFM[0][3] * rate_set.yaw
 	);
 	motor_commands[M2] = (
 		mixerFM[1][0] * thrust_set_norm +
-		mixerFM[1][1] * rate_set.rollen +
-		mixerFM[1][2] * rate_set.nicken +
-		mixerFM[1][3] * rate_set.gieren
+		mixerFM[1][1] * rate_set.roll +
+		mixerFM[1][2] * rate_set.pitch +
+		mixerFM[1][3] * rate_set.yaw
 	);
 	motor_commands[M3] = (
 		mixerFM[2][0] * thrust_set_norm +
-		mixerFM[2][1] * rate_set.rollen +
-		mixerFM[2][2] * rate_set.nicken +
-		mixerFM[2][3] * rate_set.gieren
+		mixerFM[2][1] * rate_set.roll +
+		mixerFM[2][2] * rate_set.pitch +
+		mixerFM[2][3] * rate_set.yaw
 	);
 	motor_commands[M4] = (
 		mixerFM[3][0] * thrust_set_norm +
-		mixerFM[3][1] * rate_set.rollen +
-		mixerFM[3][2] * rate_set.nicken +
-		mixerFM[3][3] * rate_set.gieren
+		mixerFM[3][1] * rate_set.roll +
+		mixerFM[3][2] * rate_set.pitch +
+		mixerFM[3][3] * rate_set.yaw
 	);
 
 	for (int i = 0; i < 4; i++) {
@@ -1431,24 +1435,24 @@ static void READ_MAG(void)
 // Quaternion
 
 Eulerangle Quaternion2Eulerangle(Quaternion q) {
-    Eulerangle winkel;
+    Eulerangle angle;
 
     // roll (x-axis rotation)
     double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
     double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-    winkel.rollen = atan2(sinr_cosp, cosr_cosp);
+    angle.roll = atan2(sinr_cosp, cosr_cosp);
 
     // pitch (y-axis rotation)
     double sinp = sqrt(1 + 2 * (q.w * q.y - q.x * q.z));
     double cosp = sqrt(1 - 2 * (q.w * q.y - q.x * q.z));
-    winkel.nicken = 2 * atan2(sinp, cosp) - M_PI / 2;
+    angle.pitch = 2 * atan2(sinp, cosp) - M_PI / 2;
 
     // yaw (z-axis rotation)
     double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
     double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-    winkel.gieren = atan2(siny_cosp, cosy_cosp);
+    angle.yaw = atan2(siny_cosp, cosy_cosp);
 
-    return winkel;
+    return angle;
 }
 
 // LED
