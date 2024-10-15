@@ -18,6 +18,8 @@
 
 ### BLDC-motors
 
+Axisflying C227 1960KV FPV Motor schwarz
+
 ### BLDC-driver
 
 ### Microcontroller
