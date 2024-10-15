@@ -22,6 +22,8 @@ Axisflying C227 1960KV FPV Motor schwarz
 
 ### BLDC-driver
 
+B-G431B-ESC1 
+
 ### Microcontroller
 
 STM32F411RE
