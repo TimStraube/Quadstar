@@ -73,8 +73,8 @@ all: main-build
 main-build: Sensorfusion.elf secondary-outputs
 
 # Tool invocations
-Sensorfusion.elf Sensorfusion.map: $(OBJS) $(USER_OBJS) /home/tim/Programme/Q92MCU/Sensorfusion/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Sensorfusion.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m4 -T"/home/tim/Programme/Q92MCU/Sensorfusion/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Sensorfusion.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_MotionFX_Library/Lib -L../Middlewares/ST/STM32_MotionID_Library/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Sensorfusion.elf Sensorfusion.map: $(OBJS) $(USER_OBJS) /home/tim/Programme/Quadstar/quadsoft/Sensorfusion/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Sensorfusion.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m4 -T"/home/tim/Programme/Quadstar/quadsoft/Sensorfusion/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Sensorfusion.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_MotionFX_Library/Lib -L../Middlewares/ST/STM32_MotionID_Library/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

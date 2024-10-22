@@ -148,7 +148,7 @@ class Joystick():
 
             message = f"{int(self.axis_thrust + 100)}{int(self.roll + 500)}{int(self.pitch + 500)}{self.controller_active}{self.schubnur}\n\r".encode()
             print("Send: " + str(message))
-            self.serialPort.senden(message)
+            self.serialPort.send2uart(message)
         self.roll_old = self.roll
         self.pitch_old = self.pitch
         self.old_axis_thrust = self.axis_thrust
