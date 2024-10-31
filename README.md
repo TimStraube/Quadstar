@@ -8,13 +8,13 @@
 4. Learn a control policy 
 5. Deploy the control policy and compare the performance to the PID controller
 
-## Controller architecture
+## Controller architectures
 
 ### PID controller
 
 ### End2end policy
 
-## Hardware
+## Drivetrain
 
 ### BLDC-motors
 
@@ -24,19 +24,21 @@ Axisflying C227 1960KV FPV Motor schwarz
 
 B-G431B-ESC1 
 
-### Microcontroller
+### Akkumulator
 
-STM32F411RE
+## Information flow system
+
+### Main flight computer
+
+The core of the system is a STM32F411RE microcontroller which computes all processes required for the flight controller which includes sensor fusion.
 
 ### Sensor extension board
 
 X-NUCLEO-IKS4A1
 
-### Akkumulator
-
 ## Simulation
 
-### Config
+### Configuration
 
 All volatile parameters on the user side can be controlled from a single file.
 When a new model is trained the current config is used for training and is saved in the SQLite database models/config.db.
@@ -45,31 +47,23 @@ When a new model is trained the current config is used for training and is saved
 
 The program quadtest.py can be used to create matplotlib-plots of position, velocity and attitude trajectories from simulation:
 
-```
-python3 quadtest.py
-```
+```python3 quadtest.py```
 
 ### Visualize the quadcopter in the browser with flask
 
 Quadlive provides two functionalities.
 
-```
-python3 quadlive.py 
-```
+```python3 quadlive.py```
 
 ### Train models with Stable-Baselines3
 
-```
-python3 quadtrain.py
-```
+To train the a quadcopter flight controller on the current configuration run ```python3 quadtrain.py```.
 
 ## Delopyment
 
 ### Joystick
 
-```
-python3 joystick.py
-```
+To sample joystick values and send them to the main flight computer run ```python3 joystick.py```.
 
 ## Credit
 
