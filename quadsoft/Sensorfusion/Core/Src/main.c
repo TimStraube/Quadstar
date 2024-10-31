@@ -953,29 +953,29 @@ void controller_step(void) {
 	// m/s
 	velocity_error.down = velocity_set.down - velocity_quad.down;
 
-	thrust_set->down = vel_p_gain.down * velocity_error.down - vel_d_gain.down * acceleration.down + mass * (acc_setpoint.down - gravitation_constant) + thr_int.down;
+	thrust_set.down = vel_p_gain.down * velocity_error.down - vel_d_gain.down * acceleration.down + mass * (acc_setpoint.down - gravitation_constant) + thr_int.down;
 
 	double uMax = -0.4;
 	double uMin = -16 * gravitation_constant;
 
 	// thrust_set[2] = thrust_z;
-	if (thrust_set->down < uMin) {
-		thrust_set->down = uMin;
+	if (thrust_set.down < uMin) {
+		thrust_set.down = uMin;
 	}
-	if (thrust_set->down > uMax) {
-		thrust_set->down = uMax;
+	if (thrust_set.down > uMax) {
+		thrust_set.down = uMax;
 	}
 
 	// XY Velocity Control (Thrust in NE-direction)
 	velocity_error.north = velocity_set.north - velocity_quad.north;
 	velocity_error.east = velocity_set.east - velocity_quad.east;
-	thrust_set->north = (
+	thrust_set.north = (
 		vel_p_gain.north * velocity_error.north -
 		vel_d_gain.north *  acceleration.north +
 		mass * acc_setpoint.north +
 		thr_int.north
 	);
-	thrust_set->east = (
+	thrust_set.east = (
 		vel_p_gain.east * velocity_error.east -
 		vel_d_gain.east *  acceleration.east +
 		mass * acc_setpoint.east +
@@ -983,11 +983,11 @@ void controller_step(void) {
 	);
 
 	double thrust_max_xy_tilt = (
-		abs(thrust_set->down) * tan(tiltMax)
+		abs(thrust_set.down) * tan(tiltMax)
 	);
 	double thrust_max_xy = sqrt(
 		pow(maxThr, 2) -
-		pow(thrust_set->down, 2)
+		pow(thrust_set.down, 2)
 	);
 
 	if (thrust_max_xy > thrust_max_xy_tilt) {
@@ -995,19 +995,19 @@ void controller_step(void) {
 	}
 
 	if (
-		thrust_set->north * thrust_set->north + thrust_set->east * thrust_set->east >
+		thrust_set.north * thrust_set.north + thrust_set.east * thrust_set.east >
 		pow(thrust_max_xy, 2)) {
 
 		double mag = sqrt(
-			pow(thrust_set->north, 2) +
-			pow(thrust_set->east, 2)
+			pow(thrust_set.north, 2) +
+			pow(thrust_set.east, 2)
 		);
 
-		thrust_set->north = (
-			thrust_set->north * thrust_max_xy / mag
+		thrust_set.north = (
+			thrust_set.north * thrust_max_xy / mag
 		);
-		thrust_set->east = (
-			thrust_set->east * thrust_max_xy / mag
+		thrust_set.east = (
+			thrust_set.east * thrust_max_xy / mag
 		);
 	}
 
@@ -1015,21 +1015,21 @@ void controller_step(void) {
 	// see Anti-Reset Windup for PID controllers, L.Rundqwist, 1990
 
 	velocity_error_limit.north = velocity_error.north - (
-		thrust_set->north - thrust_set->north
+		thrust_set.north - thrust_set.north
 		) * 2.0 / vel_p_gain.north;
 	velocity_error_limit.east = velocity_error.east - (
-		thrust_set->east - thrust_set->east
+		thrust_set.east - thrust_set.east
 		) * 2.0 / vel_p_gain.east;
 
 	double thrust_set_norm = sqrt(
-		thrust_set->north * thrust_set->north +
-		thrust_set->east * thrust_set->east +
-		thrust_set->down * thrust_set->down
+		thrust_set.north * thrust_set.north +
+		thrust_set.east * thrust_set.east +
+		thrust_set.down * thrust_set.down
 	);
 
-	body_z[0] = -thrust_set->north / thrust_set_norm;
-	body_z[1] = -thrust_set->east / thrust_set_norm;
-	body_z[2] = -thrust_set->down / thrust_set_norm;
+	body_z[0] = -thrust_set.north / thrust_set_norm;
+	body_z[1] = -thrust_set.east / thrust_set_norm;
+	body_z[2] = -thrust_set.down / thrust_set_norm;
 
 	y_C[0] = -sin(yaw_setpoint);
 	y_C[1] = cos(yaw_setpoint);
@@ -1148,14 +1148,14 @@ void controller_step(void) {
 	e_z[2] = 1.0;
 
 	thrust_set_norm = sqrt(
-		pow(thrust_set->north, 2) +
-		pow(thrust_set->east, 2) +
-		pow(thrust_set->down, 2)
+		pow(thrust_set.north, 2) +
+		pow(thrust_set.east, 2) +
+		pow(thrust_set.down, 2)
 	);
 
-	e_z_d[0] = -thrust_set->north / thrust_set_norm;
-	e_z_d[1] = -thrust_set->east / thrust_set_norm;
-	e_z_d[2] = -thrust_set->down / thrust_set_norm;
+	e_z_d[0] = -thrust_set.north / thrust_set_norm;
+	e_z_d[1] = -thrust_set.east / thrust_set_norm;
+	e_z_d[2] = -thrust_set.down / thrust_set_norm;
 
 	double quaternion_error_without_yaw_dot_part = (
 		e_z[0] * e_z_d[0] +
@@ -1310,30 +1310,30 @@ void controller_step(void) {
 	);
 
 	thrust_set_norm = sqrt(
-		pow(thrust_set->north, 2) +
-		pow(thrust_set->east, 2) +
-		pow(thrust_set->down, 2)
+		pow(thrust_set.north, 2) +
+		pow(thrust_set.east, 2) +
+		pow(thrust_set.down, 2)
 	);
 
-	motor_commands->front_left = (
+	motor_commands.front_left = (
 		mixerFM[0][0] * thrust_set_norm +
 		mixerFM[0][1] * rate_set.roll +
 		mixerFM[0][2] * rate_set.pitch +
 		mixerFM[0][3] * rate_set.yaw
 	);
-	motor_commands->front_right = (
+	motor_commands.front_right = (
 		mixerFM[1][0] * thrust_set_norm +
 		mixerFM[1][1] * rate_set.roll +
 		mixerFM[1][2] * rate_set.pitch +
 		mixerFM[1][3] * rate_set.yaw
 	);
-	motor_commands->back_right = (
+	motor_commands.back_right = (
 		mixerFM[2][0] * thrust_set_norm +
 		mixerFM[2][1] * rate_set.roll +
 		mixerFM[2][2] * rate_set.pitch +
 		mixerFM[2][3] * rate_set.yaw
 	);
-	motor_commands->back_left = (
+	motor_commands.back_left = (
 		mixerFM[3][0] * thrust_set_norm +
 		mixerFM[3][1] * rate_set.roll +
 		mixerFM[3][2] * rate_set.pitch +
@@ -1395,13 +1395,13 @@ void controller_step(void) {
 	if (controller_active) {
 		skalar = (pwm_upper_bound - pwm_lower_bound) / 1000.0f;
 		// Pin PA8
-		TIM1->CCR1 = ((skalar * thrust * motor_commands->front_left + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR1 = ((skalar * thrust * motor_commands.front_left + pwm_lower_bound) / 1000.0f) * 30259;
 		// Pin PA9
-		TIM1->CCR2 = ((skalar * thrust * motor_commands->front_right + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR2 = ((skalar * thrust * motor_commands.front_right + pwm_lower_bound) / 1000.0f) * 30259;
 		// Pin PA10
-		TIM1->CCR3 = ((skalar * thrust * motor_commands->back_right + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR3 = ((skalar * thrust * motor_commands.back_right + pwm_lower_bound) / 1000.0f) * 30259;
 		// Pin PA11
-		TIM1->CCR4 = ((skalar * thrust * motor_commands->back_left + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR4 = ((skalar * thrust * motor_commands.back_left + pwm_lower_bound) / 1000.0f) * 30259;
 	} else if (thrust_only) {
 		TIM1->CCR1 = thrust * 30259;
 		TIM1->CCR2 = thrust * 30259;
@@ -1414,15 +1414,15 @@ void controller_step(void) {
 		TIM1->CCR4 = 0;
 	}
 
-	motor_commands_tminus1[0] = motor_commands[0];
-	motor_commands_tminus1[1] = motor_commands[1];
-	motor_commands_tminus1[2] = motor_commands[2];
-	motor_commands_tminus1[3] = motor_commands[3];
-
-	motor_commands_tminus2[0] = motor_commands_tminus1[0];
-	motor_commands_tminus2[1] = motor_commands_tminus1[1];
-	motor_commands_tminus2[2] = motor_commands_tminus1[2];
-	motor_commands_tminus2[3] = motor_commands_tminus1[3];
+//	motor_commands_tminus1[0] = motor_commands[0];
+//	motor_commands_tminus1[1] = motor_commands[1];
+//	motor_commands_tminus1[2] = motor_commands[2];
+//	motor_commands_tminus1[3] = motor_commands[3];
+//
+//	motor_commands_tminus2[0] = motor_commands_tminus1[0];
+//	motor_commands_tminus2[1] = motor_commands_tminus1[1];
+//	motor_commands_tminus2[2] = motor_commands_tminus1[2];
+//	motor_commands_tminus2[3] = motor_commands_tminus1[3];
 }
 
 static void READ_ACCELEROMETER(void)
