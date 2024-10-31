@@ -62,9 +62,6 @@
 #define QX 0
 #define QY 1
 #define QZ 2
-#define NORTH 0
-#define EAST 1
-#define DOWN 2
 #define NORTH_SENSOR 1
 #define WEST_SENSOR 0
 #define UP_SENSOR 2
@@ -181,7 +178,7 @@ double body_y[3];
 double body_z[3];
 double y_C[3];
 double quad_dcm[3][3] = {0};
-double thr_int[3] = {0.0, 0.0, 0.0};
+NED thr_int = {0.0, 0.0, 0.0};
 double mixerFM[4][4] = {
 	{  23000,  64000,  64000, -1530000},
 	{  23000, -64000,  64000,  1530000},
@@ -192,9 +189,9 @@ double mixerFM[4][4] = {
 // PID-Parameter
 NED vel_p_gain = {5.0, 5.0, 4.0};
 NED vel_d_gain = {0.5, 0.5, 0.5};
-NED rate_p_gain = {1.5, 1.5, 1.0};
-NED rate_d_gain = {0.04, 0.04, 0.1};
-NED attitute_p_gain = {8.0, 8.0, 1.5};
+Eulerangle rate_p_gain = {1.5, 1.5, 1.0};
+Eulerangle rate_d_gain = {0.04, 0.04, 0.1};
+Eulerangle attitute_p_gain = {8.0, 8.0, 1.5};
 // double vel_i_gain[3] = {5.0, 5.0, 5.0};
 
 // Limits
@@ -217,7 +214,7 @@ NED velocity_set;
 float thrust = 0.0f;
 
 // Sollpunkte
-NED thrust_set[3];
+NED thrust_set;
 Eulerangle rate_set_value;
 double yaw_setpoint = 0.0;
 NED acc_setpoint;
@@ -235,9 +232,9 @@ int thrust_only = 1;
 double e_z[3];
 double e_z_d[3];
 Quaternion quaternion_error_without_yaw;
-Motors_clockwise motor_commands[4];
-Motors_clockwise motor_commands_tminus1[4];
-Motors_clockwise motor_commands_tminus2[4];
+Motors_clockwise motor_commands;
+Motors_clockwise motor_commands_tminus1;
+Motors_clockwise motor_commands_tminus2;
 NED velocity_error;
 double yaw_w = 0.0;
 Eulerangle rate_error;
@@ -954,43 +951,43 @@ void controller_step(void) {
 	// velocitysregler
 
 	// m/s
-	velocity_error.down = 0.0f; // velocity_set.DOWN - velocity_quad.DOWN;
+	velocity_error.down = velocity_set.down - velocity_quad.down;
 
-	thrust_set[DOWN] = vel_p_gain[DOWN] * velocity_error.down - vel_d_gain[DOWN] * acceleration[DOWN] + mass * (acc_setpoint[DOWN] - gravitation_constant) + thr_int[DOWN];
+	thrust_set->down = vel_p_gain.down * velocity_error.down - vel_d_gain.down * acceleration.down + mass * (acc_setpoint.down - gravitation_constant) + thr_int.down;
 
 	double uMax = -0.4;
 	double uMin = -16 * gravitation_constant;
 
 	// thrust_set[2] = thrust_z;
-	if (thrust_set[DOWN] < uMin) {
-		thrust_set[DOWN] = uMin;
+	if (thrust_set->down < uMin) {
+		thrust_set->down = uMin;
 	}
-	if (thrust_set[DOWN] > uMax) {
-		thrust_set[DOWN] = uMax;
+	if (thrust_set->down > uMax) {
+		thrust_set->down = uMax;
 	}
 
 	// XY Velocity Control (Thrust in NE-direction)
 	velocity_error.north = velocity_set.north - velocity_quad.north;
 	velocity_error.east = velocity_set.east - velocity_quad.east;
-	thrust_set[X] = (
-		vel_p_gain[NORTH] * velocity_error.north -
-		vel_d_gain[NORTH] *  acceleration[NORTH] +
-		mass * acc_setpoint[NORTH] +
-		thr_int[NORTH]
+	thrust_set->north = (
+		vel_p_gain.north * velocity_error.north -
+		vel_d_gain.north *  acceleration.north +
+		mass * acc_setpoint.north +
+		thr_int.north
 	);
-	thrust_set[Y] = (
-		vel_p_gain[EAST] * velocity_error.east -
-		vel_d_gain[EAST] *  acceleration[EAST] +
-		mass * acc_setpoint[EAST] +
-		thr_int[EAST]
+	thrust_set->east = (
+		vel_p_gain.east * velocity_error.east -
+		vel_d_gain.east *  acceleration.east +
+		mass * acc_setpoint.east +
+		thr_int.east
 	);
 
 	double thrust_max_xy_tilt = (
-		abs(thrust_set[DOWN]) * tan(tiltMax)
+		abs(thrust_set->down) * tan(tiltMax)
 	);
 	double thrust_max_xy = sqrt(
 		pow(maxThr, 2) -
-		pow(thrust_set[DOWN], 2)
+		pow(thrust_set->down, 2)
 	);
 
 	if (thrust_max_xy > thrust_max_xy_tilt) {
@@ -998,41 +995,41 @@ void controller_step(void) {
 	}
 
 	if (
-		thrust_set[NORTH] * thrust_set[NORTH] + thrust_set[EAST] * thrust_set[EAST] >
+		thrust_set->north * thrust_set->north + thrust_set->east * thrust_set->east >
 		pow(thrust_max_xy, 2)) {
 
 		double mag = sqrt(
-			pow(thrust_set[NORTH], 2) +
-			pow(thrust_set[EAST], 2)
+			pow(thrust_set->north, 2) +
+			pow(thrust_set->east, 2)
 		);
 
-		thrust_set[NORTH] = (
-			thrust_set[NORTH] * thrust_max_xy / mag
+		thrust_set->north = (
+			thrust_set->north * thrust_max_xy / mag
 		);
-		thrust_set[EAST] = (
-			thrust_set[EAST] * thrust_max_xy / mag
+		thrust_set->east = (
+			thrust_set->east * thrust_max_xy / mag
 		);
 	}
 
 	// Use tracking Anti-Windup for NE-direction: during saturation, the integrator is used to unsaturate the output
 	// see Anti-Reset Windup for PID controllers, L.Rundqwist, 1990
 
-	velocity_error_limit.north = velocity_error[NORTH] - (
-		thrust_set[NORTH] - thrust_set[NORTH]
-		) * 2.0 / vel_p_gain[NORTH];
-	velocity_error_limit.east = velocity_error[EAST] - (
-		thrust_set[EAST] - thrust_set[EAST]
-		) * 2.0 / vel_p_gain[EAST];
+	velocity_error_limit.north = velocity_error.north - (
+		thrust_set->north - thrust_set->north
+		) * 2.0 / vel_p_gain.north;
+	velocity_error_limit.east = velocity_error.east - (
+		thrust_set->east - thrust_set->east
+		) * 2.0 / vel_p_gain.east;
 
 	double thrust_set_norm = sqrt(
-		thrust_set[NORTH] * thrust_set[NORTH] +
-		thrust_set[EAST] * thrust_set[EAST] +
-		thrust_set[DOWN] * thrust_set[DOWN]
+		thrust_set->north * thrust_set->north +
+		thrust_set->east * thrust_set->east +
+		thrust_set->down * thrust_set->down
 	);
 
-	body_z[0] = -thrust_set[0] / thrust_set_norm;
-	body_z[1] = -thrust_set[1] / thrust_set_norm;
-	body_z[2] = -thrust_set[2] / thrust_set_norm;
+	body_z[0] = -thrust_set->north / thrust_set_norm;
+	body_z[1] = -thrust_set->east / thrust_set_norm;
+	body_z[2] = -thrust_set->down / thrust_set_norm;
 
 	y_C[0] = -sin(yaw_setpoint);
 	y_C[1] = cos(yaw_setpoint);
@@ -1151,14 +1148,14 @@ void controller_step(void) {
 	e_z[2] = 1.0;
 
 	thrust_set_norm = sqrt(
-		thrust_set[0] * thrust_set[0] +
-		thrust_set[1] * thrust_set[1] +
-		thrust_set[2] * thrust_set[2]
+		pow(thrust_set->north, 2) +
+		pow(thrust_set->east, 2) +
+		pow(thrust_set->down, 2)
 	);
 
-	e_z_d[0] = -thrust_set[0] / thrust_set_norm;
-	e_z_d[1] = -thrust_set[1] / thrust_set_norm;
-	e_z_d[2] = -thrust_set[2] / thrust_set_norm;
+	e_z_d[0] = -thrust_set->north / thrust_set_norm;
+	e_z_d[1] = -thrust_set->east / thrust_set_norm;
+	e_z_d[2] = -thrust_set->down / thrust_set_norm;
 
 	double quaternion_error_without_yaw_dot_part = (
 		e_z[0] * e_z_d[0] +
@@ -1286,86 +1283,125 @@ void controller_step(void) {
 	attitude_error = kreuzproduktQuaternion(attitude_inverse, quaternion_set);
 
 	if (attitude_error.w > 0) {
-		rate_set_value.roll = (2.0 * attitude_error.x * attitute_p_gain[0]);
-		rate_set_value.pitch = (2.0 * attitude_error.y * attitute_p_gain[1]);
-		rate_set_value.yaw = (2.0 * attitude_error.z * attitute_p_gain[2]);
+		rate_set_value.roll = (2.0 * attitude_error.x * attitute_p_gain.roll);
+		rate_set_value.pitch = (2.0 * attitude_error.y * attitute_p_gain.pitch);
+		rate_set_value.yaw = (2.0 * attitude_error.z * attitute_p_gain.yaw);
 	} else {
-		rate_set_value.roll = -(2.0 * attitude_error.x * attitute_p_gain[0]);
-		rate_set_value.pitch = -(2.0 * attitude_error.y * attitute_p_gain[1]);
-		rate_set_value.yaw = -(2.0 * attitude_error.z * attitute_p_gain[2]);
+		rate_set_value.roll = -(2.0 * attitude_error.x * attitute_p_gain.roll);
+		rate_set_value.pitch = -(2.0 * attitude_error.y * attitute_p_gain.pitch);
+		rate_set_value.yaw = -(2.0 * attitude_error.z * attitute_p_gain.yaw);
 	}
 
 	// Rate Control
 	rate_error.roll = rate_set_value.roll - drehrate.roll;
 	rate_set.roll = (
-		rate_p_gain[0] * rate_error.roll -
-		rate_d_gain[0] * omega_dot.roll
+		rate_p_gain.roll * rate_error.roll -
+		rate_d_gain.roll * omega_dot.roll
 	);
 	rate_error.pitch = rate_set_value.pitch - drehrate.pitch;
 	rate_set.pitch = (
-		rate_p_gain[1] * rate_error.pitch -
-		rate_d_gain[1] * omega_dot.pitch
+		rate_p_gain.pitch * rate_error.pitch -
+		rate_d_gain.pitch * omega_dot.pitch
 	);
 	rate_error.yaw = rate_set_value.yaw - drehrate.yaw;
 	rate_set.yaw = (
-		rate_p_gain[2] * rate_error.yaw -
-		rate_d_gain[2] * omega_dot.yaw
+		rate_p_gain.yaw * rate_error.yaw -
+		rate_d_gain.yaw * omega_dot.yaw
 	);
 
 	thrust_set_norm = sqrt(
-		pow(thrust_set[0], 2) +
-		pow(thrust_set[1], 2) +
-		pow(thrust_set[2], 2)
+		pow(thrust_set->north, 2) +
+		pow(thrust_set->east, 2) +
+		pow(thrust_set->down, 2)
 	);
 
-	motor_commands[M1] = (
+	motor_commands->front_left = (
 		mixerFM[0][0] * thrust_set_norm +
 		mixerFM[0][1] * rate_set.roll +
 		mixerFM[0][2] * rate_set.pitch +
 		mixerFM[0][3] * rate_set.yaw
 	);
-	motor_commands[M2] = (
+	motor_commands->front_right = (
 		mixerFM[1][0] * thrust_set_norm +
 		mixerFM[1][1] * rate_set.roll +
 		mixerFM[1][2] * rate_set.pitch +
 		mixerFM[1][3] * rate_set.yaw
 	);
-	motor_commands[M3] = (
+	motor_commands->back_right = (
 		mixerFM[2][0] * thrust_set_norm +
 		mixerFM[2][1] * rate_set.roll +
 		mixerFM[2][2] * rate_set.pitch +
 		mixerFM[2][3] * rate_set.yaw
 	);
-	motor_commands[M4] = (
+	motor_commands->back_left = (
 		mixerFM[3][0] * thrust_set_norm +
 		mixerFM[3][1] * rate_set.roll +
 		mixerFM[3][2] * rate_set.pitch +
 		mixerFM[3][3] * rate_set.yaw
 	);
 
-	for (int i = 0; i < 4; i++) {
-		if (motor_commands[i] < pow(minWMotor, 2)) {
-			motor_commands[i] = pow(minWMotor, 2);
-		};
-		if (motor_commands[i] > pow(maxWMotor, 2)) {
-			motor_commands[i] = pow(maxWMotor, 2);
-		};
+	void update_motor_commands(Motors_clockwise *motors, double minWMotor, double maxWMotor) {
+	    double *motor_commands[] = { &motors->front_left, &motors->front_right, &motors->back_right, &motors->back_left };
 
-		motor_commands[i] = sqrt(motor_commands[i]);
-	};
+	    for (int i = 0; i < 4; i++) {
+	        if (*motor_commands[i] < pow(minWMotor, 2)) {
+	            *motor_commands[i] = pow(minWMotor, 2);
+	        }
+	        if (*motor_commands[i] > pow(maxWMotor, 2)) {
+	            *motor_commands[i] = pow(maxWMotor, 2);
+	        }
+
+	        *motor_commands[i] = sqrt(*motor_commands[i]);
+	    }
+	}
+
+
+    update_motor_commands(&motor_commands, minWMotor, maxWMotor);
+
+//	if (motor_commands->front_left < pow(minWMotor, 2)) {
+//		motor_commands->front_left = pow(minWMotor, 2);
+//	};
+//	if (motor_commands->front_left > pow(maxWMotor, 2)) {
+//		motor_commands->front_left = pow(maxWMotor, 2);
+//	};
+//	motor_commands->front_left = sqrt(motor_commands->front_left);
+//
+//	if (motor_commands->front_right < pow(minWMotor, 2)) {
+//		motor_commands->front_right = pow(minWMotor, 2);
+//	};
+//	if (motor_commands->front_right > pow(maxWMotor, 2)) {
+//		motor_commands->front_right = pow(maxWMotor, 2);
+//	};
+//	motor_commands->front_right = sqrt(motor_commands->front_right);
+//
+//	if (motor_commands[i] < pow(minWMotor, 2)) {
+//		motor_commands[i] = pow(minWMotor, 2);
+//	};
+//	if (motor_commands[i] > pow(maxWMotor, 2)) {
+//		motor_commands[i] = pow(maxWMotor, 2);
+//	};
+//	motor_commands[i] = sqrt(motor_commands[i]);
+//
+//	if (motor_commands[i] < pow(minWMotor, 2)) {
+//		motor_commands[i] = pow(minWMotor, 2);
+//	};
+//	if (motor_commands[i] > pow(maxWMotor, 2)) {
+//		motor_commands[i] = pow(maxWMotor, 2);
+//	};
+//	motor_commands[4] = sqrt(motor_commands[i]);
 
 	// PWM
 	thrust = thrust_joystick / 100.0f;
 	if (controller_active) {
 		skalar = (pwm_upper_bound - pwm_lower_bound) / 1000.0f;
 		// Pin PA8
-		TIM1->CCR1 = ((skalar * thrust * ((motor_commands[M1] + motor_commands_tminus1[M1] + motor_commands_tminus2[M1]) / 3) + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR1 = ((skalar * thrust * motor_commands->front_left + pwm_lower_bound) / 1000.0f) * 30259;
 		// Pin PA9
-		TIM1->CCR2 = ((skalar * thrust * ((motor_commands[M2] + motor_commands_tminus1[M2] + motor_commands_tminus2[M2]) / 3) + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR2 = ((skalar * thrust * motor_commands->front_right + pwm_lower_bound) / 1000.0f) * 30259;
 		// Pin PA10
-		TIM1->CCR3 = ((skalar * thrust * ((motor_commands[M3] + motor_commands_tminus1[M3] + motor_commands_tminus2[M3]) / 3) + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR3 = ((skalar * thrust * motor_commands->back_right + pwm_lower_bound) / 1000.0f) * 30259;
 		// Pin PA11
-		TIM1->CCR4 = ((skalar * thrust * ((motor_commands[M4] + motor_commands_tminus1[M4] + motor_commands_tminus2[M4]) / 3) + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR4 = ((skalar * thrust * motor_commands->back_left + pwm_lower_bound) / 1000.0f) * 30259;
 	} else if (thrust_only) {
 		TIM1->CCR1 = thrust * 30259;
 		TIM1->CCR2 = thrust * 30259;
