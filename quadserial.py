@@ -199,11 +199,11 @@ class Quadserial():
 
                 time.sleep(0.08)
     
-    def send2uart(self, nachricht):
+    def send2uart(self, message):
         self.serialPort.flushInput()
         self.serialPort.flushOutput()
         self.serialPort.write(
-            nachricht
+            message
         )
 
     def reset(self):

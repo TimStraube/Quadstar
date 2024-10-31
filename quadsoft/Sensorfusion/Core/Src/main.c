@@ -156,7 +156,7 @@ uint8_t rx_buffer[32];
 uint8_t rx_index = 0;
 float pwm_lower_bound = 770.0f;
 float pwm_upper_bound = 900.0f;
-uint8_t controller_active = 0;
+uint8_t controller_active = 1;
 float level = 0.3;
 
 MFX_input_t data_in;
@@ -212,6 +212,8 @@ double tiltMax = 0.8;
 NED velocity_error_limit;
 NED velocity_set;
 float thrust = 0.0f;
+
+int pwm_tim1_period = 16400;
 
 // Sollpunkte
 NED thrust_set;
@@ -375,10 +377,10 @@ int main(void)
 			}
 			HAL_Delay(100);
 
-			TIM1->CCR1 = level * 30259;
-			TIM1->CCR2 = level * 30259;
-			TIM1->CCR3 = level * 30259;
-			TIM1->CCR4 = level * 30259;
+			TIM1->CCR1 = level * pwm_tim1_period;
+			TIM1->CCR2 = level * pwm_tim1_period;
+			TIM1->CCR3 = level * pwm_tim1_period;
+			TIM1->CCR4 = level * pwm_tim1_period;
 		}
 
 	TIM1->CCR1 = 0.0;
@@ -568,9 +570,9 @@ static void MX_TIM1_Init(void)
 
 	/* USER CODE END TIM1_Init 1 */
 	htim1.Instance = TIM1;
-	htim1.Init.Prescaler = 8;
+	htim1.Init.Prescaler = 1;
 	htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim1.Init.Period = 30259;
+	htim1.Init.Period = pwm_tim1_period;
 	htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim1.Init.RepetitionCounter = 0;
 	htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -1395,18 +1397,18 @@ void controller_step(void) {
 	if (controller_active) {
 		skalar = (pwm_upper_bound - pwm_lower_bound) / 1000.0f;
 		// Pin PA8
-		TIM1->CCR1 = ((skalar * thrust * motor_commands.front_left + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR1 = ((skalar * thrust * motor_commands.front_left + pwm_lower_bound) / 1000.0f) * pwm_tim1_period;
 		// Pin PA9
-		TIM1->CCR2 = ((skalar * thrust * motor_commands.front_right + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR2 = ((skalar * thrust * motor_commands.front_right + pwm_lower_bound) / 1000.0f) * pwm_tim1_period;
 		// Pin PA10
-		TIM1->CCR3 = ((skalar * thrust * motor_commands.back_right + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR3 = ((skalar * thrust * motor_commands.back_right + pwm_lower_bound) / 1000.0f) * pwm_tim1_period;
 		// Pin PA11
-		TIM1->CCR4 = ((skalar * thrust * motor_commands.back_left + pwm_lower_bound) / 1000.0f) * 30259;
+		TIM1->CCR4 = ((skalar * thrust * motor_commands.back_left + pwm_lower_bound) / 1000.0f) * pwm_tim1_period;
 	} else if (thrust_only) {
-		TIM1->CCR1 = thrust * 30259;
-		TIM1->CCR2 = thrust * 30259;
-		TIM1->CCR3 = thrust * 30259;
-		TIM1->CCR4 = thrust * 30259;
+		TIM1->CCR1 = thrust * pwm_tim1_period;
+		TIM1->CCR2 = thrust * pwm_tim1_period;
+		TIM1->CCR3 = thrust * pwm_tim1_period;
+		TIM1->CCR4 = thrust * pwm_tim1_period;
 	} else {
 		TIM1->CCR1 = 0;
 		TIM1->CCR2 = 0;
