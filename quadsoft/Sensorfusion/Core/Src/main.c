@@ -156,7 +156,7 @@ uint8_t rx_buffer[32];
 uint8_t rx_index = 0;
 float pwm_lower_bound = 770.0f;
 float pwm_upper_bound = 900.0f;
-uint8_t controller_active = 1;
+uint8_t controller_active = 0;
 float level = 0.3;
 
 MFX_input_t data_in;
@@ -213,7 +213,7 @@ NED velocity_error_limit;
 NED velocity_set;
 float thrust = 0.0f;
 
-int pwm_tim1_period = 16400;
+int pwm_tim1_period = 16500;
 
 // Sollpunkte
 NED thrust_set;
@@ -230,6 +230,7 @@ Eulerangle omega_dot;
 
 float skalar;
 int thrust_only = 1;
+int enable_esc = 0;
 
 double e_z[3];
 double e_z_d[3];
@@ -369,19 +370,43 @@ int main(void)
 
 	level = 0.0;
 
-		while (level < (1.0f)) {
-			if (controller_active) {
-				level += 0.001;
-			} else {
-				break;
-			}
-			HAL_Delay(100);
+	if (~enable_esc) {
+		TIM1->CCR1 = (1000.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (1000.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (1000.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (1000.0 / 2041.0) * pwm_tim1_period;
+		enable_esc = 1;
+	}
 
-			TIM1->CCR1 = level * pwm_tim1_period;
-			TIM1->CCR2 = level * pwm_tim1_period;
-			TIM1->CCR3 = level * pwm_tim1_period;
-			TIM1->CCR4 = level * pwm_tim1_period;
-		}
+	HAL_Delay(1000);
+
+	TIM1->CCR1 = (1200.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR2 = (1200.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR3 = (1200.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR4 = (1200.0 / 2041.0) * pwm_tim1_period;
+
+	HAL_Delay(1000);
+
+
+	TIM1->CCR1 = (1400.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR2 = (1400.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR3 = (1400.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR4 = (1400.0 / 2041.0) * pwm_tim1_period;
+
+	HAL_Delay(1000);
+//	while (level < (1.0f)) {
+//		if (controller_active) {
+//			level += 0.001;
+//		} else {
+//			break;
+//		}
+//		HAL_Delay(100);
+//
+//		TIM1->CCR1 = level * pwm_tim1_period;
+//		TIM1->CCR2 = level * pwm_tim1_period;
+//		TIM1->CCR3 = level * pwm_tim1_period;
+//		TIM1->CCR4 = level * pwm_tim1_period;
+//	}
 
 	TIM1->CCR1 = 0.0;
 	TIM1->CCR2 = 0.0;
