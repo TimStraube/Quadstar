@@ -142,7 +142,7 @@ class Quadserial():
             else:
                 pass
 
-    def startEndlossampler(self):
+    def startInfinitSampler(self):
         with open(config.serialname, 'rb') as ser:
             while True:
                 bs = ser.read(64)
@@ -199,11 +199,11 @@ class Quadserial():
 
                 time.sleep(0.08)
     
-    def send2uart(self, nachricht):
+    def send2uart(self, message):
         self.serialPort.flushInput()
         self.serialPort.flushOutput()
         self.serialPort.write(
-            nachricht
+            message
         )
 
     def reset(self):
@@ -213,7 +213,7 @@ if __name__ == '__main__':
     serialSampler = Quadserial()
 
     prozessSampler = multiprocessing.Process(
-        target = serialSampler.startEndlossampler
+        target = serialSampler.startInfinitSampler
     )
     prozessSampler.start()
     
