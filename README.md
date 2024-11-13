@@ -1,38 +1,44 @@
 # Quadstar
 
-## Targets of the project
-
-1. Build a airworthy quadcopter from scratch which can be controlled with a joystick
-2. Learn PID parameters in a simulation
-3. Deploy the learned PID parameters and compare the performance to manually set ones
-4. Learn a control policy 
-5. Deploy the control policy and compare the performance to the PID controller
+Quadstar is a project which includes python classes for simulating and training a quadcopter system. Furthermore a basic PID flight controller implementation is provided in the folder ```./quadsoft/``` for STM32F411 processors including KiCad shematics. 
+With the help of the functionality a quadcopter prototyp has beeing build, mainly for fun and research purposes. Future work may include the development of fixed wing simulation functionality.
 
 ## Controller architectures
 
+Noumerous controller architectures are known from control theory. For example one can employ model predictive or robust control on a quadcopter plant controlling problem. Consumer grade quadcopters often make use of PID control, mainly due to ease of use and implementation.
+
 ### PID controller
 
+I used a quaternion based PID controller for my quadcopters.
+
+The PID controller as well as the flight dynamic model inplementation from [quadcopter_simcon](https://github.com/bobzwik/Quadcopter_SimCon) have been modified for this reposiory. Big thanks to the creator.  
+
 ### End2end policy
+
+
 
 ## Drivetrain
 
 ### BLDC-motors
 
-Axisflying C227 1960KV FPV Motor schwarz
+The follwing motors are currently being used on my quadcopter model Axisflying C227 1960KV FPV Motor schwarz and I can recommend them. They even worked fine with a 11.2V (S3) power source while the specification recommends 22.2V (S6). It is probably wise to go with the specification for a build. So did I at least. 
 
 ### BLDC-driver
 
-B-G431B-ESC1 
+Following troubles with other ESCs I found out about the B-G431B-ESC1. I can recommend it but it a little bit of electronics and programming knowledge to get up and running.
+When using the provided tools by ST for configuration a Windows OS is needed at the time of writing. 
 
+MCSDK, Motor Profiler, STM32CubeIDE
+ 
 ### Akkumulator
 
 ## Information flow system
 
-### Main flight computer
+### Main compute unit (MCU)
 
-The core of the system is a STM32F411RE microcontroller which computes all processes required for the flight controller which includes sensor fusion.
+The core of the system is an STM32F411RE microcontroller which computes all processes required for the flight controller, which includes sensor fusion.
 
-### Sensor extension board
+### Main sensor unit (MSU)
 
 X-NUCLEO-IKS4A1
 
@@ -65,6 +71,4 @@ To train the a quadcopter flight controller on the current configuration run ```
 
 To sample joystick values and send them to the main flight computer run ```python3 joystick.py```.
 
-## Credit
 
-The PID controller as well as the flight dynamic model inplementation from [quadcopter_simcon](https://github.com/bobzwik/Quadcopter_SimCon) have been modified for this reposiory. Big thanks to the creator.  
