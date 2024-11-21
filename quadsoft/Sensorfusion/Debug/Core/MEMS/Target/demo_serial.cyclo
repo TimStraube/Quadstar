@@ -1,7 +1,0 @@
-../Core/MEMS/Target/demo_serial.c:64:6:BUILD_REPLY_HEADER	1
-../Core/MEMS/Target/demo_serial.c:76:6:INIT_STREAMING_HEADER	1
-../Core/MEMS/Target/demo_serial.c:89:6:INIT_STREAMING_MSG	2
-../Core/MEMS/Target/demo_serial.c:109:5:HandleMSG	47
-../Core/MEMS/Target/demo_serial.c:439:6:RTC_DateRegulate	2
-../Core/MEMS/Target/demo_serial.c:462:6:RTC_TimeRegulate	2
-../Core/MEMS/Target/demo_serial.c:487:6:Get_PresentationString	2
