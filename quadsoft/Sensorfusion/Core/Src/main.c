@@ -371,10 +371,18 @@ int main(void)
 	level = 0.0;
 
 	if (~enable_esc) {
-		TIM1->CCR1 = (1000.0 / 2041.0) * pwm_tim1_period;
-		TIM1->CCR2 = (1000.0 / 2041.0) * pwm_tim1_period;
-		TIM1->CCR3 = (1000.0 / 2041.0) * pwm_tim1_period;
-		TIM1->CCR4 = (1000.0 / 2041.0) * pwm_tim1_period;
+
+		TIM1->CCR1 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (800.0 / 2041.0) * pwm_tim1_period;
+
+		HAL_Delay(1000);
+
+		TIM1->CCR1 = (1060.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (1060.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (1060.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (1060.0 / 2041.0) * pwm_tim1_period;
 		enable_esc = 1;
 	}
 
@@ -393,6 +401,13 @@ int main(void)
 	TIM1->CCR3 = (1400.0 / 2041.0) * pwm_tim1_period;
 	TIM1->CCR4 = (1400.0 / 2041.0) * pwm_tim1_period;
 
+	HAL_Delay(10000);
+
+	TIM1->CCR1 = (800.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR2 = (800.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR3 = (800.0 / 2041.0) * pwm_tim1_period;
+	TIM1->CCR4 = (800.0 / 2041.0) * pwm_tim1_period;
+
 	HAL_Delay(1000);
 //	while (level < (1.0f)) {
 //		if (controller_active) {
@@ -408,10 +423,10 @@ int main(void)
 //		TIM1->CCR4 = level * pwm_tim1_period;
 //	}
 
-	TIM1->CCR1 = 0.0;
-	TIM1->CCR2 = 0.0;
-	TIM1->CCR3 = 0.0;
-	TIM1->CCR4 = 0.0;
+//	TIM1->CCR1 = 0.0;
+//	TIM1->CCR2 = 0.0;
+//	TIM1->CCR3 = 0.0;
+//	TIM1->CCR4 = 0.0;
 	DWT_Start();
 
 	// HAL_TIM_Base_Start_IT(&htim2);
@@ -424,12 +439,48 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		if (__HAL_TIM_GET_COUNTER(&htim2) - timer_val >= 20)
-		{
-			timer_val = __HAL_TIM_GET_COUNTER(&htim2);
-			controller_step();
-			LL_GPIO_TogglePin(LED2_GPIO_PORT, LED2_PIN);
-		}
+		TIM1->CCR1 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (800.0 / 2041.0) * pwm_tim1_period;
+
+		HAL_Delay(1000);
+
+		TIM1->CCR1 = (1060.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (1060.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (1060.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (1060.0 / 2041.0) * pwm_tim1_period;
+
+		HAL_Delay(1000);
+
+		TIM1->CCR1 = (1200.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (1200.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (1200.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (1200.0 / 2041.0) * pwm_tim1_period;
+
+		HAL_Delay(1000);
+
+
+		TIM1->CCR1 = (1400.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (1400.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (1400.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (1400.0 / 2041.0) * pwm_tim1_period;
+
+		HAL_Delay(10000);
+
+		TIM1->CCR1 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR2 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR3 = (800.0 / 2041.0) * pwm_tim1_period;
+		TIM1->CCR4 = (800.0 / 2041.0) * pwm_tim1_period;
+
+		HAL_Delay(1000);
+
+//		if (__HAL_TIM_GET_COUNTER(&htim2) - timer_val >= 20)
+//		{
+//			timer_val = __HAL_TIM_GET_COUNTER(&htim2);
+//			controller_step();
+//			LL_GPIO_TogglePin(LED2_GPIO_PORT, LED2_PIN);
+//		}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
