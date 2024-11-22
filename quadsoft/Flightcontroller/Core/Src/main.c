@@ -102,30 +102,30 @@ int main(void)
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 1060); // Arm the ESC
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 1060); // Arm the ESC
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 1060); // Arm the ESC
-//	HAL_Delay(1000);
-//
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 120); // Set pulse width to 1200us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 120); // Set pulse width to 1200us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 120); // Set pulse width to 1200us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 120); // Set pulse width to 1200us
-//	HAL_Delay(1000); // Wait for 1 second
-//
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 140); // Set pulse width to 1400us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 140); // Set pulse width to 1400us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 140); // Set pulse width to 1400us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 140); // Set pulse width to 1400us
-//	HAL_Delay(10000); // Wait for 10 seconds
-//
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 120); // Set pulse width back to 1200us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 120); // Set pulse width back to 1200us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 120); // Set pulse width back to 1200us
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 120); // Set pulse width back to 1200us
-//	HAL_Delay(3000); // Wait for 3 seconds
-//
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 80); // Disarm the ESC
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 80); // Disarm the ESC
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 80); // Disarm the ESC
-//	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 80); // Disarm the ESC
+	HAL_Delay(1000);
+
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 1200); // Set pulse width to 1200us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 1200); // Set pulse width to 1200us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 1200); // Set pulse width to 1200us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 1200); // Set pulse width to 1200us
+	HAL_Delay(1000); // Wait for 1 second
+
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 1400); // Set pulse width to 1400us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 1400); // Set pulse width to 1400us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 1400); // Set pulse width to 1400us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 1400); // Set pulse width to 1400us
+	HAL_Delay(10000); // Wait for 10 seconds
+
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 1200); // Set pulse width back to 1200us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 1200); // Set pulse width back to 1200us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 1200); // Set pulse width back to 1200us
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 1200); // Set pulse width back to 1200us
+	HAL_Delay(3000); // Wait for 3 seconds
+
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 800); // Disarm the ESC
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 800); // Disarm the ESC
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 800); // Disarm the ESC
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 800); // Disarm the ESC
   /* USER CODE END 2 */
 
   /* Infinite loop */
