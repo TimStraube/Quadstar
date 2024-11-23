@@ -143,7 +143,7 @@ int main(void)
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-
+  MC_StartMotor1();
   /* USER CODE END 2 */
 
   /* Infinite loop */
