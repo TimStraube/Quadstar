@@ -28,9 +28,12 @@ The follwing motors are currently being used on my quadcopter model Axisflying C
 ### BLDC-driver
 
 Following troubles with other ESCs I found out about the B-G431B-ESC1. I can recommend it but it a little bit of electronics and programming knowledge to get up and running.
+
+![screenshot](images/B-G431B-ESC1.png)
+
 When using the provided tools by ST for configuration a Windows OS is needed at the time of writing. 
 
-MCSDK, Motor Profiler, STM32CubeIDE
+Using the following software, MCSDK, Motor Profiler and STM32CubeIDE provided by ST the B-G431B-ESC1 board can be programmed.
  
 ### Akkumulator
 
