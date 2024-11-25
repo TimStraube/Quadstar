@@ -13,7 +13,7 @@ Noumerous controller architectures are known from control theory. For example on
 
 I used a quaternion based PID controller for my quadcopters.
 
-The PID controller as well as the flight dynamic model inplementation from [quadcopter_simcon](https://github.com/bobzwik/Quadcopter_SimCon) have been modified for this reposiory. Big thanks to the creator.  
+The PID controller as well as the flight dynamic model inplementation from [quadcopter_simcon](https://github.com/bobzwik/Quadcopter_SimCon) have been modified for this repository. Big thanks to the creator.  
 
 ### End2end policy
 
