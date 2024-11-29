@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <title>Quadserver</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}?v={{ version }}">
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+                }
+            }
+        </script>
+        <script type="module" src="{% static 'landing.js' %}?v={{ version }}" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+    </head>
+    <body>
+        <h1>Quadserver</h1>
+
+        <label>Position north</label>
+        <input></input><br>
+        <label>Position east</label>
+        <input></input><br>
+        <label>Position down</label>
+        <input></input><br>
+        <button>
+            Add quadcopter
+        </button><br>
+        <label for="rlAlgorithm">Choose an controller:</label>
+        <select id="rlAlgorithm">
+            <option value="PPO">PID PPO</option>
+            <option value="DQN">E2E PPO</option>
+        </select><br>
+        <label for="rlModel">Choose an model:</label>
+        <select id="rlModel">
+            <option value="default">Default</option>
+            <option value="m2">M1</option>
+            <option value="m1">M2</option>
+        </select><br>
+        <button>
+            Start simulation
+        </button><br>
+        <button>
+            Start training
+        </button><br>
+        <button>
+            Stop training
+        </button>
+
+        <form id="inputUpdate" method="post" action="{% url 'inputUpdate' %}">
+            {% csrf_token %}
+            <input type="submit" name="done" value="Save model" class="btn btn-primary" id="saveModel" />
+        </form>
+
+        
+    </body>
+    <footer>
+
+    </footer>
+</html>
