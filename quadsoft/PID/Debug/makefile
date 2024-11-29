@@ -73,11 +73,11 @@ all: main-build
 main-build: Sensorfusion.elf secondary-outputs
 
 dependents:
-	-cd /home/tim/Programme/Quadstar/quadsoft/Sensorfusion/Release && $(MAKE) all
+	-cd C:/Users/Tim/Programme/Quadstar/quadsoft/PID/Release && $(MAKE) clean all
 
 # Tool invocations
-Sensorfusion.elf Sensorfusion.map: $(OBJS) $(USER_OBJS) /home/tim/Programme/Quadstar/quadsoft/Sensorfusion/Release/Sensorfusion.elf /home/tim/Programme/Quadstar/quadsoft/Sensorfusion/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Sensorfusion.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m4 -T"/home/tim/Programme/Quadstar/quadsoft/Sensorfusion/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Sensorfusion.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_MotionFX_Library/Lib -L../Middlewares/ST/STM32_MotionID_Library/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Sensorfusion.elf Sensorfusion.map: $(OBJS) $(USER_OBJS) C:/Users/Tim/Programme/Quadstar/quadsoft/PID/Release/Sensorfusion.elf C:\Users\Tim\Programme\Quadstar\quadsoft\PID\STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Sensorfusion.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m4 -T"C:\Users\Tim\Programme\Quadstar\quadsoft\PID\STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Sensorfusion.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_MotionFX_Library/Lib -L../Middlewares/ST/STM32_MotionID_Library/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -106,6 +106,6 @@ warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
 .PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
-/home/tim/Programme/Quadstar/quadsoft/Sensorfusion/Release/Sensorfusion.elf:
+C:/Users/Tim/Programme/Quadstar/quadsoft/PID/Release/Sensorfusion.elf:
 
 -include ../makefile.targets
