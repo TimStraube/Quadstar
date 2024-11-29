@@ -1,5 +1,5 @@
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:56:6:esc_boot	1
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:72:6:esc_pwm_stop	1
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:80:13:esc_pwm_run	17
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:237:6:esc_pwm_control	52
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:589:6:TIM2_IRQHandler	3
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:56:6:esc_boot	1
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:72:6:esc_pwm_stop	1
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:80:13:esc_pwm_run	17
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:237:6:esc_pwm_control	52
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/esc.c:589:6:TIM2_IRQHandler	3

@@ -1,5 +1,0 @@
-/home/tim/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/r_divider_bus_voltage_sensor.c:65:13:RVBS_Clear	3
-/home/tim/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/r_divider_bus_voltage_sensor.c:50:13:RVBS_Init	1
-/home/tim/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/r_divider_bus_voltage_sensor.c:208:17:RVBS_CheckFaultState	2
-/home/tim/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/r_divider_bus_voltage_sensor.c:126:17:RVBS_CalcAvVbusFilt	8
-/home/tim/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/r_divider_bus_voltage_sensor.c:167:17:RVBS_CalcAvVbus	4

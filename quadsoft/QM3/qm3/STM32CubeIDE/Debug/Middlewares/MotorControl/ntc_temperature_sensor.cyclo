@@ -1,7 +1,7 @@
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:69:17:NTC_SetFaultState	3
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:135:13:NTC_Clear	1
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:106:13:NTC_Init	2
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:158:17:NTC_CalcAvTemp	3
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:209:17:NTC_GetAvTemp_d	1
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:225:16:NTC_GetAvTemp_C	2
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:271:17:NTC_CheckTemp	1
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:69:17:NTC_SetFaultState	3
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:135:13:NTC_Clear	1
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:106:13:NTC_Init	2
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:158:17:NTC_CalcAvTemp	3
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:209:17:NTC_GetAvTemp_d	1
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:225:16:NTC_GetAvTemp_C	2
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/ntc_temperature_sensor.c:271:17:NTC_CheckTemp	1

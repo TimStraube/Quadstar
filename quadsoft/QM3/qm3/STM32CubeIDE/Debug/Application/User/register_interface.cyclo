@@ -1,7 +1,7 @@
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:32:9:RI_SetRegisterGlobal	17
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:166:9:RI_SetRegisterMotor1	89
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:619:9:RI_GetRegisterGlobal	20
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:764:11:RI_GetRegisterMotor1	105
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:1350:9:RI_MovString	4
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:1376:9:RI_GetIDSize	2
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:1411:16:RI_GetPtrReg	21
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:32:9:RI_SetRegisterGlobal	17
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:166:9:RI_SetRegisterMotor1	89
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:619:9:RI_GetRegisterGlobal	20
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:764:11:RI_GetRegisterMotor1	105
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:1350:9:RI_MovString	4
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:1376:9:RI_GetIDSize	2
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/register_interface.c:1411:16:RI_GetPtrReg	21

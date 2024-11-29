@@ -1,2 +1,2 @@
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_app_hooks.c:50:13:MC_APP_BootHook	1
-C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_app_hooks.c:64:13:MC_APP_PostMediumFrequencyHook_M1	1
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_app_hooks.c:50:13:MC_APP_BootHook	1
+/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_app_hooks.c:64:13:MC_APP_PostMediumFrequencyHook_M1	1
