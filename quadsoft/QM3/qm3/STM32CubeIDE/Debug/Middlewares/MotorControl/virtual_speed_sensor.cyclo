@@ -1,0 +1,13 @@
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:68:13:VSS_Clear	1
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:57:13:VSS_Init	1
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:118:16:VSS_CalcElAngle	7
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:216:13:VSS_CalcAvrgMecSpeedUnit	5
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:282:13:VSS_SetMecAngle	1
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:315:14:VSS_SetMecAcceleration	4
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:393:13:VSS_RampCompleted	1
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:427:17:VSS_GetLastRampFinalSpeed	1
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:449:13:VSS_SetStartTransition	3
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:495:13:VSS_IsTransitionOngoing	2
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:550:13:VSS_TransitionEnded	1
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:566:13:VSS_SetCopyObserver	1
+C:/Users/Tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/virtual_speed_sensor.c:590:13:VSS_SetElAngle	1

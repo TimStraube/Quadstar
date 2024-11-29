@@ -1,0 +1,51 @@
+# M1
+
+
+
+# M2
+
+# M3
+
+## Profiling Test 1
+
+Pole pairs: 12
+Max RPM: 5000
+Max current: 10
+VBus: 22V
+Prop: None
+
+Result: Success
+
+
+## Profiling Test 2
+
+Pole pairs: 12
+Max RPM: 7000
+Max current: 10
+VBus: 22V
+Prop: None
+
+Result: Success
+
+## Profiling Test 3
+
+Pole pairs: 12
+Max RPM: 12000
+Max current: 10
+VBus: 22V
+Prop: None
+
+Result: Failed
+
+
+## Profiling Test 4
+
+Pole pairs: 12
+Max RPM: 12000
+Max current: 10
+VBus: 22V
+Prop: Big
+
+Result: Success
+
+# M4

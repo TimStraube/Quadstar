@@ -1,4 +1,0 @@
-../Core/MEMS/App/app_mems.c:97:6:MX_MEMS_Init	3
-../Core/MEMS/App/app_mems.c:119:6:MX_MEMS_Process	28
-../Core/MEMS/App/app_mems.c:139:6:HAL_TIM_PeriodElapsedCallback	2
-../Core/MEMS/App/app_mems.c:425:6:BSP_PB_Callback	1
