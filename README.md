@@ -17,7 +17,9 @@ The PID controller as well as the flight dynamic model inplementation from [quad
 
 ### End2end policy
 
+Another approach to quadcopter control is employing a nonlinear network of weights. Deep reinforcement learning can be used to train the policy network. Proximal policy optimization (PPO) is has been used in this repo. Currently the training process is still ongoing. 
 
+![screenshot](images/PPO.png)
 
 ## Drivetrain
 
