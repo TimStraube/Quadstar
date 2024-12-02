@@ -60,8 +60,8 @@ all: main-build
 main-build: NUCLEO-U083-Motorctrl.elf secondary-outputs
 
 # Tool invocations
-NUCLEO-U083-Motorctrl.elf NUCLEO-U083-Motorctrl.map: $(OBJS) $(USER_OBJS) /home/tim/Programme/Q92MCU/NUCLEO-U083-Motorctrl/STM32U083RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "NUCLEO-U083-Motorctrl.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"/home/tim/Programme/Q92MCU/NUCLEO-U083-Motorctrl/STM32U083RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO-U083-Motorctrl.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+NUCLEO-U083-Motorctrl.elf NUCLEO-U083-Motorctrl.map: $(OBJS) $(USER_OBJS) /home/tim/Programme/Quadstar/quadsoft/NUCLEO-U083-Motorctrl/STM32U083RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "NUCLEO-U083-Motorctrl.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"/home/tim/Programme/Quadstar/quadsoft/NUCLEO-U083-Motorctrl/STM32U083RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO-U083-Motorctrl.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
