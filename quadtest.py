@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 from stable_baselines3 import PPO
 from quad import Quadcopter
 from quadcontroller import ControllerPID
-from utils import utils
 from quaternion import Quaternion
 
 class Testbench():

@@ -9,11 +9,11 @@ episode_start_time = 0
 
 ## Quadtrain
 # Foldername and id for the model
-model_id = "QM-15-08-24-EIPC55-D"
+model_id = "QM-12-12-24-ASROCK-A"
 # Load model for continued training
 load_model = False
 # Maximal number of episodes
-episodes = 1e3
+episodes = 1e6
 # Network architecture
 actor = [2, 2]
 critic = [2, 2]

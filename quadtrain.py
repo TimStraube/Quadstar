@@ -76,7 +76,7 @@ class Agent():
             "MlpPolicy",
             self.envs,
             tensorboard_log = (
-                f"./models/{config.model_id}/tensorboard"
+                f"./src/models/{config.model_id}/tensorboard"
             ),
             policy_kwargs=policy_kwargs,
             learning_rate = config.learning_rate,
@@ -88,7 +88,7 @@ class Agent():
         
         if config.load_model: 
             model_path = (
-                f"./models/{config.model_id}/main.zip"
+                f"./src/models/{config.model_id}/main.zip"
             )
             self.model = PPO.load(model_path) 
 
@@ -96,10 +96,10 @@ class Agent():
             self.model.get_env(),
             eval_freq = config.evaluation_frequency,
             best_model_save_path = (
-                f"./models/{config.model_id}"
+                f"./src/models/{config.model_id}"
             ),
             log_path = os.path.join(
-                f"./models/{config.model_id}", 
+                f"./src/models/{config.model_id}", 
                 "results"
             ),
             n_eval_episodes = config.evaluation_step_size
@@ -108,11 +108,11 @@ class Agent():
         conn = None
         try:
             # Ensure the models folder exists
-            os.makedirs("models", exist_ok=True)
+            os.makedirs("src/models", exist_ok=True)
 
             # Path to the database file
             database_path = os.path.join(
-                "models", 
+                "src/models", 
                 "config.db"
             )
 
@@ -199,7 +199,7 @@ class Agent():
             progress_bar = True
         )
 
-        self.model.save(f"./models/{config.model_id}/main")
+        self.model.save(f"./src/models/{config.model_id}/main")
 
 if __name__ == "__main__":
     agent = Agent()
