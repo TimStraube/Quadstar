@@ -1,5 +1,0 @@
-{
-    "files.associations": {
-        "stm32g4xx_hal.h": "c"
-    }
-}
