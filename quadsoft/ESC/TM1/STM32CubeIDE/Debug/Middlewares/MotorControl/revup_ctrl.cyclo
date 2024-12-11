@@ -1,0 +1,15 @@
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:88:13:RUC_Init	6
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:124:13:RUC_Clear	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:177:13:RUC_OTF_Exec	27
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:406:13:RUC_Exec	4
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:456:13:RUC_Completed	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:471:13:RUC_Stop	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:492:13:RUC_FirstAccelerationStageReached	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:512:13:RUC_SetPhaseDurationms	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:526:13:RUC_SetPhaseFinalMecSpeedUnit	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:540:13:RUC_SetPhaseFinalTorque	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:552:17:RUC_GetPhaseDurationms	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:564:16:RUC_GetPhaseFinalMecSpeedUnit	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:576:16:RUC_GetPhaseFinalTorque	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:586:16:RUC_GetNumberOfPhases	1
+/home/timstraube/Programme/Quadstar/quadsoft/TM1/MCSDK_v5.4.8-Full/MotorControl/MCSDK/MCLib/Any/Src/revup_ctrl.c:596:13:RUC_Get_SCLowsideOTF_Status	1
