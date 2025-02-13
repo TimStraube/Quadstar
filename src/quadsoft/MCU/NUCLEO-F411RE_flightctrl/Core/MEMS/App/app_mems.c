@@ -56,7 +56,7 @@ int LibVersionLen;
 volatile uint8_t SensorReadRequest = 0;
 uint8_t UseOfflineData = 0;
 offline_data_t OfflineData[OFFLINE_DATA_SIZE];
-int OfflineDataReadIndex = 0;
+uint8_t OfflineDataReadIndex = 0;
 int OfflineDataWriteIndex = 0;
 int OfflineDataCount = 0;
 uint32_t AlgoFreq = ALGO_FREQ;

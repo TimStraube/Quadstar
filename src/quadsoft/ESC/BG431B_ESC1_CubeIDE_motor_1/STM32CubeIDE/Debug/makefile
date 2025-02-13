@@ -36,34 +36,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := TM1
+BUILD_ARTIFACT_NAME := BG431B_ESC1_CubeIDE_motor_1
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-TM1.elf \
+BG431B_ESC1_CubeIDE_motor_1.elf \
 
 MAP_FILES += \
-TM1.map \
+BG431B_ESC1_CubeIDE_motor_1.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-TM1.list \
+BG431B_ESC1_CubeIDE_motor_1.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: TM1.elf secondary-outputs
+main-build: BG431B_ESC1_CubeIDE_motor_1.elf secondary-outputs
 
 # Tool invocations
-TM1.elf TM1.map: $(OBJS) $(USER_OBJS) /home/timstraube/Programme/Quadstar/quadsoft/TM1/STM32CubeIDE/STM32G431CBUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "TM1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/timstraube/Programme/Quadstar/quadsoft/TM1/STM32CubeIDE/STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TM1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+BG431B_ESC1_CubeIDE_motor_1.elf BG431B_ESC1_CubeIDE_motor_1.map: $(OBJS) $(USER_OBJS) /home/timstraube/Programme/Quadstar/src/quadsoft/ESC/BG431B_ESC1_CubeIDE_motor_1/STM32CubeIDE/STM32G431CBUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "BG431B_ESC1_CubeIDE_motor_1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/timstraube/Programme/Quadstar/src/quadsoft/ESC/BG431B_ESC1_CubeIDE_motor_1/STM32CubeIDE/STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BG431B_ESC1_CubeIDE_motor_1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -72,14 +72,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-TM1.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "TM1.list"
+BG431B_ESC1_CubeIDE_motor_1.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "BG431B_ESC1_CubeIDE_motor_1.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) TM1.elf TM1.list TM1.map default.size.stdout
+	-$(RM) BG431B_ESC1_CubeIDE_motor_1.elf BG431B_ESC1_CubeIDE_motor_1.list BG431B_ESC1_CubeIDE_motor_1.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

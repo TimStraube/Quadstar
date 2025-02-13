@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Sensorfusion</name>
+	<name>NUCLEO-F411RE_flightctrl</name>
 	<comment></comment>
 	<projects>
 		<project>Sensorfusion</project>
@@ -30,17 +30,14 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>Drivers/STM32F4xx_LL_Driver/stm32f4xx_ll_utils.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_utils.c</locationURI>
-		</link>
-	</linkedResources>
 	<variableList>
 		<variable>
 			<name>copy_PARENT</name>
 			<value>$%7BPARENT-2-PROJECT_LOC%7D/Quadstar/Quadsoft/TIM_PWMOutput</value>
+		</variable>
+		<variable>
+			<name>copy_PARENT1</name>
+			<value>$%7BPARENT-3-PROJECT_LOC%7D/Programme/Quadstar/src/quadsoft/Quadstar/Quadsoft/TIM_PWMOutput</value>
 		</variable>
 	</variableList>
 </projectDescription>

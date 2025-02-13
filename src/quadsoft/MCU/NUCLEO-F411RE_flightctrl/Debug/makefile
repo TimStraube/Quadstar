@@ -9,7 +9,8 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include X-CUBE-ISPU/Target/subdir.mk
+-include MEMS/Target/subdir.mk
+-include MEMS/App/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Drivers/BSP/STM32F4xx_Nucleo/subdir.mk
 -include Drivers/BSP/IKS4A1/subdir.mk
@@ -20,10 +21,8 @@ RM := rm -rf
 -include Drivers/BSP/Components/lps22df/subdir.mk
 -include Drivers/BSP/Components/lis2mdl/subdir.mk
 -include Drivers/BSP/Components/lis2duxs12/subdir.mk
--include Drivers/BSP/Components/ism330is/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
--include Core/MEMS/Target/subdir.mk
 -include Core/MEMS/App/subdir.mk
 -include objects.mk
 
@@ -47,37 +46,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := Sensorfusion
+BUILD_ARTIFACT_NAME := NUCLEO-F411RE_flightctrl
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Sensorfusion.elf \
+NUCLEO-F411RE_flightctrl.elf \
 
 MAP_FILES += \
-Sensorfusion.map \
+NUCLEO-F411RE_flightctrl.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Sensorfusion.list \
+NUCLEO-F411RE_flightctrl.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Sensorfusion.elf secondary-outputs
-
-dependents:
-	-cd /home/tim/Programme/Quadstar/quadsoft/Sensorfusion/Release && $(MAKE) all
+main-build: NUCLEO-F411RE_flightctrl.elf secondary-outputs
 
 # Tool invocations
-Sensorfusion.elf Sensorfusion.map: $(OBJS) $(USER_OBJS) /home/tim/Programme/Quadstar/quadsoft/Sensorfusion/Release/Sensorfusion.elf /home/tim/Programme/Quadstar/quadsoft/Sensorfusion/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Sensorfusion.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m4 -T"/home/tim/Programme/Quadstar/quadsoft/Sensorfusion/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Sensorfusion.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_MotionFX_Library/Lib -L../Middlewares/ST/STM32_MotionID_Library/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+NUCLEO-F411RE_flightctrl.elf NUCLEO-F411RE_flightctrl.map: $(OBJS) $(USER_OBJS) /home/timstraube/Programme/Quadstar/src/quadsoft/MCU/NUCLEO-F411RE_flightctrl/STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "NUCLEO-F411RE_flightctrl.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m4 -T"/home/timstraube/Programme/Quadstar/src/quadsoft/MCU/NUCLEO-F411RE_flightctrl/STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO-F411RE_flightctrl.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_MotionFX_Library/Lib -L../Middlewares/ST/STM32_MotionID_Library/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -86,14 +82,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Sensorfusion.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Sensorfusion.list"
+NUCLEO-F411RE_flightctrl.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "NUCLEO-F411RE_flightctrl.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) Sensorfusion.elf Sensorfusion.list Sensorfusion.map default.size.stdout
+	-$(RM) NUCLEO-F411RE_flightctrl.elf NUCLEO-F411RE_flightctrl.list NUCLEO-F411RE_flightctrl.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
@@ -106,6 +102,5 @@ warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
 .PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
-/home/tim/Programme/Quadstar/quadsoft/Sensorfusion/Release/Sensorfusion.elf:
 
 -include ../makefile.targets

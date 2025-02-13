@@ -1,0 +1,12 @@
+../MEMS/Target/serial_protocol.c:40:9:ByteStuffCopyByte	3
+../MEMS/Target/serial_protocol.c:71:9:ByteStuffCopy	2
+../MEMS/Target/serial_protocol.c:92:9:ReverseByteStuffCopyByte	4
+../MEMS/Target/serial_protocol.c:124:9:ReverseByteStuffCopyByte2	4
+../MEMS/Target/serial_protocol.c:155:9:ReverseByteStuffCopy	7
+../MEMS/Target/serial_protocol.c:214:6:CHK_ComputeAndAdd	2
+../MEMS/Target/serial_protocol.c:233:9:CHK_CheckAndRemove	2
+../MEMS/Target/serial_protocol.c:254:6:Serialize	2
+../MEMS/Target/serial_protocol.c:271:10:Deserialize	2
+../MEMS/Target/serial_protocol.c:292:6:Serialize_s32	2
+../MEMS/Target/serial_protocol.c:312:9:Deserialize_s32	2
+../MEMS/Target/serial_protocol.c:332:6:FloatToArray	1

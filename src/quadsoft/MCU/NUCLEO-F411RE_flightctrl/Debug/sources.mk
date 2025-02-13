@@ -23,10 +23,8 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 Core/MEMS/App \
-Core/MEMS/Target \
 Core/Src \
 Core/Startup \
-Drivers/BSP/Components/ism330is \
 Drivers/BSP/Components/lis2duxs12 \
 Drivers/BSP/Components/lis2mdl \
 Drivers/BSP/Components/lps22df \
@@ -37,5 +35,6 @@ Drivers/BSP/Components/stts22h \
 Drivers/BSP/IKS4A1 \
 Drivers/BSP/STM32F4xx_Nucleo \
 Drivers/STM32F4xx_HAL_Driver/Src \
-X-CUBE-ISPU/Target \
+MEMS/App \
+MEMS/Target \
 

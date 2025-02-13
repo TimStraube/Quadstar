@@ -5,5 +5,5 @@
 
 USER_OBJS :=
 
-LIBS := -l:MotionFX_CM4F_wc32_ot_hard.a -l:MotionID_CM4F_wc32_ot_hard.a
+LIBS := -l:MotionID_CM4F_wc32_ot_hard.a -l:MotionFX_CM4F_wc32_ot_hard.a
 
