@@ -25,7 +25,7 @@ Another approach to quadcopter control is employing a nonlinear network of weigh
 
 ### BLDC-motors
 
-The follwing motors are currently being used on my quadcopter model Axisflying C227 1960KV FPV Motor schwarz and I can recommend them. They even worked fine with a 11.2V (S3) power source while the specification recommends 22.2V (S6). It is probably wise to go with the specification for a build. So did I at least. 
+The following motors are currently being used on my quadcopter model Axisflying C227 1960KV FPV Motor schwarz and I can recommend them. They even worked fine with a 11.2V (S3) power source while the specification recommends 22.2V (S6). It is probably wise to go with the specification for a build. So did I at least. 
 
 ### BLDC-driver
 
