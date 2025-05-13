@@ -15,7 +15,7 @@ void setup() {
     Serial.begin(115200);
 
     // Treiber initialisieren
-    driver.voltage_power_supply = 12;
+    driver.voltage_power_supply = 22;
     driver.init();
     motor.linkDriver(&driver);
 
@@ -42,7 +42,7 @@ void setup() {
     motor.PID_velocity.output_ramp = 1000;
     motor.LPF_velocity.Tf = 0.01;
 
-    motor.P_angle.P = 20;
+    motor.P_angle.P = 10;
 
     // Serielle Kommunikation initialisieren
     motor.useMonitoring(Serial);
@@ -54,17 +54,40 @@ void setup() {
     } else {
         Serial.println(F("FOC Initialisierung fehlgeschlagen"));
     }
-    motor.target = 50; 
+    motor.initFOC();
+    motor.target = 0; 
 
-    // // Befehl hinzufügen
-    // command.add('T', doTarget, "target velocity");
+    // Befehl hinzufügen
+    command.add('T', doTarget, "target velocity");
 
-    // Serial.println(F("Motor ready."));
-    // Serial.println(F("Set the target velocity using serial terminal:"));
+    Serial.println(F("Motor ready."));
+    Serial.println(F("Set the target velocity using serial terminal:"));
+    delay(1000);
 }
 
 void loop() {
     motor.move();
     motor.loopFOC();
     command.run();
+
+    // Überprüfen, ob serielle Daten verfügbar sind
+    if (Serial.available() > 0) {
+        String input = Serial.readStringUntil('\n');
+        input.trim(); // Entfernt führende und nachfolgende Leerzeichen, einschließlich \r
+        if (input.length() > 0 && input != "\r") {
+            float targetSpeed = input.toFloat();
+            motor.target = targetSpeed;
+            Serial.print("Neue Zielgeschwindigkeit: ");
+            Serial.println(motor.target);
+        }
+    }
+
+    // Entfernen der automatischen Geschwindigkeitssteigerung
+    // static unsigned long lastUpdate = 0;
+    // if (millis() - lastUpdate >= 100 && motor.target < 50) {
+    //     motor.target += 1;
+    //     Serial.print("Speed increased, new target: ");
+    //     Serial.println(motor.target);
+    //     lastUpdate = millis();
+    // }
 }
