@@ -154,6 +154,52 @@ const Home: React.FC = () => {
                       <IonButton size="small" onClick={() => setCubeZoom(Math.min(8, cubeZoom + 0.5))} color="secondary">Zoom -</IonButton>
                     </div>
                   </div>
+                  {/* Geschwindigkeitsanzeige mittig */}
+                  <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '24px'}}>
+                    <div style={{background: '#e3f2fd', borderRadius: '18px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.12)', padding: '18px 36px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                      <div style={{fontSize: '1.3em', color: '#1976d2', fontWeight: 'bold', marginBottom: '8px'}}>Geschwindigkeit</div>
+                      <svg width="180" height="110" viewBox="0 0 180 110">
+                        {/* Skala */}
+                        <path d="M20,90 A70,70 0 0,1 160,90" fill="none" stroke="#1976d2" strokeWidth="6" />
+                        {/* Ticks */}
+                        {Array.from({length: 11}).map((_, i) => {
+                          // Skala: 9 Uhr (180°) bis 15 Uhr (360° bzw. 0°)
+                          const startAngle = Math.PI;
+                          const endAngle = 2 * Math.PI;
+                          const angle = startAngle + (endAngle - startAngle) * (i / 10);
+                          const x1 = 90 + 65 * Math.cos(angle);
+                          const y1 = 90 + 65 * Math.sin(angle);
+                          const x2 = 90 + 75 * Math.cos(angle);
+                          const y2 = 90 + 75 * Math.sin(angle);
+                          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#1976d2" strokeWidth={i % 5 === 0 ? 4 : 2} />;
+                        })}
+                        {/* Zahlen */}
+                        {[0,2,4,6,8,10].map((v) => {
+                          const startAngle = Math.PI;
+                          const endAngle = 2 * Math.PI;
+                          const angle = startAngle + (endAngle - startAngle) * (v / 10);
+                          const x = 90 + 55 * Math.cos(angle);
+                          const y = 90 + 55 * Math.sin(angle);
+                          return <text key={v} x={x} y={y+7} textAnchor="middle" fontSize="18" fill="#1976d2" alignmentBaseline="middle">{v}</text>;
+                        })}
+                        {/* Zeiger (für 7.2 m/s) */}
+                        {(() => {
+                          const speed = 7.2;
+                          const maxSpeed = 10;
+                          const startAngle = Math.PI;
+                          const endAngle = 2 * Math.PI;
+                          const angle = startAngle + (endAngle - startAngle) * (speed / maxSpeed);
+                          const x2 = 90 + 60 * Math.cos(angle);
+                          const y2 = 90 + 60 * Math.sin(angle);
+                          return <line x1={90} y1={90} x2={x2} y2={y2} stroke="#d32f2f" strokeWidth="6" />;
+                        })()}
+                        {/* Mittelpunkt */}
+                        <circle cx="90" cy="90" r="10" fill="#1976d2" stroke="#fff" strokeWidth="3" />
+                      </svg>
+                      <div style={{fontSize: '2em', color: '#1976d2', fontWeight: 'bold', marginTop: '8px'}}>7.2 m/s</div>
+                      <div style={{fontSize: '1em', color: '#555'}}>horizontal</div>
+                    </div>
+                  </div>
                   {/* Winkelanzeigen nebeneinander unten */}
                   <div className="wing-angle-circles" style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '48px', width: '100%'}}>
                     {/* Linker Flügelwinkel */}
