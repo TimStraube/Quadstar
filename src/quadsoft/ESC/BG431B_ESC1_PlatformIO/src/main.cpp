@@ -27,9 +27,9 @@ void setup() {
 
     // Motorparameter setzen
     motor.voltage_sensor_align = 1;
-    motor.velocity_index_search = 3;
+    motor.velocity_index_search = 1;
     motor.voltage_limit = 6;
-    motor.velocity_limit = 1000;
+    motor.velocity_limit = 6000; // 6000 RPM
 
     motor.controller = MotionControlType::velocity_openloop;
     motor.torque_controller = TorqueControlType::foc_current;
@@ -70,24 +70,39 @@ void loop() {
     motor.loopFOC();
     command.run();
 
-    // Überprüfen, ob serielle Daten verfügbar sind
-    if (Serial.available() > 0) {
-        String input = Serial.readStringUntil('\n');
-        input.trim(); // Entfernt führende und nachfolgende Leerzeichen, einschließlich \r
-        if (input.length() > 0 && input != "\r") {
-            float targetSpeed = input.toFloat();
-            motor.target = targetSpeed;
-            Serial.print("Neue Zielgeschwindigkeit: ");
-            Serial.println(motor.target);
-        }
-    }
+    // // Überprüfen, ob serielle Daten verfügbar sind
+    // if (Serial.available() > 0) {
+    //     String input = Serial.readStringUntil('\n');
+    //     input.trim(); // Entfernt führende und nachfolgende Leerzeichen, einschließlich \r
+    //     if (input.length() > 0 && input != "\r") {
+    //         float targetSpeed = input.toFloat();
+    //         motor.target = targetSpeed;
+    //         Serial.print("Neue Zielgeschwindigkeit: ");
+    //         Serial.println(motor.target);
+    //     }
+    // }
 
     // Entfernen der automatischen Geschwindigkeitssteigerung
-    // static unsigned long lastUpdate = 0;
-    // if (millis() - lastUpdate >= 100 && motor.target < 50) {
-    //     motor.target += 1;
-    //     Serial.print("Speed increased, new target: ");
-    //     Serial.println(motor.target);
-    //     lastUpdate = millis();
-    // }
+    static unsigned long lastUpdate = 0;
+    static bool increasing = true;
+    if (millis() - lastUpdate >= 100) {
+        if (increasing) {
+            if (motor.target < 300) {
+                motor.target += 2;
+                Serial.print("Speed increased, new target: ");
+                Serial.println(motor.target);
+            } else {
+                increasing = false;
+            }
+        } else {
+            if (motor.target > 10) {
+                motor.target -= 2;
+                Serial.print("Speed decreased, new target: ");
+                Serial.println(motor.target);
+            } else {
+                increasing = true;
+            }
+        }
+        lastUpdate = millis();
+    }
 }
