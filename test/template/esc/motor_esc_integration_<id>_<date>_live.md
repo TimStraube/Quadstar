@@ -1,5 +1,9 @@
 # Motor ESC Integration Test
 
+## Setup
+
+### Beschreibung
+
 Integration test of multiple Motor ESC units.
 
 | **Testbeschreibung** | Wert                            |
@@ -11,7 +15,7 @@ Integration test of multiple Motor ESC units.
 | Endzeit              | 21:30                           |
 | Testername           | Tim Straube                     |
 
-## Setup
+### Hardware
 
 | **Hardware**                          | Wert            |
 | ------------------------------------- | --------------- |
@@ -26,24 +30,28 @@ Integration test of multiple Motor ESC units.
 | Eingangsstrom                         |                 |
 | Quellenseitige Verschaltungstopologie | Seriell         |
 
+### Messhardware
+
 | **Messhardware** | Wert               |
 | ---------------- | ------------------ |
 | Stromquelle      | Voltcraft ESP 3020 |
 | Oszilloskop      | Rigol DS 1054      |
 | Multimeter       | Testo 760-1        |
 
+### Software
+
 | **Software**  | Wert  |
 | ------------- | ----- |
 | Version (Tag) | 1.0.0 |
 
-### Setupbeschreibung
-
-- Normaler Test
-
 ## Ergebnis
+
+### Erfolgsanforderungen
 
 | **Erfolgsanforderungen** | Resultat    |
 | ------------------------ | ----------- |
 | Regelung mit PWM         | Erfolgreich |
 
 ### Verhaltensbeschreibung
+
+...

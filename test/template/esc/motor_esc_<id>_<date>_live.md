@@ -1,5 +1,9 @@
 # Motor ESC Test
 
+## Setup
+
+### Beschreibung
+
 Test of a single Motor ESC circuit.
 
 | **Testbeschreibung** | Wert           |
@@ -11,12 +15,12 @@ Test of a single Motor ESC circuit.
 | Endzeit              | 21:30          |
 | Testername           | Tim Straube    |
 
-## Setup
+### Hardware
 
 | **Hardware**                          | Wert            |
 | ------------------------------------- | --------------- |
 | Typ ESC                               | STM BG431B ESC1 |
-| ID ESC 1                              | BG431B_ESC1_1   |
+| ID ESC                                | BG431B_ESC1_1   |
 | Typ Motor                             |                 |
 | Anzahl ESCs                           | 1               |
 | Quellenseitige Verschaltungstopologie | Seriell         |
@@ -27,18 +31,14 @@ Test of a single Motor ESC circuit.
 | ------------- | ----- |
 | Version (Tag) | 1.0.0 |
 
-### Setupbeschreibung
-
-- Normaler Test
-
-### Testziele
-
-- Regelung des ESC
-
 ## Ergebnis
 
-| **Software**  | Wert  |
-| ------------- | ----- |
-| Version (Tag) | 1.0.0 |
+### Erfolgsanforderungen
+
+| **Erfolgsanforderungen** | Resultat    |
+| ------------------------ | ----------- |
+| Regelung mit PWM         | Erfolgreich |
 
 ### Verhaltensbeschreibung
+
+...
