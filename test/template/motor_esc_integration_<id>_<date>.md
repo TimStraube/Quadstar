@@ -1,4 +1,6 @@
-# Motor ESC Test
+# Motor ESC Integration Test
+
+Integration test of multiple Motor ESC units.
 
 | **Testbeschreibung** | Wert                            |
 | -------------------- | ------------------------------- |

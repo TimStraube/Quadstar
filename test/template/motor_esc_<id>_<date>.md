@@ -1,5 +1,7 @@
 # Motor ESC Test
 
+Test of a single Motor ESC circuit.
+
 | **Testbeschreibung** | Wert           |
 | -------------------- | -------------- |
 | ID                   | 0001           |
