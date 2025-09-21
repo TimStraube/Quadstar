@@ -5,3 +5,4 @@
 * If none fits create a new one from scratch but structured like the others
 * If you miss fields in existing templates add them if they are not redundant
 * Never remove existing entries for backwards compatablity
+* If values are undefined or unknown leave the field empty

@@ -11,8 +11,8 @@ Test of a single Motor ESC circuit.
 | ID                   | 0001           |
 | Typ                  | Motor ESC Test |
 | Datum                | 21.09.2025     |
-| Startzeit            | 19:30          |
-| Endzeit              | 21:30          |
+| Startzeit            | 20:00          |
+| Endzeit              |                |
 | Testername           | Tim Straube    |
 
 ### Hardware
@@ -35,9 +35,14 @@ Test of a single Motor ESC circuit.
 
 ### Erfolgsanforderungen
 
-| **Erfolgsanforderungen** | Resultat    |
-| ------------------------ | ----------- |
-| Regelung mit PWM         | Erfolgreich |
+| **Erfolgsanforderungen**                 | Resultat    |
+| ---------------------------------------- | ----------- |
+| Firmware Upload                          |             |
+| Regelung mit PWM                         | Erfolgreich |
+| Beide grünen LEDs leuchten beim power up |             |
+| Rote LED leuchtet beim power up          |             |
+| --                                       | --          |
+| Gesamtergebnis                           | Failed      |
 
 ### Verhaltensbeschreibung
 

@@ -50,6 +50,7 @@ Integration test of multiple Motor ESC units.
 
 | **Erfolgsanforderungen** | Resultat    |
 | ------------------------ | ----------- |
+| Firmware Upload          |             |
 | Regelung mit PWM         | Erfolgreich |
 
 ### Verhaltensbeschreibung

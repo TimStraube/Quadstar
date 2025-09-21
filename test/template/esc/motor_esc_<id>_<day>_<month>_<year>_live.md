@@ -35,9 +35,14 @@ Test of a single Motor ESC circuit.
 
 ### Erfolgsanforderungen
 
-| **Erfolgsanforderungen** | Resultat    |
-| ------------------------ | ----------- |
-| Regelung mit PWM         | Erfolgreich |
+| **Erfolgsanforderungen**                 | Resultat    |
+| ---------------------------------------- | ----------- |
+| Firmware Upload                          |             |
+| Regelung mit PWM                         | Erfolgreich |
+| Beide grünen LEDs leuchten beim power up |             |
+| Rote LED leuchtet beim power up          |             |
+| --                                       | --          |
+| Gesamtergebnis                           | Failed      |
 
 ### Verhaltensbeschreibung
 
