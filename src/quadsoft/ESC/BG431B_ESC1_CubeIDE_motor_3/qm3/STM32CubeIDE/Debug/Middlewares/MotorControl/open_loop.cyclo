@@ -1,6 +1,0 @@
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:50:13:OL_Init	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:73:13:OL_VqdConditioning	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:90:13:OL_UpdateVoltage	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:110:16:OL_GetVoltage	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:126:13:OL_Calc	3
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/MCSDK_v6.2.0-Full/MotorControl/MCSDK/MCLib/Any/Src/open_loop.c:162:13:OL_VF	1

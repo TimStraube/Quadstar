@@ -1,9 +1,0 @@
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:23:6:MC_Perf_Measure_Init	2
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:64:6:MC_Perf_Clear	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:94:6:MC_Perf_Measure_Start	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:116:6:MC_BG_Perf_Measure_Start	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:140:6:MC_Perf_Measure_Stop	5
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:202:6:MC_BG_Perf_Measure_Stop	5
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:263:9:MC_Perf_GetCPU_Load	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:297:9:MC_Perf_GetMaxCPU_Load	1
-/home/tim/Programme/Quadstar/quadsoft/QM3/qm3/Src/mc_perf.c:326:9:MC_Perf_GetMinCPU_Load	3
