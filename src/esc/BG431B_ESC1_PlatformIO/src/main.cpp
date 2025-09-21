@@ -82,27 +82,25 @@ void loop() {
     //     }
     // }
 
-    // Entfernen der automatischen Geschwindigkeitssteigerung
+    // Automatische Zielgeschwindigkeitssteuerung: 0 -> 50 -> 100 -> 0, alle 5s
     static unsigned long lastUpdate = 0;
-    static bool increasing = true;
-    if (millis() - lastUpdate >= 100) {
-        if (increasing) {
-            if (motor.target < 300) {
-                motor.target += 2;
-                Serial.print("Speed increased, new target: ");
-                Serial.println(motor.target);
-            } else {
-                increasing = false;
-            }
-        } else {
-            if (motor.target > 10) {
-                motor.target -= 2;
-                Serial.print("Speed decreased, new target: ");
-                Serial.println(motor.target);
-            } else {
-                increasing = true;
-            }
+    static int state = 0;
+    if (millis() - lastUpdate >= 5000) {
+        switch (state) {
+            case 0:
+                motor.target = 0;
+                Serial.println("Target set to 0");
+                break;
+            case 1:
+                motor.target = 50;
+                Serial.println("Target set to 50");
+                break;
+            case 2:
+                motor.target = 100;
+                Serial.println("Target set to 100");
+                break;
         }
+        state = (state + 1) % 3;
         lastUpdate = millis();
     }
 }
