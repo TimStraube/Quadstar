@@ -35,14 +35,18 @@ Test of a single Motor ESC circuit.
 
 ### Erfolgsanforderungen
 
-| **Erfolgsanforderungen**                 | Resultat    |
-| ---------------------------------------- | ----------- |
-| Firmware Upload                          |             |
-| Regelung mit PWM                         | Erfolgreich |
-| Beide grünen LEDs leuchten beim power up |             |
-| Rote LED leuchtet beim power up          |             |
-| --                                       | --          |
-| Gesamtergebnis                           | Failed      |
+| **Erfolgsanforderungen**                                  | Resultat (failed 0, success 1) |
+| --------------------------------------------------------- | ------------------------------ |
+| Firmware Upload                                           |                                |
+| Regelung mit PWM                                          |                                |
+| Beide grünen LEDs leuchten beim power up                  |                                |
+| Rote LED leuchtet beim power up                           |                                |
+| Drehzahlverhalten entspricht den Erwartungen              |                                |
+| 3 Testzyklen mit identischem Verhalten bei gleichem Input |                                |
+| ESC hatte keine Übertemperatur                            |                                |
+| Motor hatte keine Übertemperatur                          |                                |
+| Voll Schubkraft erreicht                                  |                                |
+| Sound                                                     |                                |
 
 ### Verhaltensbeschreibung
 
