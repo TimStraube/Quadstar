@@ -12,7 +12,7 @@ Test of a single Motor ESC circuit.
 | Typ                  | Motor ESC Test |
 | Datum                | 21.09.2025     |
 | Startzeit            | 20:00          |
-| Endzeit              |                |
+| Endzeit              | 21:20          |
 | Testername           | Tim Straube    |
 
 ### Hardware
