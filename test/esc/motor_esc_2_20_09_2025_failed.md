@@ -11,8 +11,8 @@ Test of a single Motor ESC circuit.
 | ID                   | 0001           |
 | Typ                  | Motor ESC Test |
 | Datum                | 21.09.2025     |
-| Startzeit            | 20:00          |
-| Endzeit              | 21:20          |
+| Startzeit            | 21:25          |
+| Endzeit              | 21:30          |
 | Testername           | Tim Straube    |
 
 ### Hardware
@@ -29,7 +29,7 @@ Test of a single Motor ESC circuit.
 
 | **Software**  | Wert  |
 | ------------- | ----- |
-| Version (Tag) | 1.0.0 |
+| Version (Tag) | 1.0.1 |
 
 ## Ergebnis
 
@@ -41,8 +41,8 @@ Test of a single Motor ESC circuit.
 | Regelung mit PWM                                          | 0                              |
 | Beide grünen LEDs leuchten beim power up                  | 1                              |
 | Rote LED leuchtet beim power up                           | 1                              |
-| Drehzahlverhalten entspricht den Erwartungen              | 1                              |
-| 3 Testzyklen mit identischem Verhalten bei gleichem Input | 1                              |
+| Drehzahlverhalten entspricht den Erwartungen              | 0                              |
+| 3 Testzyklen mit identischem Verhalten bei gleichem Input | 0                              |
 | ESC hatte keine Übertemperatur                            | 0                              |
 | Motor hatte keine Übertemperatur                          | 0                              |
 | Voll Schubkraft erreicht                                  | 0                              |
@@ -50,4 +50,4 @@ Test of a single Motor ESC circuit.
 
 ### Verhaltensbeschreibung
 
-Der Motor dreht dreimal hoch kurz nachdem die Spannung erhöht wird und spult wieder runter. Es kommt nicht zu einem Abbruch. Besonders der ESC ist nach den drei Testzyklen sehr warm.
+Der Motor brummt laut. Vermutlich beim Sprung von Sollgeschwindigkeit 0 auf 50 bewegt er sich zwar kurz verfängt sich dann aber in einem oszilierendem Zustand mit nur kleinen Winkeländerungen aber keiner vollen Drehung.

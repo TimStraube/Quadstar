@@ -24,8 +24,8 @@ Test of a single Motor ESC circuit.
 | Typ Motor                             |                 |
 | Anzahl ESCs                           | 1               |
 | Quellenseitige Verschaltungstopologie | Seriell         |
-| Eingangsspannung                      | 20V             |
-| Eingangsstrom                         |                 |
+| Eingangsspannung in V                 | 20              |
+| Maximaler Eingangsstrom in A          |                 |
 
 | **Software**  | Wert  |
 | ------------- | ----- |
