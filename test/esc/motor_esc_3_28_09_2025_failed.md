@@ -8,11 +8,11 @@ Test of a single Motor ESC circuit.
 
 | **Testbeschreibung** | Wert           |
 | -------------------- | -------------- |
-| ID                   | 0001           |
+| ID                   | 0003           |
 | Typ                  | Motor ESC Test |
-| Datum                | 21.09.2025     |
-| Startzeit            | 19:30          |
-| Endzeit              | 21:30          |
+| Datum                | 28.09.2025     |
+| Startzeit            | 22:30          |
+| Endzeit              | 23:30          |
 | Testername           | Tim Straube    |
 
 ### Hardware
@@ -41,17 +41,18 @@ Test of a single Motor ESC circuit.
 
 | **Erfolgsanforderungen**                                  | Resultat (failed 0, success 1) |
 | --------------------------------------------------------- | ------------------------------ |
-| Firmware Upload                                           |                                |
-| Regelung mit PWM                                          |                                |
-| Beide grünen LEDs leuchten beim power up                  |                                |
-| Rote LED leuchtet beim power up                           |                                |
-| Drehzahlverhalten entspricht den Erwartungen              |                                |
-| 3 Testzyklen mit identischem Verhalten bei gleichem Input |                                |
-| ESC hatte keine Übertemperatur                            |                                |
-| Motor hatte keine Übertemperatur                          |                                |
-| Voll Schubkraft erreicht                                  |                                |
-| Sound                                                     |                                |
+| Firmware Upload                                           | 1                              |
+| Regelung mit PWM                                          | 0                              |
+| Beide grünen LEDs leuchten beim power up                  | 0                              |
+| Rote LED leuchtet beim power up                           | 1                              |
+| Drehzahlverhalten entspricht den Erwartungen              | 0                              |
+| 3 Testzyklen mit identischem Verhalten bei gleichem Input | 1                              |
+| ESC hatte keine Übertemperatur                            | 1                              |
+| Motor hatte keine Übertemperatur                          | 1                              |
+| Voll Schubkraft erreicht                                  | 0                              |
+| Sound                                                     | 0                              |
 
 ### Verhaltensbeschreibung
 
-...
+Wie erwartet dreht der Motor hoch auf 150. Doch sobald PWM greift beginnt er laut auf der Stelle zu ozillieren. 
+Wahrscheinlich kommt das PWM Signal nicht an oder wird nicht richtig erkannt.
