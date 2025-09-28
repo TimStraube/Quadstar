@@ -65,42 +65,48 @@ void setup() {
     delay(1000);
 }
 
-void loop() {
+void loop()
+{
     motor.move();
     motor.loopFOC();
     command.run();
 
-    // // Überprüfen, ob serielle Daten verfügbar sind
-    // if (Serial.available() > 0) {
-    //     String input = Serial.readStringUntil('\n');
-    //     input.trim(); // Entfernt führende und nachfolgende Leerzeichen, einschließlich \r
-    //     if (input.length() > 0 && input != "\r") {
-    //         float targetSpeed = input.toFloat();
-    //         motor.target = targetSpeed;
-    //         Serial.print("Neue Zielgeschwindigkeit: ");
-    //         Serial.println(motor.target);
-    //     }
-    // }
-
-    // Automatische Zielgeschwindigkeitssteuerung: 0 -> 50 -> 100 -> 0, alle 5s
+    static bool rampDone = false;
     static unsigned long lastUpdate = 0;
-    static int state = 0;
-    if (millis() - lastUpdate >= 5000) {
-        switch (state) {
-            case 0:
-                motor.target = 0;
-                Serial.println("Target set to 0");
-                break;
-            case 1:
-                motor.target = 50;
-                Serial.println("Target set to 50");
-                break;
-            case 2:
-                motor.target = 100;
-                Serial.println("Target set to 100");
-                break;
+
+    // Ramp-up bis 150 beim Start
+    if (!rampDone) {
+        if (millis() - lastUpdate >= 100) {
+            if (motor.target < 150) {
+                motor.target += 2;
+                Serial.print("Startup ramp, target: ");
+                Serial.println(motor.target);
+            } else {
+                rampDone = true;
+            }
+            lastUpdate = millis();
         }
-        state = (state + 1) % 3;
-        lastUpdate = millis();
+        return; // PWM erst nach Ramp-up auswerten
+    }
+
+    // PWM-Eingang für Geschwindigkeit (Pin: INPUT-Header 'PWM')
+    const uint8_t PWM_INPUT_PIN = PA15;
+    pinMode(PWM_INPUT_PIN, INPUT);
+    static bool pwmLost = false;
+    unsigned long pwm = pulseIn(PWM_INPUT_PIN, HIGH, 25000); // Timeout 25ms
+    if (pwm >= 1000 && pwm <= 2000)
+    {
+        motor.target = map(pwm, 1000, 2000, 0, 300);
+        Serial.print("PWM input: ");
+        Serial.print(pwm);
+        Serial.print(" µs -> target: ");
+        Serial.println(motor.target);
+        pwmLost = false;
+    }
+    else if (!pwmLost)
+    {
+        motor.target = 150;
+        Serial.println("No valid PWM detected, target set to 150");
+        pwmLost = true;
     }
 }
