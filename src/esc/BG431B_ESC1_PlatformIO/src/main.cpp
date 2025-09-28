@@ -82,6 +82,11 @@ void setup() {
     delay(1000);
 }
 
+// --- Filter + deadband globals ---
+float filteredPWM = 1500;
+int lastTarget = 150;
+float userTarget = 150; // Initialwert für Ramp-up
+
 void loop()
 {
     motor.move();
@@ -106,20 +111,39 @@ void loop()
         return; // PWM erst nach Ramp-up auswerten
     }
 
-    // PWM-Eingang für Geschwindigkeit (Interrupt-basiert)
-    uint32_t pwm = pulseWidth;  // Wert aus ISR
-    static bool pwmLost = false;
+    // --- PWM-Eingang filtern ---
+    uint32_t pwmRaw = pulseWidth;  // Wert aus ISR
+    // Low-pass Filter
+    const float alpha = 0.1; // 0.0 = langsam, 1.0 = direkt
+    filteredPWM = (1.0f - alpha) * filteredPWM + alpha * (float)pwmRaw;
 
-    if (pwm >= 1000 && pwm <= 2000) {
-        motor.target = map(pwm, 1000, 2000, 0, 300);
-        Serial.print("PWM input: ");
-        Serial.print(pwm);
-        Serial.print(" µs -> target: ");
+    if (filteredPWM >= 1500 && filteredPWM <= 1700) {
+        int newTarget = map((int)filteredPWM, 1500, 1700, 130, 150);
+
+        // Deadband: nur ändern, wenn Differenz groß genug
+        if (abs(newTarget - lastTarget) > 1) {
+            userTarget = newTarget;
+            lastTarget = newTarget;
+            Serial.print("PWM input (filtered): ");
+            Serial.print(filteredPWM, 1);
+            Serial.print(" µs -> userTarget: ");
+            Serial.println(userTarget);
+        }
+    } else {
+        userTarget = 0; // Sicherer Wert, wenn PWM außerhalb Bereich
+    }
+
+    // motor.target nähert sich userTarget mit Ramp
+    if (millis() - lastUpdate >= 100) {
+        if (motor.target < userTarget) {
+            motor.target += 2;
+            if (motor.target > userTarget) motor.target = userTarget;
+        } else if (motor.target > userTarget) {
+            motor.target -= 2;
+            if (motor.target < userTarget) motor.target = userTarget;
+        }
+        Serial.print("Ramp to userTarget, motor.target: ");
         Serial.println(motor.target);
-        pwmLost = false;
-    } else if (!pwmLost) {
-        motor.target = 150;
-        Serial.println("No valid PWM detected, target set to 150");
-        pwmLost = true;
+        lastUpdate = millis();
     }
 }
