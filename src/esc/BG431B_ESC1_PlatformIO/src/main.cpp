@@ -10,6 +10,18 @@ LowsideCurrentSense currentSense = LowsideCurrentSense(0.003f, -64.0f / 7.0f, A_
 Commander command = Commander(Serial);
 void doTarget(char* cmd) { command.motion(&motor, cmd); }
 
+// --- PWM Input globals ---
+const uint8_t PWM_INPUT_PIN = PA15;
+volatile uint32_t lastRise = 0;
+volatile uint32_t pulseWidth = 1500; // default safe value
+
+void pwmRise() {
+  lastRise = micros();
+}
+void pwmFall() {
+  pulseWidth = micros() - lastRise;
+}
+
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(115200);
@@ -60,6 +72,11 @@ void setup() {
     // Befehl hinzufügen
     command.add('T', doTarget, "target velocity");
 
+    // PWM Input einrichten (PA15 Interrupts)
+    pinMode(PWM_INPUT_PIN, INPUT);
+    attachInterrupt(digitalPinToInterrupt(PWM_INPUT_PIN), pwmRise, RISING);
+    attachInterrupt(digitalPinToInterrupt(PWM_INPUT_PIN), pwmFall, FALLING);
+
     Serial.println(F("Motor ready."));
     Serial.println(F("Set the target velocity using serial terminal:"));
     delay(1000);
@@ -89,22 +106,18 @@ void loop()
         return; // PWM erst nach Ramp-up auswerten
     }
 
-    // PWM-Eingang für Geschwindigkeit (Pin: INPUT-Header 'PWM')
-    const uint8_t PWM_INPUT_PIN = PA15;
-    pinMode(PWM_INPUT_PIN, INPUT);
+    // PWM-Eingang für Geschwindigkeit (Interrupt-basiert)
+    uint32_t pwm = pulseWidth;  // Wert aus ISR
     static bool pwmLost = false;
-    unsigned long pwm = pulseIn(PWM_INPUT_PIN, HIGH, 25000); // Timeout 25ms
-    if (pwm >= 1000 && pwm <= 2000)
-    {
+
+    if (pwm >= 1000 && pwm <= 2000) {
         motor.target = map(pwm, 1000, 2000, 0, 300);
         Serial.print("PWM input: ");
         Serial.print(pwm);
         Serial.print(" µs -> target: ");
         Serial.println(motor.target);
         pwmLost = false;
-    }
-    else if (!pwmLost)
-    {
+    } else if (!pwmLost) {
         motor.target = 150;
         Serial.println("No valid PWM detected, target set to 150");
         pwmLost = true;
