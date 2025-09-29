@@ -118,7 +118,7 @@ void loop()
     filteredPWM = (1.0f - alpha) * filteredPWM + alpha * (float)pwmRaw;
 
     if (filteredPWM >= 1500 && filteredPWM <= 1700) {
-        int newTarget = map((int)filteredPWM, 1500, 1700, 130, 150);
+        int newTarget = map((int)filteredPWM, 1000, 2000, 0, 500);
 
         // Deadband: nur ändern, wenn Differenz groß genug
         if (abs(newTarget - lastTarget) > 1) {

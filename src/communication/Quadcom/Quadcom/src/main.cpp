@@ -1,13 +1,10 @@
-
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <esp_now.h>
 
-
-
 #define LED_GPIO 2
 #define BUTTON_GPIO 18
+#define PWM_PIN 21
 
 const unsigned long blinkInterval = 500;
 unsigned long lastBlink = 0;
@@ -18,12 +15,10 @@ typedef struct __attribute__((packed)) {
   uint8_t pause; // Wert egal, nur als Signal
 } PauseMessage;
 
-// MAC-Adresse des Partners (hier als Platzhalter, muss ggf. angepasst werden)
 uint8_t peerAddress[] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF}; // Broadcast
 
-
 unsigned long pauseUntil = 0;
-// Callback für empfangene Nachrichten
+
 void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
   if (len == sizeof(PauseMessage)) {
     pauseUntil = millis() + 1000;
@@ -33,11 +28,18 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
   }
 }
 
+const int ledPin = 2;
+int targetSpeed = 0;  // 0 ... 1000
+
 void setup() {
   Serial.begin(115200);
   Serial.println("Boot OK");
   pinMode(LED_GPIO, OUTPUT);
   pinMode(BUTTON_GPIO, INPUT_PULLUP);
+
+  // 🔧 Initialize PWM for ESC
+  ledcSetup(0, 490, 16);         // Channel 0, 490 Hz (2.04ms), 16-bit resolution
+  ledcAttachPin(PWM_PIN, 0);
 
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -75,12 +77,29 @@ void loop() {
       lastBlink = now;
       ledState = !ledState;
       digitalWrite(LED_GPIO, ledState ? HIGH : LOW);
-      Serial.print("LED: ");
-      Serial.println(ledState ? "AN" : "AUS");
     }
   } else if (now < pauseUntil) {
     digitalWrite(LED_GPIO, LOW);
     ledState = false;
   }
+
+  // Benutzereingabe auslesen
+  if (Serial.available()) {
+    int val = Serial.parseInt();
+    if (val >= 0 && val <= 1000) {
+      targetSpeed = val;
+      Serial.print("Neue Geschwindigkeit: ");
+      Serial.println(targetSpeed);
+    }
+    while (Serial.available()) Serial.read();
+  }
+
+
+
+  int pulse_us = map(targetSpeed, 0, 1000, 1000, 2000);
+  int period_us = 1000000 / 490;   // ≈ 2041 µs
+  int duty = (pulse_us * 65535) / period_us;
+  ledcWrite(0, duty);
+
   delay(10);
 }
