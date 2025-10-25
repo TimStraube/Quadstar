@@ -19,17 +19,39 @@ class Quadserial():
         self.clearLine = False
         portnumber = 0
         error = 1
-        # Iterate 64 ports until the right one is found
+        # Erst ACM-Ports testen
         while (error and portnumber < 64):
+            portname = f"/dev/ttyACM{portnumber}"
+            print(f"Probiere Port: {portname}")
             try:
                 self.serialPort = serial.Serial(
-                    f"/dev/ttyACM{portnumber}",
+                    portname,
                     115200
                 )
+                print(f"Erfolgreich verbunden mit {portname}")
                 error = 0
-            except:
+            except Exception as e:
                 portnumber += 1
-                print("Serial Error.")
+                print(f"Serial Error bei {portname}: {e}")
+        # Falls kein ACM-Port gefunden, USB-Ports testen
+        if error:
+            portnumber = 0
+            while (error and portnumber < 16):
+                portname = f"/dev/ttyUSB{portnumber}"
+                print(f"Probiere Port: {portname}")
+                try:
+                    self.serialPort = serial.Serial(
+                        portname,
+                        115200
+                    )
+                    print(f"Erfolgreich verbunden mit {portname}")
+                    error = 0
+                except Exception as e:
+                    portnumber += 1
+                    print(f"Serial Error bei {portname}: {e}")
+        if error:
+            print("Kein serieller Port gefunden! Kommunikation deaktiviert.")
+            self.serialPort = None
 
         self.sample_id = [
             "accx", 
@@ -200,11 +222,21 @@ class Quadserial():
                 time.sleep(0.08)
     
     def send2uart(self, message):
+        if self.serialPort is None:
+            print("SerialPort nicht initialisiert! Sendevorgang übersprungen.")
+            return
         self.serialPort.flushInput()
         self.serialPort.flushOutput()
-        self.serialPort.write(
-            message
-        )
+        # Nur eine einzelne Zahl als String mit Zeilenumbruch senden
+        try:
+            num = int(message)
+        except (ValueError, TypeError):
+            try:
+                num = int(float(message))
+            except (ValueError, TypeError):
+                num = 0
+        msg = f"{num}\n".encode()
+        self.serialPort.write(msg)
 
     def reset(self):
         pass

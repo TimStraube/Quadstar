@@ -85,18 +85,34 @@ void loop() {
 
   // Benutzereingabe auslesen
   if (Serial.available()) {
-    int val = Serial.parseInt();
-    if (val >= 0 && val <= 1000) {
-      targetSpeed = val;
-      Serial.print("Neue Geschwindigkeit: ");
-      Serial.println(targetSpeed);
+    Serial.println("[LOG] Serial.available() == true");
+    int availableBytes = Serial.available();
+    Serial.print("[LOG] Bytes im Buffer: ");
+    Serial.println(availableBytes);
+    String msg = Serial.readStringUntil('\n');
+    Serial.print("[LOG] Rohdaten empfangen: ");
+    Serial.println(msg);
+    msg.trim();
+    Serial.print("[LOG] Getrimmte Nachricht: ");
+    Serial.println(msg);
+    int thrust = msg.toInt(); // Wandelt die komplette Nachricht in eine Zahl um
+    Serial.print("[LOG] Umgewandelter Wert: ");
+    Serial.println(thrust);
+    if (thrust >= 0 && thrust <= 1000) {
+        targetSpeed = thrust;
+        Serial.print("Joystick Geschwindigkeit: ");
+        Serial.println(targetSpeed);
+    } else {
+        Serial.print("Ungültige Nachricht: ");
+        Serial.println(msg);
     }
     while (Serial.available()) Serial.read();
+    Serial.println("[LOG] Buffer nach Lesen geleert.");
   }
 
 
 
-  int pulse_us = map(targetSpeed, 0, 1000, 1000, 2000);
+  int pulse_us = map(targetSpeed, 0, 100, 1000, 2000);
   int period_us = 1000000 / 490;   // ≈ 2041 µs
   int duty = (pulse_us * 65535) / period_us;
   ledcWrite(0, duty);

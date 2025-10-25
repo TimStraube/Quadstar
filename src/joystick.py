@@ -140,15 +140,12 @@ class Joystick():
 
     def writeSerial(self):
         if (
-            abs(self.old_axis_thrust - self.axis_thrust) > 0.5 or 
-            abs(self.roll_old - self.roll) > 0.5 or 
-            abs(self.pitch_old - self.pitch) > 0.5 or
-            self.controller_active != self.controller_active_callback or 
-            self.schubnur != self.schubnur_callback):
-
-            message = f"{int(self.axis_thrust + 100)}{int(self.roll + 500)}{int(self.pitch + 500)}{self.controller_active}{self.schubnur}\n\r".encode()
-            print("Send: " + str(message))
-            self.serialPort.send2uart(message)
+            abs(self.old_axis_thrust - self.axis_thrust) > 0.5):
+              # Wertebereich 0 ... 100
+              thrust_value = int(self.axis_thrust)
+              thrust_value = max(0, min(100, thrust_value))
+              print(f"Send: {thrust_value}")
+              self.serialPort.send2uart(thrust_value)
         self.roll_old = self.roll
         self.pitch_old = self.pitch
         self.old_axis_thrust = self.axis_thrust
