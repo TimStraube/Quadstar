@@ -222,27 +222,17 @@ class Quadserial():
                 time.sleep(0.08)
     
     def send2uart(self, message):
+        print(f"[Quadserial] Sende an UART: {repr(message)}")
         if self.serialPort is None:
             print("SerialPort nicht initialisiert! Sendevorgang übersprungen.")
             return
-        self.serialPort.flushInput()
-        self.serialPort.flushOutput()
-        # Nur eine einzelne Zahl als String mit Zeilenumbruch senden
-        try:
-            num = int(message)
-        except (ValueError, TypeError):
-            try:
-                num = int(float(message))
-            except (ValueError, TypeError):
-                num = 0
-        msg = f"{num}\n".encode()
-        self.serialPort.write(msg)
+        self.serialPort.write(str(message).encode())
 
     def reset(self):
         pass
 
 if __name__ == '__main__':
-    serialSampler = Quadserial()
+    serialSampler = Quadserial() 
 
     prozessSampler = multiprocessing.Process(
         target = serialSampler.startInfinitSampler

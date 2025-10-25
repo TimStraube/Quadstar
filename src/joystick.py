@@ -81,11 +81,9 @@ class Joystick():
         pygame.event.pump()
         if self.norm:
             try:
-                self.roll = 100 * self.joystick.get_axis(0)
-                self.pitch = -100 * self.joystick.get_axis(1)
-                self.axis_thrust = 100 * (
-                    0.5 - (self.joystick.get_axis(2) / 2)
-                )
+                self.roll = int(self.joystick.get_axis(0) * 100)
+                self.pitch = int(-self.joystick.get_axis(1) * 100)
+                self.axis_thrust = int((0.5 - (self.joystick.get_axis(2) / 2)) * 100)
             except:
                 # print("Error: Axis could not be read.")
                 self.roll = 0
@@ -139,18 +137,19 @@ class Joystick():
         print("thrust: " + str(self.axis_thrust) + "\n")
 
     def writeSerial(self):
-        if (
-            abs(self.old_axis_thrust - self.axis_thrust) > 0.5):
-              # Wertebereich 0 ... 100
-              thrust_value = int(self.axis_thrust)
-              thrust_value = max(0, min(100, thrust_value))
-              print(f"Send: {thrust_value}")
-              self.serialPort.send2uart(thrust_value)
+        if abs(self.old_axis_thrust - self.axis_thrust) > 0.5:
+            thrust_value = int(self.axis_thrust)
+            roll_value = int(self.roll)
+            pitch_value = int(self.pitch)
+            msg = f"{thrust_value},{roll_value},{pitch_value}\n"
+            print(f"Send: {msg.strip()}")
+            self.serialPort.send2uart(msg)
         self.roll_old = self.roll
         self.pitch_old = self.pitch
         self.old_axis_thrust = self.axis_thrust
         self.controller_active_callback = self.controller_active
         self.schubnur_callback = self.schubnur
+        print(f"DEBUG: thrust={self.axis_thrust}, roll={self.roll}, pitch={self.pitch}")
 
 if __name__ == '__main__':
     joystick = Joystick()

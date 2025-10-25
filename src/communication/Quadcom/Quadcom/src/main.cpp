@@ -85,26 +85,42 @@ void loop() {
 
   // Benutzereingabe auslesen
   if (Serial.available()) {
-    Serial.println("[LOG] Serial.available() == true");
-    int availableBytes = Serial.available();
-    Serial.print("[LOG] Bytes im Buffer: ");
-    Serial.println(availableBytes);
     String msg = Serial.readStringUntil('\n');
+    msg.trim();
     Serial.print("[LOG] Rohdaten empfangen: ");
     Serial.println(msg);
-    msg.trim();
-    Serial.print("[LOG] Getrimmte Nachricht: ");
-    Serial.println(msg);
-    int thrust = msg.toInt(); // Wandelt die komplette Nachricht in eine Zahl um
-    Serial.print("[LOG] Umgewandelter Wert: ");
-    Serial.println(thrust);
-    if (thrust >= 0 && thrust <= 1000) {
+
+    int thrust = 0, roll = 0, pitch = 0;
+    // Prüfe, ob Kommas enthalten sind
+    if (msg.indexOf(',') != -1) {
+      int firstComma = msg.indexOf(',');
+      int secondComma = msg.indexOf(',', firstComma + 1);
+      if (firstComma != -1 && secondComma != -1) {
+        thrust = msg.substring(0, firstComma).toInt();
+        roll = msg.substring(firstComma + 1, secondComma).toInt();
+        pitch = msg.substring(secondComma + 1).toInt();
         targetSpeed = thrust;
         Serial.print("Joystick Geschwindigkeit: ");
         Serial.println(targetSpeed);
-    } else {
+        Serial.print("Roll: ");
+        Serial.println(roll);
+        Serial.print("Pitch: ");
+        Serial.println(pitch);
+      } else {
         Serial.print("Ungültige Nachricht: ");
         Serial.println(msg);
+      }
+    } else {
+      // Fallback: Nur ein Wert
+      thrust = msg.toInt();
+      if (thrust >= 0 && thrust <= 1000) {
+        targetSpeed = thrust;
+        Serial.print("Joystick Geschwindigkeit: ");
+        Serial.println(targetSpeed);
+      } else {
+        Serial.print("Ungültige Nachricht: ");
+        Serial.println(msg);
+      }
     }
     while (Serial.available()) Serial.read();
     Serial.println("[LOG] Buffer nach Lesen geleert.");
