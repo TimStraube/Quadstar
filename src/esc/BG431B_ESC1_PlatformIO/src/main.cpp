@@ -15,11 +15,12 @@ const uint8_t PWM_INPUT_PIN = PA15;
 volatile uint32_t lastRise = 0;
 volatile uint32_t pulseWidth = 1500; // default safe value
 
-void pwmRise() {
-  lastRise = micros();
-}
-void pwmFall() {
-  pulseWidth = micros() - lastRise;
+void pwmChange() {
+    if (digitalRead(PWM_INPUT_PIN)) {
+        lastRise = micros(); // RISING
+    } else {
+        pulseWidth = micros() - lastRise; // FALLING
+    }
 }
 
 void setup() {
@@ -72,10 +73,9 @@ void setup() {
     // Befehl hinzufügen
     command.add('T', doTarget, "target velocity");
 
-    // PWM Input einrichten (PA15 Interrupts)
+    // PWM Input einrichten (PA15 Interrupt)
     pinMode(PWM_INPUT_PIN, INPUT);
-    attachInterrupt(digitalPinToInterrupt(PWM_INPUT_PIN), pwmRise, RISING);
-    attachInterrupt(digitalPinToInterrupt(PWM_INPUT_PIN), pwmFall, FALLING);
+    attachInterrupt(digitalPinToInterrupt(PWM_INPUT_PIN), pwmChange, CHANGE);
 
     Serial.println(F("Motor ready."));
     Serial.println(F("Set the target velocity using serial terminal:"));
@@ -111,29 +111,21 @@ void loop()
         return; // PWM erst nach Ramp-up auswerten
     }
 
-    // --- PWM-Eingang filtern ---
-    uint32_t pwmRaw = pulseWidth;  // Wert aus ISR
-    // Low-pass Filter
-    const float alpha = 0.1; // 0.0 = langsam, 1.0 = direkt
-    filteredPWM = (1.0f - alpha) * filteredPWM + alpha * (float)pwmRaw;
-
-    if (filteredPWM >= 1500 && filteredPWM <= 1700) {
-        int newTarget = map((int)filteredPWM, 1000, 2000, 0, 500);
-
-        // Deadband: nur ändern, wenn Differenz groß genug
-        if (abs(newTarget - lastTarget) > 1) {
-            userTarget = newTarget;
-            lastTarget = newTarget;
-            Serial.print("PWM input (filtered): ");
-            Serial.print(filteredPWM, 1);
-            Serial.print(" µs -> userTarget: ");
-            Serial.println(userTarget);
-        }
+    // --- PWM-Eingang mit pulseIn ---
+    uint32_t pwmRaw = pulseIn(PWM_INPUT_PIN, HIGH, 5000); // Timeout 5ms
+    if (pwmRaw > 0) {
+        filteredPWM = 0.9f * filteredPWM + 0.1f * pwmRaw;
+        int newTarget = map(filteredPWM, 1000, 2000, 0, 500);
+        userTarget = newTarget;
+        Serial.print("PWM input (filtered): ");
+        Serial.print(filteredPWM, 1);
+        Serial.print(" µs -> userTarget: ");
+        Serial.println(userTarget);
     } else {
-        userTarget = 0; // Sicherer Wert, wenn PWM außerhalb Bereich
+        userTarget = 0;
     }
 
-    // motor.target nähert sich userTarget mit Ramp
+    // motor.target nähert sich userTarget with Ramp
     if (millis() - lastUpdate >= 100) {
         if (motor.target < userTarget) {
             motor.target += 2;

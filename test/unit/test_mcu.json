@@ -1,0 +1,12 @@
+{
+    "1": {
+        "name": "MCU Startup",
+        "description": "Den Startvorgang der MCU testen.\n\nErfolgsanforderung:\nDie MCU startet ohne Fehler und ist betriebsbereit.",
+        "executions": 5
+    },
+    "2": {
+        "name": "MCU Controller",
+        "description": "Den Controller der MCU testen.\n\nErfolgsanforderung:\nDer Controller funktioniert ohne Fehler und steuert die Motoren wie erwartet.",
+        "executions": 5
+    }
+}

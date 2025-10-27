@@ -1,0 +1,53 @@
+{
+  "1": {
+    "name": "Joystick control",
+    "description": "Test the joystick control of the motors.\n\nSuccess criteria:\nThe motors respond correctly to joystick inputs following the controller.",
+    "setup": {
+      "set_orientation": {
+        "options": [
+          "One motor is driven",
+          "Two motors are driven",
+          "Four motors are driven",
+          "Four motors and the step motors are driven"
+        ]
+      },
+      "Programm": {
+        "options": [
+          "Programm 1",
+          "Programm 2"
+        ]
+      }
+    },
+    "targets": [
+      "ESC and motor do not overheat",
+      "Motor follows the speed target"
+    ],
+    "executions": 3
+  },
+  "2": {
+    "name": "Flight mode switching",
+    "description": "The button for switching flight mode is pressed mid-flight.",
+    "success": "The flight mode switches correctly without errors.",
+    "setup": {
+      "set_orientation": {
+        "options": [
+          "One motor is driven",
+          "Two motors are driven",
+          "Four motors are driven",
+          "Four motors and the step motors are driven"
+        ]
+      },
+      "Programm": {
+        "options": [
+          "Programm 1",
+          "Programm 2"
+        ]
+      }
+    },
+    "targets": [
+      "ESC and motor do not overheat",
+      "Motor follows the speed target"
+    ],
+    "executions": 3
+  }
+}
