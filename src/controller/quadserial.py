@@ -8,7 +8,10 @@ import serial
 import re
 import numpy as np
 import multiprocessing
-import config
+
+# Konfigurationswerte direkt im File definieren
+serialname = "/dev/ttyACM0"  # Beispiel-Port, ggf. anpassen
+doclear = True  # Konsole nach jedem Sample löschen
 
 class Quadserial():
     def __init__(self) -> None:
@@ -111,12 +114,12 @@ class Quadserial():
         ]
 
     def startEinmalsampler(self):
-        with open(config.serialname, 'rb') as ser:
+        with open(serialname, 'rb') as ser:
             bs = ser.read(2048)
 
             line = repr(bs)
 
-            if config.doclear:
+            if doclear:
                 print("\033c", end='')
 
             for i in range(len(self.sample_id)):
@@ -165,13 +168,13 @@ class Quadserial():
                 pass
 
     def startInfinitSampler(self):
-        with open(config.serialname, 'rb') as ser:
+        with open(serialname, 'rb') as ser:
             while True:
                 bs = ser.read(64)
 
                 line = repr(bs)
 
-                if self.clearLine:
+                if doclear:
                     print("\033c", end='')
 
                 for i in range(len(self.sample_id)):

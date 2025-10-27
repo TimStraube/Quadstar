@@ -19,7 +19,7 @@ from numpy import sign
 from numpy.linalg import inv
 from numpy.linalg import norm
 from scipy.integrate import ode
-from quadcontroller import ControllerPID
+from controller.quadcontroller import ControllerPID
 
 deg2rad = numpy.pi / 180.0
 

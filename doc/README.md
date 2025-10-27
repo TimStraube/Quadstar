@@ -1,6 +1,6 @@
 # Quadstar
 
-Quadstar is a project which includes python classes for simulating and training a quadcopter system. Furthermore a basic PID flight controller implementation is provided in the folder ```./quadsoft/``` for STM32F411 processors including KiCad shematics. 
+Quadstar is a project which includes python classes for simulating a quadcopter system. A basic PID flight controller implementation is provided in the folder ```./quadsoft/``` for STM32F411 processors including KiCad shematics. 
 With the help of the functionality a quadcopter prototyp has beeing build, mainly for fun and research purposes. Future work may include the development of fixed wing simulation functionality.
 
 ![screenshot](images/prototyp.png)
@@ -61,10 +61,6 @@ The program quadtest.py can be used to create matplotlib-plots of position, velo
 Quadlive provides two functionalities.
 
 ```python3 quadlive.py```
-
-### Train models with Stable-Baselines3
-
-To train the a quadcopter flight controller on the current configuration run ```python3 quadtrain.py```.
 
 ## Delopyment
 

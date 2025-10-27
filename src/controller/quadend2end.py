@@ -10,7 +10,7 @@ import random
 import matplotlib.pyplot as plt
 from gymnasium import spaces
 from quaternion import Quaternion
-from quad import Quadcopter
+from controller.quad import Quadcopter
 
 class Quadend2end(gymnasium.Env):
     def __init__(self):

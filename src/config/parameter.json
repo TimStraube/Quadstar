@@ -1,0 +1,32 @@
+{
+  "step_size": 0.0005,
+  "episode_end_time": 20,
+  "episode_start_time": 0,
+
+  "quadtrain": {
+    "model_id": "QM-15-08-24-EIPC55-D",
+    "load_model": false,
+    "episodes": 1000,
+    "actor": [2, 2],
+    "critic": [2, 2],
+    "learning_rate": 1e-6,
+    "parallel_environments": 4,
+    "batchsize": 16
+  },
+
+  "quadend2end": {
+    "actionspace_end2end": [1000, 120],
+    "reward_weights": [0.0, 0.2, 0.8, 0.0]
+  },
+
+  "quadpid": {
+    "actionspace_pid": [0, 10],
+    "actions": 6,
+    "pid_values_update_step_size": 0.01
+  },
+
+  "evaluation": {
+    "evaluation_step_size": 2,
+    "evaluation_frequency": 10000
+  }
+}

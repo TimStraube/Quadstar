@@ -1,4 +1,0 @@
-stable_baselines3[extra]
-scipy
-django
-multiprocessing

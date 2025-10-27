@@ -8,8 +8,8 @@ import numpy
 import time
 import matplotlib.pyplot as plt
 from stable_baselines3 import PPO
-from quad import Quadcopter
-from quadcontroller import ControllerPID
+from controller.quad import Quadcopter
+from controller.quadcontroller import ControllerPID
 from quaternion import Quaternion
 
 class Testbench():
