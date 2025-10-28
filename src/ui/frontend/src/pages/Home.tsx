@@ -27,13 +27,6 @@ const Home: React.FC = () => {
       setJoystickConnected(false);
     }
   };
-  // 3D Controls
-  const [
-    cubeRotation,
-    setCubeRotation,
-  ] = useState(0.5);
-  const [cubeZoom, setCubeZoom] =
-    useState(3);
   // Start-Autorisierung und Notmodus
   const [
     startAuthorized,
@@ -108,16 +101,6 @@ const Home: React.FC = () => {
             </IonCol>
             <IonCol>
               <InfoCard
-                cubeRotation={
-                  cubeRotation
-                }
-                setCubeRotation={
-                  setCubeRotation
-                }
-                cubeZoom={cubeZoom}
-                setCubeZoom={
-                  setCubeZoom
-                }
                 cardClass={cardClass}
               />
             </IonCol>
@@ -125,7 +108,7 @@ const Home: React.FC = () => {
               <JoystickCard joystickConnected={joystickConnected} />
             </IonCol>
             <IonCol>
-              <Controller />
+              <Controller startAuthorized={startAuthorized} />
             </IonCol>
           </IonRow>
         </IonGrid>

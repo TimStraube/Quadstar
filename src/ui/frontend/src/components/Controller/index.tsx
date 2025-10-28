@@ -1,17 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
 
-const motorPower = [80, 78, 82, 79];
-const motorTemp = [55, 60, 52, 58];
+import { listenInfoValues, InfoValues } from "../../services/Control/main";
 
-const Controller: React.FC<{ cardClass?: (base: string) => string }> = ({ cardClass = (b) => b }) => {
+const Controller: React.FC<{ cardClass?: (base: string) => string, startAuthorized?: boolean }> = ({ cardClass = (b) => b, startAuthorized = false }) => {
+  const [info, setInfo] = useState<InfoValues | null>(null);
+  const [blink, setBlink] = useState(true);
+  useEffect(() => {
+    const ws = listenInfoValues(setInfo);
+    return () => ws.close();
+  }, []);
+  useEffect(() => {
+    if (startAuthorized) {
+      const interval = setInterval(() => setBlink(b => !b), 500);
+      return () => clearInterval(interval);
+    } else {
+      setBlink(true);
+    }
+  }, [startAuthorized]);
+
+  const motorPower = info?.motors?.map(m => m.speed) ?? [0, 0, 0, 0];
+  const motorTemp = info?.motors?.map(m => m.temperature) ?? [0, 0, 0, 0];
+  const battery = info?.battery ?? 0;
+  const stepMotors = info?.stepMotors ?? [
+    { position: 0, temperature: 0 },
+    { position: 0, temperature: 0 }
+  ];
+
   return (
-    <IonCard className={cardClass('blue-card')} style={{width: '100%', flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+    <IonCard className={cardClass('blue-card')} style={{width: '100%', flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative'}}>
+      {/* Blinkendes Lämpchen oben rechts */}
+      <div style={{position: 'absolute', top: 18, right: 18, zIndex: 10}}>
+        {startAuthorized && (
+          <span style={{
+            display: 'inline-block',
+            width: 28,
+            height: 28,
+            borderRadius: '50%',
+            background: blink ? '#ffeb3b' : '#fffde7',
+            boxShadow: blink ? '0 0 16px 6px #ffeb3b' : 'none',
+            border: '2px solid #fbc02d',
+            transition: 'background 0.2s, box-shadow 0.2s'
+          }} />
+        )}
+      </div>
       <IonCardHeader>
         <IonCardTitle>Controller & Motoren</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
         <div style={{marginBottom: '16px'}}>Controller: <strong>PID aktiv</strong></div>
+        <div style={{marginBottom: '16px', padding: '12px', background: '#e3f2fd', borderRadius: '12px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.12)'}}>
+          <strong>Batterie:</strong> {battery}%
+        </div>
         {[1,2,3,4].map((motor) => (
           <div key={motor} style={{marginBottom: '32px', display: 'flex', flexDirection: 'row', alignItems: 'center', height: '60px'}}>
             <div style={{width: '80px', fontWeight: 'bold', color: '#fff'}}>Motor {motor}</div>
@@ -31,6 +71,16 @@ const Controller: React.FC<{ cardClass?: (base: string) => string }> = ({ cardCl
             </div>
           </div>
         ))}
+      {/* Stepper Motoren Anzeige */}
+      <div style={{marginBottom: '24px', display: 'flex', flexDirection: 'row', gap: '32px', justifyContent: 'center'}}>
+        {[0,1].map(idx => (
+          <div key={idx} style={{background: '#e3f2fd', borderRadius: '12px', padding: '16px 24px', minWidth: '160px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.12)'}}>
+            <div style={{fontWeight: 'bold', color: '#000', fontSize: '1.1em', marginBottom: '8px'}}>Stepper {idx === 0 ? 'Links' : 'Rechts'}</div>
+            <div style={{marginBottom: '6px', color: '#000'}}>Position: <strong>{stepMotors[idx].position}°</strong></div>
+            <div style={{color: '#000'}}>Temperatur: <strong>{stepMotors[idx].temperature}°C</strong></div>
+          </div>
+        ))}
+      </div>
       </IonCardContent>
     </IonCard>
   );

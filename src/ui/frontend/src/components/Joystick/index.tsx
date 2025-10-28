@@ -20,7 +20,7 @@ const JoystickCard: React.FC<{ joystickConnected: boolean }> = ({ joystickConnec
     <IonCard
       className={"blue-card left-card"}
       style={{
-        marginTop: "16px",
+        padding: "24px",
         flex: "1 1 auto",
         display: "flex",
         flexDirection: "column",
@@ -45,7 +45,7 @@ const JoystickCard: React.FC<{ joystickConnected: boolean }> = ({ joystickConnec
         <div className="joystick-pos-container" style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
           <div className="joystick-pos-label" style={{ fontSize: "1.1em" }}>Position</div>
           <div className="joystick-pos-rect" style={{ width: "160px", height: "100px" }}>
-            <div className="joystick-pos-center" style={{ width: "10px", height: "10px" }}></div>
+            <div className="joystick-pos-center"></div>
             <div className="joystick-pos-dot" style={{ left: `${80 + 60 * x}px`, top: `${50 - 40 * y}px`, width: "18px", height: "18px" }}></div>
           </div>
           <div className="joystick-pos-value" style={{ fontSize: "1.1em" }}>
