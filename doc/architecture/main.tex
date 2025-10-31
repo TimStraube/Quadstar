@@ -1,23 +1,32 @@
-\documentclass[a3paper]{standalone}
+\documentclass[a3paper, border=20pt]{standalone}
 \usepackage{tikz}
 \usetikzlibrary{shapes, arrows, positioning}
+\usetikzlibrary{fit}
+\usetikzlibrary{matrix}
 \usepackage{amsmath}
 
 \begin{document}
-\begin{tikzpicture}[node distance=2cm, auto, >=latex', thick]
-  % Nodes
+\begin{tikzpicture}[node distance=2cm, auto, >=latex', thick, xshift=2cm, yshift=2cm]
+  % Vertikale Anordnung: Joystick, QuadUI, Communication Units, MCU
   \node[draw, rounded rectangle, fill=blue!10] (joystick) {Joystick};
-  \node[draw, rounded rectangle, right=3cm of joystick, fill=yellow!10] (gcu) {Ground Compute Unit (GCU)};
-  \node[draw, rounded rectangle, right=3cm of gcu, fill=orange!10] (tx) {Transmitter};
-  \node[draw, rounded rectangle, right=3cm of tx, fill=orange!10] (rx) {Receiver};
+  \node[draw, rounded rectangle, right=2.5cm of joystick, fill=teal!10] (quadui) {QuadUI};
+  \node[draw, rounded rectangle, below=2cm of joystick, fill=yellow!10] (gcu) {Communication Unit (GCU)};
+  \node[draw, rounded rectangle, below=2cm of gcu, fill=orange!10] (rx) {Communication Unit (Quadcopter)};
   \node[draw, rounded rectangle, below=2cm of rx, fill=green!10, minimum width=3cm] (mcu) {Main Compute Unit};
+  % Akku, Ladestation und Testbench
+  \node[draw, rounded rectangle, fill=cyan!15, below=2.5cm of mcu, minimum width=2.5cm] (akku) {Akku};
+  \node[draw, rounded rectangle, fill=gray!10, left=7cm of akku, minimum width=2.5cm] (ladestation) {Ladestation};
+  \node[draw, rounded rectangle, fill=orange!20, below=2cm of ladestation, minimum width=2.5cm] (testbench) {Testbench};
+  \draw[dashed, thick] (ladestation) -- node[above, font=\small]{Laden} (akku);
 
   % ESCs and Motors
   \foreach \i in {1,...,4} {
-    \node[draw, rectangle, below=1.5cm of mcu, xshift={(\i-2.5)*2cm}, fill=red!10] (esc\i) {ESC \i};
+    \node[draw, rectangle, below=1.5cm of akku, xshift={(\i-2.5)*2cm}, fill=red!10] (esc\i) {ESC \i};
     \node[draw, circle, below=1.2cm of esc\i, fill=gray!20] (motor\i) {Motor \i};
     \draw[->] (mcu) -- node[left, font=\small, xshift=-2mm, yshift=2mm]{s\_c} (esc\i);
     \draw[->] (esc\i) -- (motor\i);
+    % Pfeil vom Akku zu jedem ESC
+    \draw[->, thick] (akku) -- (esc\i);
   }
 
   % Step Motors
@@ -27,10 +36,22 @@
   \draw[->] (mcu) -- node[above, font=\small]{s\_c} (step2);
 
   % Connections
-  \draw[->] (joystick) -- node[above, font=\small]{s\_j} (gcu);
-  \draw[->] (gcu) -- node[above, font=\small]{s\_j} (tx);
-  \draw[->, dashed] (tx) -- (rx);
+  \draw[->] (joystick) -- (quadui);
+  \draw[->] (joystick) -- node[left, font=\small]{s\_j} (gcu);
+  \draw[->] (quadui) -- node[above, font=\small]{s\_j} (gcu);
+  % Bidirektionale Kommunikation zwischen den Communication Units
+  \draw[->, dashed, bend left=20] (gcu) to node[above, font=\small]{s\_j} (rx);
+  \draw[->, dashed, bend left=20] (rx) to node[below, font=\small]{s\_j} (gcu);
   \draw[->] (rx) -- (mcu);
+
+  % Quadcopter-Komponenten-Box
+  \node[draw, dashed, rounded rectangle, fit=(mcu) (esc1) (esc2) (esc3) (esc4) (motor1) (motor2) (motor3) (motor4) (rx) (akku) (step1) (step2), inner sep=1cm, label=below:{\textbf{Quadcopter}}] (quadbox) {};
+
+  % Ground Control Station-Box
+  \node[draw, dashed, rounded rectangle, fit=(joystick) (quadui) (gcu), inner sep=0.7cm, label=above:{\textbf{Ground Control Station}}] (gcsbox) {};
+
+  % Ground Service Station-Box
+  \node[draw, dashed, rounded rectangle, fit=(ladestation) (testbench), inner sep=0.7cm, label=above:{\textbf{Ground Service Station}}] (gssbox) {};
 \end{tikzpicture}
 
 % Legende
