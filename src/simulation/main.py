@@ -9,9 +9,9 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import jsonify
-from quadtest import Testbench
-from quadserial import Quadserial
-from quaternion import Quaternion
+from simulation.test import Testbench
+from util.serial import Quadserial
+from util.quaternion import Quaternion
 
 deg2rad = numpy.pi / 180.0
 
@@ -67,37 +67,6 @@ def home():
     else:
         testbench.reset()
         return render_template('simulation.html')
-    
-@app.route('/sensortest/', methods=['GET', 'POST', 'HEAD'])
-def sensortest():
-    if request.method == 'POST':
-        if quad_connected:
-            sampleSerial.startEinmalsampler()
-            samples = sampleSerial.sample_current.tolist()
-        else:
-            samples = numpy.array([[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]])
-
-        # kardan = quaternion.quaternion2cardan([
-        #     samples[16][0], 
-        #     samples[17][0], 
-        #     samples[18][0], 
-        #     samples[19][0]
-        # ])
-
-        # Winkel in rad
-        quad_state = jsonify({
-            "t" : 0,
-            "north" : 0,
-            "east" : 0,
-            "down" : 0,
-            "roll" : float(samples[5][0]) * deg2rad,
-            "pitch" : float(samples[4][0]) * deg2rad,
-            "yaw" : float(samples[3][0]) * deg2rad
-        })
-        return quad_state
-    else:
-        testbench.reset()
-        return render_template('sensortest.html')
 
 if __name__ == '__main__':
     app.run(host="localhost", debug=True)

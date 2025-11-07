@@ -25,7 +25,7 @@ from numpy import cos
 from numpy import tan
 from numpy import sqrt
 from numpy.linalg import norm
-from quaternion import Quaternion
+from util.quaternion import Quaternion
 
 NORTH = 0
 EAST = 1

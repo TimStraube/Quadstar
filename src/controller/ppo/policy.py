@@ -9,8 +9,8 @@ import config as config
 import random
 import matplotlib.pyplot as plt
 from gymnasium import spaces
-from quaternion import Quaternion
-from controller.quad import Quadcopter
+from util.quaternion import Quaternion
+from controller.system.quad import Quadcopter
 
 class Quadend2end(gymnasium.Env):
     def __init__(self):

@@ -7,7 +7,7 @@ import pygame
 import sched
 import time
 import multiprocessing
-from quadserial import Quadserial
+from util.serial import Quadserial
 
 class Joystick():
     active = True

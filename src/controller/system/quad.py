@@ -12,14 +12,14 @@ email: hi@optimalpi.de
 
 import numpy
 import config as config
-from quaternion import Quaternion
+from util.quaternion import Quaternion
 from numpy import sin
 from numpy import cos
 from numpy import sign
 from numpy.linalg import inv
 from numpy.linalg import norm
 from scipy.integrate import ode
-from controller.quadcontroller import ControllerPID
+from controller.controller import ControllerPID
 
 deg2rad = numpy.pi / 180.0
 

@@ -9,10 +9,10 @@ import config
 import random
 import matplotlib.pyplot as plt
 from gymnasium import spaces
-from quaternion import Quaternion
+from util.quaternion import Quaternion
 from scipy.integrate import ode
 from controller.quadcontroller import ControllerPID
-from controller.quad import Quadcopter
+from controller.system.quad import Quadcopter
 
 class Quadpid(gymnasium.Env):
     reward_tminus1 = 0
