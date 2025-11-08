@@ -3,7 +3,7 @@
 Quadstar is a project which includes python classes for simulating a quadcopter system. A basic PID flight controller implementation is provided in the folder ```./quadsoft/``` for STM32F411 processors including KiCad shematics. 
 With the help of the functionality a quadcopter prototyp has beeing build, mainly for fun and research purposes. Future work may include the development of fixed wing simulation functionality.
 
-![screenshot](images/Prototyp.png)
+![screenshot](docs/images/Prototyp.png)
 
 ## Controller architectures
 
@@ -25,7 +25,7 @@ The following motors are currently being used on my quadcopter model Axisflying 
 
 Following troubles with other ESCs I found out about the B-G431B-ESC1. I can recommend it but it a little bit of electronics and programming knowledge to get up and running.
 
-![screenshot](images/B-G431B-ESC1.png)
+![screenshot](docs/images/B-G431B-ESC1.png)
 
 When using the provided tools by ST for configuration a Windows OS is needed at the time of writing. 
 
