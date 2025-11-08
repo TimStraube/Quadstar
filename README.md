@@ -1,11 +1,17 @@
 # Quadstar
 
+## Description
+
 Quadstar is a project which includes python classes for simulating a quadcopter system. A basic PID flight controller implementation is provided in the folder ```./quadsoft/``` for STM32F411 processors including KiCad shematics. 
 With the help of the functionality a quadcopter prototyp has beeing build, mainly for fun and research purposes. Future work may include the development of fixed wing simulation functionality.
 
 ![screenshot](docs/images/Prototyp.png)
 
-## Controller architectures
+## Architecture
+
+![screenshot](docs/images/architecture.png)
+
+### Controller architectures
 
 Noumerous controller architectures are known from control theory. For example one can employ model predictive or robust control on a quadcopter plant controlling problem. Consumer grade quadcopters often make use of PID control, mainly due to ease of use and implementation.
 
