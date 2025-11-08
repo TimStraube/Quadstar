@@ -6,49 +6,68 @@
 \usepackage{amsmath}
 
 \begin{document}
-\begin{tikzpicture}[node distance=2cm, auto, >=latex', thick, xshift=2cm, yshift=2cm]
+
+\begin{tikzpicture}[node distance=2cm, auto, >=latex', thick]
+  % Titel oben zentriert
+  \node[font=\Huge\bfseries] at (0,12) {Quadstar System Engineering Architecture};
+  
+  % Hauptdiagramm mit Offset
+  \begin{scope}[xshift=2cm, yshift=9cm]
   % Vertikale Anordnung: Joystick, QuadUI, Communication Units, MCU
-  \node[draw, rounded rectangle, fill=blue!10] (joystick) {Joystick};
-  \node[draw, rounded rectangle, right=2.5cm of joystick, fill=teal!10] (quadui) {G16 QuadUI (16, 23)};
-  \node[draw, rounded rectangle, below=2cm of joystick, fill=yellow!10] (gcu) {G17 Ground Communication Unit (GCU)};
-  \node[draw, rounded rectangle, below=2cm of gcu, fill=orange!10] (rx) {Quad Communication Unit (QCU) (17)};
-  \node[draw, rounded rectangle, below=2cm of rx, fill=green!10, minimum width=3cm] (mcu) {Main Compute Unit (MCU) (19, 29, 31)};
+  \node[draw, rounded rectangle, fill=gray!20] (joystick) {\#44 Joystick};
+  \node[draw, rounded rectangle, right=2.5cm of joystick, fill=green!10] (quadui) {\#16 User Interface};
+  \node[draw, rounded rectangle, below=2cm of joystick, fill=blue!10] (gcu) {\#43 Ground Communication Unit (GCU)};
+  \node[draw, rounded rectangle, below=2cm of gcu, fill=blue!10] (rx) {\#30 Quad Communication Unit (QCU)};
+  \node[draw, rounded rectangle, below=2cm of rx, fill=blue!10, minimum width=3cm] (mcu) {\#40 Main Compute Unit (MCU)};
+  
+  % Power Wiring Harness
+  \node[draw, rounded rectangle, fill=gray!20, left=3cm of mcu, minimum width=2.5cm] (pwh) {\#48 Power Wiring Harness};
+  
   % Akku, Ladestation und Testbench
-  \node[draw, rounded rectangle, fill=cyan!15, left=3cm of mcu, minimum width=2.5cm] (akku) {G21 Akku};
-  \node[draw, rounded rectangle, fill=gray!10, left=7cm of akku, minimum width=2.5cm] (ladestation) {Ladestation};
-  \node[draw, rounded rectangle, fill=orange!20, below=2cm of ladestation, minimum width=2.5cm] (testbench) {Testbench};
-  \draw[dashed, thick] (ladestation) -- node[above, font=\small]{Laden} (akku);
+  \node[draw, rounded rectangle, fill=blue!10, left=2.5cm of pwh, minimum width=2.5cm] (akku) {\#21 Akku};
+  \node[draw, rounded rectangle, fill=gray!20, left=4.5cm of akku, minimum width=2.5cm] (ladestation) {\#45 Loading Station};
+  \node[draw, rounded rectangle, fill=orange!20, below=2cm of ladestation, minimum width=2.5cm] (testbench) {\#46 Testbench};
+  \draw[dashed, thick] (ladestation) -- node[above, font=\small]{Loading} (akku);
+  \draw[->, thick] (akku) -- (pwh);
 
   % ESC and Motor (single representation for 4 units)
-  \node[draw, rectangle, below=1.5cm of mcu, fill=red!10] (esc) {Electronic Speed Controller (ESC) (8, 15)};
-  \node[draw, circle, below=1.2cm of esc, fill=gray!20] (motor) {Motor};
+  \node[draw, rounded rectangle, below=1.5cm of mcu, fill=blue!10] (esc) {\#38 Electronic Speed Controller (ESC)};
+  \node[draw, rounded rectangle, below=1.2cm of esc, fill=gray!20] (motor) {\#41 BLDC-Motor};
   \node[right=0.2cm of esc, font=\small\bfseries] {$\times 4$};
   \draw[->] (mcu) -- node[left, font=\small]{s\_c} (esc);
   \draw[->] (esc) -- (motor);
-  \draw[->, thick] (akku) |- (esc);
+  \draw[->, thick] (pwh) |- (esc);
+  \draw[->, thick] (pwh) -- (mcu);
+  \draw[->, thick] (pwh) |- (rx);
 
   % Step Motor (single representation for 2 units)
-  \node[draw, rectangle, right=3cm of esc, fill=purple!10] (step) {Step Motor};
+  \node[draw, rounded rectangle, right=3cm of esc, fill=gray!20] (step) {\#42 Step Motor};
   \node[right=0.2cm of step, font=\small\bfseries] {$\times 2$};
-  \draw[->] (mcu) -- node[above, font=\small]{s\_c} (step);
+  \draw[->] (mcu) -| node[near start, above, font=\small]{s\_c} (step);
+  
+  % Wings
+  \node[draw, rounded rectangle, below=1.2cm of step, fill=gray!20] (wings) {\#47 Wings};
+  \node[right=0.2cm of wings, font=\small\bfseries] {$\times 2$};
+  \draw[->] (step) -- (wings);
 
   % Connections
   \draw[->] (joystick) -- (quadui);
   \draw[->] (joystick) -- node[left, font=\small]{s\_j} (gcu);
-  \draw[->] (quadui) -- node[above, font=\small]{s\_j} (gcu);
+  \draw[->] (quadui) |- node[near start, right, font=\small]{s\_j} (gcu);
   % Bidirektionale Kommunikation zwischen den Communication Units
   \draw[->, dashed, bend left=20] (gcu) to node[above, font=\small]{s\_j} (rx);
   \draw[->, dashed, bend left=20] (rx) to node[below, font=\small]{s\_j} (gcu);
   \draw[->] (rx) -- (mcu);
 
   % Quadcopter-Komponenten-Box
-  \node[draw, dashed, rounded rectangle, fit=(mcu) (esc) (motor) (rx) (akku) (step), inner sep=1cm, label=below:{\textbf{Quadcopter}}] (quadbox) {};
+  \node[draw, dashed, rounded rectangle, fit=(mcu) (esc) (motor) (rx) (akku) (step) (wings) (pwh), inner sep=1cm, label=below:{\textbf{Quadcopter}}] (quadbox) {};
 
   % Ground Control Station-Box
   \node[draw, dashed, rounded rectangle, fit=(joystick) (quadui) (gcu), inner sep=0.7cm, label=above:{\textbf{Ground Control Station}}] (gcsbox) {};
 
   % Ground Service Station-Box
   \node[draw, dashed, rounded rectangle, fit=(ladestation) (testbench), inner sep=0.7cm, label=above:{\textbf{Ground Service Station}}] (gssbox) {};
+  \end{scope}
 \end{tikzpicture}
 
 % Legende
