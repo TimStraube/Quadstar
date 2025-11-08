@@ -56,6 +56,10 @@
   \node[right=0.2cm of wings, font=\small\bfseries] {$\times 2$};
   \draw[->] (step) -- (wings);
 
+  % Frame and Gear (links von BLDC Motor, horizontal ausgerichtet, keine Verbindungen)
+  \node[draw, rounded rectangle, left=2cm of motor, fill=gray!20] (frame) {\#50 Frame};
+  \node[draw, rounded rectangle, left=1.5cm of frame, fill=gray!20] (gear) {\#14 Gear};
+
   % Connections
   \draw[->] (joystick) -- (quadui);
   \draw[->] (joystick) -- node[left, font=\small]{s\_j} (gcu);
@@ -66,7 +70,7 @@
   \draw[->] (rx) -- (mcu);
 
   % Quadcopter-Komponenten-Box
-  \node[draw, dashed, rounded rectangle, fit=(mcu) (esc) (motor) (rx) (qsu) (akku) (step) (wings) (pwh), inner sep=1cm, label=below:{\textbf{Quadcopter}}] (quadbox) {};
+  \node[draw, dashed, rounded rectangle, fit=(mcu) (esc) (motor) (rx) (qsu) (akku) (step) (wings) (pwh) (frame) (gear), inner sep=1cm, label=below:{\textbf{Quadcopter}}] (quadbox) {};
 
   % Ground Control Station-Box
   \node[draw, dashed, rounded rectangle, fit=(joystick) (quadui) (gcu), inner sep=0.7cm, label=above:{\textbf{Ground Control Station (GCS)}}] (gcsbox) {};
