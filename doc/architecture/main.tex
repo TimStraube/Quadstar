@@ -22,11 +22,11 @@
   \node[draw, rounded rectangle, below=2cm of rx, fill=orange!20, minimum width=3cm] (mcu) {\#40 Main Compute Unit (MCU)};
   
   % Power Wiring Harness
-  \node[draw, rounded rectangle, fill=red!20, left=3cm of mcu, minimum width=2.5cm] (pwh) {\#48 Power Wiring Harness};
+  \node[draw, rounded rectangle, fill=gray!20, left=3cm of mcu, minimum width=2.5cm] (pwh) {\#48 Power Wiring Harness};
   
-  % Akku, Ladestation und Testbench
-  \node[draw, rounded rectangle, fill=red!20, left=2.5cm of pwh, minimum width=2.5cm] (akku) {\#21 Akku};
-  \node[draw, rounded rectangle, fill=red!20, left=4.5cm of akku, minimum width=2.5cm] (ladestation) {\#45 Loading Station};
+  % Accumulator, Ladestation und Testbench
+  \node[draw, rounded rectangle, fill=gray!20, left=2.5cm of pwh, minimum width=2.5cm] (akku) {\#50 Accumulator};
+  \node[draw, rounded rectangle, fill=gray!20, left=4.5cm of akku, minimum width=2.5cm] (ladestation) {\#45 Loading Station};
   \node[draw, rounded rectangle, fill=orange!20, below=2cm of ladestation, minimum width=2.5cm] (testbench) {\#46 Testbench};
   \draw[dashed, thick] (ladestation) -- node[above, font=\small]{Loading} (akku);
   \draw[->, thick] (akku) -- (pwh);
@@ -83,7 +83,8 @@
     \tikz\node[draw, rounded rectangle, fill=red!20, minimum width=0.8cm, minimum height=0.4cm] {};\ Actuator\\
     \tikz\node[draw, rounded rectangle, fill=blue!20, minimum width=0.8cm, minimum height=0.4cm] {};\ Sensor\\
     \tikz\node[draw, rounded rectangle, fill=orange!20, minimum width=0.8cm, minimum height=0.4cm] {};\ Control\\
-    \tikz\node[draw, rounded rectangle, fill=violet!20, minimum width=0.8cm, minimum height=0.4cm] {};\ Communication\\[0.3cm]
+    \tikz\node[draw, rounded rectangle, fill=violet!20, minimum width=0.8cm, minimum height=0.4cm] {};\ Communication\\
+    \tikz\node[draw, rounded rectangle, fill=gray!20, minimum width=0.8cm, minimum height=0.4cm] {};\ Util\\[0.3cm]
     \textbf{Hinweis:}\\
     \# entspricht der GitHub Project Issue ID
   };
