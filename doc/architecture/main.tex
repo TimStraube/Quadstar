@@ -13,6 +13,7 @@
   
   % Hauptdiagramm mit Offset
   \begin{scope}[xshift=2cm, yshift=9cm]
+  
   % Vertikale Anordnung: Joystick, QuadUI, Communication Units, MCU
   \node[draw, rounded rectangle, fill=blue!20] (joystick) {\#44 Joystick};
   \node[draw, rounded rectangle, right=2.5cm of joystick, fill=violet!20] (quadui) {\#16 User Interface};
@@ -24,11 +25,14 @@
   % Power Wiring Harness
   \node[draw, rounded rectangle, fill=gray!20, left=3cm of mcu, minimum width=2.5cm] (pwh) {\#48 Power Wiring Harness};
   
-  % Accumulator, Ladestation und Testbench
+  % Accumulator
   \node[draw, rounded rectangle, fill=gray!20, left=2.5cm of pwh, minimum width=2.5cm] (akku) {\#50 Accumulator};
-  \node[draw, rounded rectangle, fill=gray!20, left=4.5cm of akku, minimum width=2.5cm] (ladestation) {\#45 Loading Station};
-  \node[draw, rounded rectangle, fill=orange!20, below=2cm of ladestation, minimum width=2.5cm] (testbench) {\#46 Testbench};
-  \draw[dashed, thick] (ladestation) -- node[above, font=\small]{Loading} (akku);
+  
+  % Ground Service Station (über Accumulator, vertikal ausgerichtet)
+  \node[draw, rounded rectangle, fill=orange!20, above=7cm of akku, minimum width=2.5cm] (testbench) {\#46 Testbench};
+  \node[draw, rounded rectangle, fill=gray!20, below=1.5cm of testbench, minimum width=2.5cm] (ladestation) {\#45 Loading Station};
+  
+  \draw[dashed, thick] (ladestation) -- node[right, font=\small]{Loading} (akku);
   \draw[->, thick] (akku) -- (pwh);
 
   % ESC and Motor (single representation for 4 units)
@@ -65,10 +69,10 @@
   \node[draw, dashed, rounded rectangle, fit=(mcu) (esc) (motor) (rx) (qsu) (akku) (step) (wings) (pwh), inner sep=1cm, label=below:{\textbf{Quadcopter}}] (quadbox) {};
 
   % Ground Control Station-Box
-  \node[draw, dashed, rounded rectangle, fit=(joystick) (quadui) (gcu), inner sep=0.7cm, label=above:{\textbf{Ground Control Station}}] (gcsbox) {};
+  \node[draw, dashed, rounded rectangle, fit=(joystick) (quadui) (gcu), inner sep=0.7cm, label=above:{\textbf{Ground Control Station (GCS)}}] (gcsbox) {};
 
   % Ground Service Station-Box
-  \node[draw, dashed, rounded rectangle, fit=(ladestation) (testbench), inner sep=0.7cm, label=above:{\textbf{Ground Service Station}}] (gssbox) {};
+  \node[draw, dashed, rounded rectangle, fit=(ladestation) (testbench), inner sep=0.7cm, label=above:{\textbf{Ground Service Station (GSS)}}] (gssbox) {};
   \end{scope}
 \end{tikzpicture}
 
