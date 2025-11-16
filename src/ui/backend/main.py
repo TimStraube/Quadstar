@@ -9,7 +9,7 @@ import threading
 import time
 from fastapi.middleware.cors import CORSMiddleware
 try:
-    from joystick import Joystick
+    from util.joystick import Joystick
 except ImportError:
     Joystick = None  # Fallback, damit das Backend startet
 
