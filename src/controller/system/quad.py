@@ -7,7 +7,6 @@ Please feel free to use and modify this, but keep the above information. Thanks!
 
 """
 author: Tim Leonard Straube
-email: hi@optimalpi.de
 """
 
 import numpy

@@ -1,6 +1,5 @@
 """
 author: Tim Leonard Straube
-email: hi@optimalpi.de
 """
 
 import os
