@@ -56,22 +56,12 @@ X-NUCLEO-IKS4A1
 All volatile parameters on the user side can be controlled from a single file.
 When a new model is trained the current config is used for training and is saved in the SQLite database models/config.db.
 
-### Plot of quadcopter trajectories
-
-The program quadtest.py can be used to create matplotlib-plots of position, velocity and attitude trajectories from simulation:
-
-```python3 quadtest.py```
-
-### Visualize the quadcopter in the browser with flask
-
-Quadlive provides two functionalities.
-
-```python3 quadlive.py```
-
 ## Delopyment
 
 ### Joystick
 
-To sample joystick values and send them to the main flight computer run ```python3 joystick.py```.
+To sample joystick values and send them to the main flight computer run:
+
+```PYTHONPATH=src poetry run python -m util.joystick```.
 
 
