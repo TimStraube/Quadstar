@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value=""/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="MX_init"/>
+			<item value="presca"/>
+			<item value="RCC_ClkInitStr"/>
+			<item value="RCC_CLk"/>
+			<item value="MX_GPIO"/>
+			<item value="MX_TIM1_Init"/>
+			<item value="MX_TIM1_INT"/>
+			<item value="MX_TIM1"/>
+			<item value="MX_GPIO_INIT"/>
+			<item value="LED_On"/>
+			<item value="DWT_Init"/>
+			<item value="static void MX"/>
+			<item value="tim3"/>
+			<item value="TIm3"/>
+		</list>
+		<list key="replacehistory">
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="73"/>
+		<item key="DIALOG_Y_ORIGIN" value="523"/>
+		<item key="DIALOG_WIDTH" value="363"/>
+		<item key="DIALOG_HEIGHT" value="444"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu Sans|11.0|0|GTK|1|"/>
+	</section>
+</section>

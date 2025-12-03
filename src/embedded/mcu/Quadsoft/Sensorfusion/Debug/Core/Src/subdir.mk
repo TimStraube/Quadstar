@@ -1,0 +1,48 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+# Toolchain: GNU Tools for STM32 (12.3.rel1)
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../Core/Src/main.c \
+../Core/Src/stm32f4xx_hal_msp.c \
+../Core/Src/stm32f4xx_it.c \
+../Core/Src/stm32f4xx_nucleo_bus.c \
+../Core/Src/syscalls.c \
+../Core/Src/sysmem.c \
+../Core/Src/system_stm32f4xx.c \
+../Core/Src/uart_forward.c 
+
+OBJS += \
+./Core/Src/main.o \
+./Core/Src/stm32f4xx_hal_msp.o \
+./Core/Src/stm32f4xx_it.o \
+./Core/Src/stm32f4xx_nucleo_bus.o \
+./Core/Src/syscalls.o \
+./Core/Src/sysmem.o \
+./Core/Src/system_stm32f4xx.o \
+./Core/Src/uart_forward.o 
+
+C_DEPS += \
+./Core/Src/main.d \
+./Core/Src/stm32f4xx_hal_msp.d \
+./Core/Src/stm32f4xx_it.d \
+./Core/Src/stm32f4xx_nucleo_bus.d \
+./Core/Src/syscalls.d \
+./Core/Src/sysmem.d \
+./Core/Src/system_stm32f4xx.d \
+./Core/Src/uart_forward.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../X-CUBE-ISPU/Target -I../MEMS/App -I../MEMS/Target -I../Core/Inc -I../Drivers/BSP/STM32F4xx_Nucleo -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/ST/STM32_MotionID_Library/Inc -I../Drivers/BSP/Components/lsm6dsv16x -I../Drivers/BSP/Components/lis2duxs12 -I../Drivers/BSP/Components/lis2mdl -I../Drivers/BSP/Components/lsm6dso16is -I../Drivers/BSP/Components/sht40ad1b -I../Drivers/BSP/Components/lps22df -I../Drivers/BSP/Components/stts22h -I../Drivers/BSP/IKS4A1 -I../Drivers/BSP/Components/Common -I../Middlewares/ST/STM32_MotionFX_Library/Inc -I../Drivers/BSP/Components/ism330is -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+
+clean: clean-Core-2f-Src
+
+clean-Core-2f-Src:
+	-$(RM) ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/stm32f4xx_nucleo_bus.cyclo ./Core/Src/stm32f4xx_nucleo_bus.d ./Core/Src/stm32f4xx_nucleo_bus.o ./Core/Src/stm32f4xx_nucleo_bus.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su ./Core/Src/uart_forward.cyclo ./Core/Src/uart_forward.d ./Core/Src/uart_forward.o ./Core/Src/uart_forward.su
+
+.PHONY: clean-Core-2f-Src
+
