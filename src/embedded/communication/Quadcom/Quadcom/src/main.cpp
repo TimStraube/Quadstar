@@ -5,6 +5,9 @@
 #define LED_GPIO 2
 #define BUTTON_GPIO 18
 #define PWM_PIN 21
+// UART pins to STM32 (change if your wiring differs)
+#define STM32_RX_PIN 16 // ESP32 RX pin (connect to STM32 TX)
+#define STM32_TX_PIN 17 // ESP32 TX pin (connect to STM32 RX)
 
 const unsigned long blinkInterval = 500;
 unsigned long lastBlink = 0;
@@ -49,6 +52,9 @@ unsigned long pauseUntil = 0;
 // Global target speed for PWM control (accessible from callbacks)
 int targetSpeed = 0;  // 0 ... 1000
 
+// forwarder prototype - declared before usage in onReceive / other places
+static void forward_to_stm32(const uint8_t *payload, uint16_t payload_len);
+
 void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
   // If it's a pause message, handle as before
   if (len == sizeof(PauseMessage)) {
@@ -56,6 +62,9 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
     digitalWrite(LED_GPIO, LOW);
     ledState = false;
     Serial.println("Pause durch Empfang ausgelöst!");
+    // forward pause to STM32
+    // small payload: the PauseMessage bytes
+    forward_to_stm32(data, sizeof(PauseMessage));
     return;
   }
 
@@ -98,14 +107,49 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
         errorState = false;
         idleState = false;
       }
+    // forward full packet to STM32 as well
+    forward_to_stm32((const uint8_t *)&pkt, sizeof(pkt));
     return;
   }
+}
+
+// CRC-16-CCITT (0x1021) - returns CRC
+static uint16_t crc16_ccitt(const uint8_t *data, size_t len) {
+  uint16_t crc = 0xFFFF;
+  for (size_t i = 0; i < len; ++i) {
+    crc ^= (uint16_t)data[i] << 8;
+    for (int j = 0; j < 8; ++j) {
+      if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
+      else crc <<= 1;
+    }
+  }
+  return crc;
+}
+
+// Frame: 0xAA 0x55 | len_lo | len_hi | payload | crc_lo | crc_hi
+static void forward_to_stm32(const uint8_t *payload, uint16_t payload_len) {
+  if (!Serial2) return; // Serial2 not initialized
+  uint8_t header[4];
+  header[0] = 0xAA;
+  header[1] = 0x55;
+  header[2] = payload_len & 0xFF;
+  header[3] = (payload_len >> 8) & 0xFF;
+  uint16_t crc = crc16_ccitt(payload, payload_len);
+  Serial2.write(header, sizeof(header));
+  Serial2.write(payload, payload_len);
+  uint8_t crcbuf[2]; crcbuf[0] = crc & 0xFF; crcbuf[1] = (crc >> 8) & 0xFF;
+  Serial2.write(crcbuf, 2);
+  Serial2.flush();
+  Serial.print("Forwarded to STM32 (bytes): "); Serial.println(payload_len);
 }
 
 const int ledPin = 2;
 
 void setup() {
   Serial.begin(115200);
+  // initialize hardware UART to STM32
+  Serial2.begin(115200, SERIAL_8N1, STM32_RX_PIN, STM32_TX_PIN);
+  Serial.println("Serial2 to STM32 initialized");
   Serial.println("Boot OK");
   pinMode(LED_GPIO, OUTPUT);
   pinMode(BUTTON_GPIO, INPUT_PULLUP);
@@ -264,6 +308,8 @@ void loop() {
       esp_err_t res = esp_now_send(peerAddress, (uint8_t *)&outPkt, sizeof(outPkt));
       if (res == ESP_OK) {
         Serial.println("QuadcomPacket gesendet.");
+        // forward locally-sent packet to STM32 as well
+        forward_to_stm32((const uint8_t *)&outPkt, sizeof(outPkt));
       } else {
         Serial.print("Fehler beim Senden (esp_now_send): ");
         Serial.println(res);
