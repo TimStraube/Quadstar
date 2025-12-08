@@ -18,9 +18,16 @@ testbench = Testbench()
 quad_connected = False
 quaternion = Quaternion()
 
-@app.route('/', methods=['GET', 'POST', 'HEAD'])
+@app.route('/', methods=['GET', 'POST', 'HEAD', 'OPTIONS'])
 def home():
-    if request.method == 'POST':
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
+    elif request.method == 'POST':
         # Führe einen einzelnen Simulationsschritt aus
         (
             t, 
@@ -35,13 +42,17 @@ def home():
         # t [s], NED [m], Attitude [rad]
         quad_state = jsonify({
             "t" : t,
-            "north" : north,
-            "east" : east,
-            "down" : down,
+            "north" : north,  # Back to original naming for compatibility
+            "east" : east,    
+            "down" : down, 
             "roll" : roll,
             "pitch" : pitch,
             "yaw" : yaw
         })
+        # Add CORS headers
+        quad_state.headers.add('Access-Control-Allow-Origin', '*')
+        quad_state.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        quad_state.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return quad_state
     else:
         testbench.reset()
