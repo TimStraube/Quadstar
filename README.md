@@ -56,6 +56,8 @@ X-NUCLEO-IKS4A1
 All volatile parameters on the user side can be controlled from a single file.
 When a new model is trained the current config is used for training and is saved in the SQLite database models/config.db.
 
+```PYTHONPATH=src poetry run python -m simulation.main```
+
 ## Delopyment
 
 ### Joystick
@@ -63,5 +65,4 @@ When a new model is trained the current config is used for training and is saved
 To sample joystick values and send them to the main flight computer run:
 
 ```PYTHONPATH=src poetry run python -m util.joystick```.
-
 

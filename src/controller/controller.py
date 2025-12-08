@@ -17,7 +17,13 @@ author: Tim Leonard Straube
 """
 
 import numpy as np
-import config as config
+import json
+import os
+
+# Load config from JSON
+config_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'parameter.json')
+with open(config_path, 'r') as f:
+    config = json.load(f)
 from numpy import pi
 from numpy import sin
 from numpy import cos

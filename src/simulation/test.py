@@ -3,14 +3,19 @@ author: Tim Leonard Straube
 email: hi@optimalpi.de
 """
 
-import config
+import json
+import os
 import numpy
 import time
 import matplotlib.pyplot as plt
-from stable_baselines3 import PPO
-from controller.quad import Quadcopter
-from controller.quadcontroller import ControllerPID
-from quaternion import Quaternion
+from controller.system.quad import Quadcopter
+from controller.controller import ControllerPID
+from util.quaternion import Quaternion
+
+# Load config from JSON
+config_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'parameter.json')
+with open(config_path, 'r') as f:
+    config = json.load(f)
 
 class Testbench():
     def __init__(self):
@@ -21,16 +26,13 @@ class Testbench():
         self.reset()
 
     def initModell(self):
-        """Modell laden
+        """Modell laden - nicht benötigt für PID-only Simulation
         """
-        model_pfad = (
-            f"./models/{config.model_id}/best_model.zip"
-        )
-        self.model = PPO.load(model_pfad)
-        self.model.set_parameters(
-            self.model.get_parameters()
-        )
-        self.model.policy.eval()
+        # Kein ML-Modell nötig, nur Standard PID-Regler
+        pass
+        
+        # For simulation without trained model, use dummy model
+        self.model = None
 
     def reset(self):
         """Quadcopter zurücksetzen
@@ -46,7 +48,7 @@ class Testbench():
         # Generate First Commands
         self.controller.controller_step(
             self.quad, 
-            config.step_size,
+            config["step_size"],
             self.quad.velocity_set
         )
         self.drehlage = [
@@ -72,93 +74,92 @@ class Testbench():
         self.y = 0
         self.z = 0
 
-        self.beobachtung = numpy.zeros(
-            9, 
-            dtype=numpy.float32
-        )
         # Sollvektor [Norden (m), Osten (m), Unten (m)]
         self.velocity_set = [1, 0, 0]
         
-    def vorhersage(self):
+
+    def simulationStep(self):
+        """Führt mehrere Simulationsschritte aus um Echtzeit zu erreichen (20ms Frontend-Update)
+        """
+        # Optimierte Echtzeit-Synchronisation: weniger Steps für bessere Performance
+        # Frontend: 50ms Updates (20 FPS) für weniger Lag
+        # Backend: 0.001s steps -> 50ms = 50 steps, aber reduziert auf 20 steps
+        frontend_delay_ms = 50  # ms (reduziert für bessere Performance)
+        backend_time_per_update = frontend_delay_ms / 1000.0  # 0.05 seconds
+        steps_per_update = 20  # Reduziert von 50 auf 20 steps für weniger Lag
+        
+        try:
+            for _ in range(steps_per_update):
+                # Update drehlage für Visualisierung
+                self.drehlage = self.quaternion.quaternion2cardan(
+                    self.quad.state[3:7]
+                )
+
+                # Sinusförmige Trajektorie - jetzt in North-Achse (vor/zurück in UI)
+                amplitude = 2.0  # Amplitude der Sinusbewegung in m/s
+                frequency = 0.5  # Frequenz in Hz (0.5 Hz = eine Periode alle 2 Sekunden)
+                
+                # Berechne Sollgeschwindigkeiten (North oszilliert für vor/zurück Bewegung)
+                self.velocity_set = [
+                    amplitude * numpy.sin(2 * numpy.pi * frequency * self.t),  # North: sinusförmig (vor/zurück)
+                    0,  # East: konstant null
+                    0   # Down: konstante Höhe
+                ]
+
+                # Quadcopter einen Schritt vorwärts simulieren
+                self.quad.update(
+                    self.t, 
+                    self.controller.motor_commands
+                )
+                
+                # Zeit erhöhen
+                self.t += config["step_size"]
+                
+                # PID Controller berechnet neue Motor-Kommandos
+                self.controller.controller_step(
+                    self.quad,
+                    config["step_size"],
+                    self.velocity_set
+                )
+                
+                # Zustand speichern (für eventuelle Visualisierung)
+                self.speichereZustand()
+                
+                # Kontinuierliche Simulation - kein automatisches Reset
+        
+        except Exception as e:
+            # Bei Fehler: Reset und neu starten
+            print(f"Simulation error: {e}")
+            self.reset()
+        
+        # Aktuelle Drehlage für Rückgabe berechnen
         self.drehlage = self.quaternion.quaternion2cardan(
             self.quad.state[3:7]
-        )             
+        )      
 
-        self.beobachtung[:] = numpy.float32(
-            numpy.concatenate([
-                self.drehlage,
-                self.quad.state[7:10], 
-                self.velocity_set
-            ])
+        # Return current state
+        return (
+            self.t,
+            self.quad.state[0],  # north
+            self.quad.state[1],  # east
+            self.quad.state[2],  # down
+            self.drehlage[2],    # yaw
+            -self.drehlage[1],   # pitch (negated for visualization)
+            self.drehlage[0]     # roll
         )
-
-        return self.model.predict(
-            self.beobachtung
-        )[0]
-    
-    def prediction(self):
-        self.drehlage = self.quaternion.quaternion2cardan(
-            self.quad.state[3:7]
-        )             
-
-        self.beobachtung[:] = numpy.float32(
-            numpy.concatenate([
-                self.drehlage,
-                self.quad.state[7:10], 
-                self.velocity_set
-            ])
-        )
-
-        return self.model.predict(
-            self.beobachtung, deterministic=True
-        )[0]
 
     def testPID(self):
-        """Methode zur Simulation mit den gelernten PID-Paramter oder optional den Default PID-Paramtern
+        """Methode zur Simulation nur mit dem Standard PID-Regler
         """
-        aktion = self.vorhersage()
-        # aktion = (
-        #     (config.Aktionsinterval_PID[1] / 2) * (aktion + config.Aktionsinterval_PID[0] + 1)
-        # )
-        aktion = 4.9 * aktion + 5
-        aktion = numpy.random.uniform(
-            low=0.1, 
-            high=9.9, 
-            size=aktion.shape
-        )
-        # self.controller.vel_P_gain[0] = aktion[0] 
-        # self.controller.vel_P_gain[1] = aktion[0] 
-        # self.controller.vel_P_gain[2] = aktion[1] 
-
-        # self.controller.vel_I_gain[0] = aktion[2]
-        # self.controller.vel_I_gain[1] = aktion[2]
-        # self.controller.vel_I_gain[2] = aktion[3]
-
-        # self.controller.vel_D_gain[0] = aktion[4]
-        # self.controller.vel_D_gain[1] = aktion[4] 
-        # self.controller.vel_D_gain[2] = aktion[5]
-
-        # self.controller.attitute_p_gain[0] = aktion[6]
-        # self.controller.attitute_p_gain[1] = aktion[6]
-        # self.controller.attitute_p_gain[2] = aktion[7]
-
-        # self.controller.Pp = aktion[8]
-        # self.controller.Dp = aktion[9]
-        # self.controller.Pq = self.controller.Pp
-        # self.controller.Dq = self.controller.Dp
-        # self.controller.Pr = aktion[10]
-        # self.controller.Dr = aktion[11]
-
-        # self.controller.rate_P_gain[0] = aktion[12]
-        # self.controller.rate_P_gain[1] = aktion[13]
-        # self.controller.rate_P_gain[2] = aktion[14]
-
-        # self.controller.rate_D_gain[0] = aktion[15]
-        # self.controller.rate_D_gain[1] = aktion[16]
-        # self.controller.rate_D_gain[2] = aktion[17]
+        # Verwende Standard PID-Parameter (keine ML-Vorhersage)
+        # Der Controller hat bereits vernünftige Default-Werte
             
         aktiv = 1
         while (aktiv):
+            # Update drehlage für Visualisierung
+            self.drehlage = self.quaternion.quaternion2cardan(
+                self.quad.state[3:7]
+            )
 
             # Norden, Osten, Unten
             self.velocity_set = [
@@ -171,10 +172,10 @@ class Testbench():
                 self.t, 
                 self.controller.motor_commands
             )
-            self.t += config.step_size
+            self.t += config["step_size"]
             self.controller.controller_step(
                 self.quad,
-                config.step_size,
+                config["step_size"],
                 self.velocity_set
             )
             self.drehlage = self.quaternion.quaternion2cardan(
@@ -182,7 +183,7 @@ class Testbench():
             )      
             self.speichereZustand()
             
-            if (self.t > config.episode_end_time):
+            if (self.t > config["episode_end_time"]):
                 aktiv = 0
 
         return (
@@ -196,57 +197,20 @@ class Testbench():
         )
 
 
-    def testModell(self):
-        """Modell testen
-        """
-        aktiv = 1
-        while (aktiv):
 
-            action = self.prediction()
-            # for _ in range(int(aktion[4] + 1)):
-            #     self.quad.update(
-            #         self.t, 
-            #         aktion_final, 
-            #         self.wind
-            #     )
-            #     self.t += config.step_size
-
-            # aktion_new = [random.randint(100, 700), random.randint(100, 700), random.randint(100, 700), random.randint(100, 700)]
-
-            for _ in range(1):
-                self.quad.update(
-                    self.t, 
-                    250 * action + 350
-                )
-                self.t += config.step_size
-
-                self.speichereZustand()
-
-                if (self.t > config.episode_end_time):
-                    aktiv = 0
-
-        return (
-            self.t,
-            self.quad.state[0],
-            self.quad.state[1],
-            self.quad.state[2],
-            self.drehlage[2],
-            -self.drehlage[1],
-            self.drehlage[0]
-        )
 
     def speichereZustand(self):
         """Zustand abspeichern für die Visualisierung
         """
         self.t_all.append(self.t)
         self.x_soll.append(self.x_soll[-1] +
-            config.step_size * self.velocity_set[0]
+            config["step_size"] * self.velocity_set[0]
         )
         self.y_soll.append(self.y_soll[-1] +
-            config.step_size * self.velocity_set[1]
+            config["step_size"] * self.velocity_set[1]
         )
         self.z_soll.append(self.z_soll[-1] +
-            config.step_size * self.velocity_set[2]
+            config["step_size"] * self.velocity_set[2]
         )
         self.velocity_set_x.append(
             self.velocity_set[0]
@@ -355,11 +319,11 @@ class Testbench():
 
         controller.controller_step(
             quad, 
-            config.step_size
+            config["step_size"]
         )
         
         # Initialize Result Matrixes
-        numTimeStep = int(Tf / config.step_size + 1)
+        numTimeStep = int(Tf / config["step_size"] + 1)
 
         t_all = numpy.zeros(numTimeStep)
         s_all = numpy.zeros([numTimeStep, len(quad.state)])
@@ -445,26 +409,26 @@ class Testbench():
         )
 
         # utils.fullprint(sDes_traj_all[:,3:6])
-        utils.makeFigures( 
-            t_all, 
-            pos_all, 
-            vel_all, 
-            quat_all, 
-            omega_all, 
-            euler_all, 
-            w_cmd_all, 
-            wMotor_all, 
-            thr_all, 
-            tor_all, 
-            sDes_calc_all
-        )
-        ani = utils.sameAxisAnimation(
-            t_all,
-            pos_all, 
-            quat_all, 
-            config.step_size,
-            ifsave
-        )
+        # utils.makeFigures( 
+        #     t_all, 
+        #     pos_all, 
+        #     vel_all, 
+        #     quat_all, 
+        #     omega_all, 
+        #     euler_all, 
+        #     w_cmd_all, 
+        #     wMotor_all, 
+        #     thr_all, 
+        #     tor_all, 
+        #     sDes_calc_all
+        # )
+        # ani = utils.sameAxisAnimation(
+        #     t_all,
+        #     pos_all, 
+        #     quat_all, 
+        #     config["step_size"],
+        #     ifsave
+        # )
         plt.show()
 
     def quad_sim(
@@ -478,15 +442,15 @@ class Testbench():
         # Dynamics (using last timestep's commands)
         quad.update(
             t, 
-            config.step_size, 
+            config["step_size"], 
             controller.motor_commands
         )
-        t += config.step_size      
+        t += config["step_size"]      
 
         # Generate Commands (for next iteration)
         controller.controller_step(
             quad, 
-            config.step_size,
+            config["step_size"],
             self.velocity_set
         )
 
@@ -494,13 +458,7 @@ class Testbench():
 
 if __name__ == '__main__':
     testbench = Testbench()
-    # testbench.simulation()
-    modeltyp = config.model_id[1]
-    if modeltyp == "P":
-        testbench.testPID()
-    elif modeltyp == "M":
-        testbench.testModell()
-    else:
-        print("Warnung! Invalider Reglertyp.")
+    # Verwende immer PID-Regler (kein ML-Modell)
+    testbench.testPID()
     testbench.render()
 

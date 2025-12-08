@@ -22,6 +22,11 @@ typedef struct {
 } QuadcomPacket;
 #pragma pack(pop)
 
+// simple PauseMessage (one byte) forwarded by the ESP32
+typedef struct __attribute__((packed)) {
+  uint8_t pause;
+} PauseMessage;
+
 // Initialize module if needed (optional)
 void UARTF_Init(void);
 
@@ -31,5 +36,8 @@ int UARTF_ReceiveOneFrame(UART_HandleTypeDef *huart, QuadcomPacket *out_pkt);
 
 // Process a received packet (user callback stub you can implement)
 void UARTF_ProcessPacket(const QuadcomPacket *pkt);
+
+// Process a received PauseMessage (one-byte). Weak; override in main.c if needed.
+void UARTF_ProcessPause(uint8_t pauseValue);
 
 #endif // UART_FORWARD_H

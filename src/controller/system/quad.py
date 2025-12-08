@@ -10,7 +10,13 @@ author: Tim Leonard Straube
 """
 
 import numpy
-import config as config
+import json
+import os
+
+# Load config from JSON
+config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'parameter.json')
+with open(config_path, 'r') as f:
+    config = json.load(f)
 from util.quaternion import Quaternion
 from numpy import sin
 from numpy import cos
@@ -134,9 +140,9 @@ class Quadcopter():
     def reset(self):
         """Environment reset
         """
-        self.t = config.episode_start_time
-        self.Ti = config.episode_start_time
-        self.Ts = config.step_size
+        self.t = config["episode_start_time"]
+        self.Ti = config["episode_start_time"]
+        self.Ts = config["step_size"]
 
         # Agent
         self.schritt = 0
@@ -231,7 +237,7 @@ class Quadcopter():
 
         self.controller.controller_step(
             self, 
-            config.step_size,
+            config["step_size"],
             self.velocity_set
         )
 
@@ -245,7 +251,7 @@ class Quadcopter():
         )
         self.integrator.set_initial_value(
             self.state, 
-            config.episode_start_time
+            config["episode_start_time"]
         )
 
         self.drehlage = self.quaternion.quaternion2cardan(
@@ -409,7 +415,7 @@ class Quadcopter():
         self.integrator.set_f_params(motor_commands)
         self.state = self.integrator.integrate(
             t, 
-            t + config.step_size
+            t + config["step_size"]
         )
 
         self.pos = self.state[0:3]
@@ -425,10 +431,10 @@ class Quadcopter():
 
         self.vel_dot = (
             self.velocity - velocity_previous
-        ) / config.step_size
+        ) / config["step_size"]
         self.omega_dot = (
             self.omega - omega_t_minus_1
-        ) / config.step_size
+        ) / config["step_size"]
 
         self.extended_state()
         self.forces()
@@ -450,10 +456,10 @@ class Quadcopter():
         error_attitude = numpy.abs(attitude[0:3])
 
         return ( 
-            -config.reward_weights[1] *
+            -config["quadend2end"]["reward_weights"][1] *
             (numpy.sum(numpy.abs(error_velocity))) +
-            config.reward_weights[2] /
+            config["quadend2end"]["reward_weights"][2] /
             (1 + numpy.sum(error_rate ** 2)) +
-            config.reward_weights[3] / 
+            config["quadend2end"]["reward_weights"][3] / 
             (1 + numpy.sum(error_attitude ** 2))
         )

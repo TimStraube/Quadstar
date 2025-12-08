@@ -46,9 +46,41 @@ int UARTF_ReceiveOneFrame(UART_HandleTypeDef *huart, QuadcomPacket *out_pkt) {
   if (res != HAL_OK) return -1;
   uint16_t payload_len = (uint16_t)lenbuf[0] | ((uint16_t)lenbuf[1] << 8);
 
-  // basic sanity check
-  if (payload_len != sizeof(QuadcomPacket)) {
-    // discard payload_len + CRC to resync (best effort)
+  // Accept either a full QuadcomPacket or a 1-byte PauseMessage
+  if (payload_len == sizeof(QuadcomPacket)) {
+    uint8_t payload[sizeof(QuadcomPacket)];
+    res = uart_read_exact(huart, payload, payload_len, 500);
+    if (res != HAL_OK) return -1;
+
+    uint8_t crcbuf[2];
+    res = uart_read_exact(huart, crcbuf, 2, 100);
+    if (res != HAL_OK) return -1;
+    uint16_t crc_recv = (uint16_t)crcbuf[0] | ((uint16_t)crcbuf[1] << 8);
+
+    uint16_t crc_calc = crc16_ccitt(payload, payload_len);
+    if (crc_calc != crc_recv) {
+      return -1;
+    }
+
+    memcpy(out_pkt, payload, sizeof(QuadcomPacket));
+    out_pkt->statusMessage[sizeof(out_pkt->statusMessage)-1] = '\0';
+    return 1;
+  } else if (payload_len == sizeof(uint8_t)) {
+    // PauseMessage (1 byte)
+    uint8_t p;
+    res = uart_read_exact(huart, &p, 1, 200);
+    if (res != HAL_OK) return -1;
+    uint8_t crcbuf[2];
+    res = uart_read_exact(huart, crcbuf, 2, 100);
+    if (res != HAL_OK) return -1;
+    uint16_t crc_recv = (uint16_t)crcbuf[0] | ((uint16_t)crcbuf[1] << 8);
+    uint16_t crc_calc = crc16_ccitt(&p, 1);
+    if (crc_calc != crc_recv) return -1;
+    // call weak pause handler
+    UARTF_ProcessPause(p);
+    return 2;
+  } else {
+    // unknown length -> discard payload_len + CRC to resync (best effort)
     uint32_t toDiscard = (uint32_t)payload_len + 2;
     uint8_t tmp[32];
     while (toDiscard) {
@@ -58,24 +90,6 @@ int UARTF_ReceiveOneFrame(UART_HandleTypeDef *huart, QuadcomPacket *out_pkt) {
     }
     return -1;
   }
-
-  uint8_t payload[sizeof(QuadcomPacket)];
-  res = uart_read_exact(huart, payload, payload_len, 500);
-  if (res != HAL_OK) return -1;
-
-  uint8_t crcbuf[2];
-  res = uart_read_exact(huart, crcbuf, 2, 100);
-  if (res != HAL_OK) return -1;
-  uint16_t crc_recv = (uint16_t)crcbuf[0] | ((uint16_t)crcbuf[1] << 8);
-
-  uint16_t crc_calc = crc16_ccitt(payload, payload_len);
-  if (crc_calc != crc_recv) {
-    return -1;
-  }
-
-  memcpy(out_pkt, payload, sizeof(QuadcomPacket));
-  out_pkt->statusMessage[sizeof(out_pkt->statusMessage)-1] = '\0';
-  return 1;
 }
 
 // weak symbol so user can override in their code, or link-time provide custom
@@ -87,4 +101,9 @@ __weak void UARTF_ProcessPacket(const QuadcomPacket *pkt) {
 
 void UARTF_Init(void) {
   // currently nothing to init for blocking mode; place-holder for DMA init
+}
+
+__weak void UARTF_ProcessPause(uint8_t pauseValue) {
+  // Default pause handler: no-op. User may override in main.c.
+  (void)pauseValue;
 }

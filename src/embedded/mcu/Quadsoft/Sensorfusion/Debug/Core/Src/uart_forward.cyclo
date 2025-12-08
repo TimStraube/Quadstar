@@ -1,5 +1,6 @@
 ../Core/Src/uart_forward.c:6:17:crc16_ccitt	4
 ../Core/Src/uart_forward.c:19:26:uart_read_exact	2
-../Core/Src/uart_forward.c:24:5:UARTF_ReceiveOneFrame	12
-../Core/Src/uart_forward.c:82:13:UARTF_ProcessPacket	1
-../Core/Src/uart_forward.c:88:6:UARTF_Init	1
+../Core/Src/uart_forward.c:24:5:UARTF_ReceiveOneFrame	16
+../Core/Src/uart_forward.c:96:13:UARTF_ProcessPacket	1
+../Core/Src/uart_forward.c:102:6:UARTF_Init	1
+../Core/Src/uart_forward.c:106:13:UARTF_ProcessPause	1

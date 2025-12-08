@@ -4,14 +4,20 @@ author: Tim Leonard Straube
 
 import gymnasium
 import numpy
-import config
+import json
+import os
 import random
 import matplotlib.pyplot as plt
 from gymnasium import spaces
 from util.quaternion import Quaternion
 from scipy.integrate import ode
-from controller.quadcontroller import ControllerPID
+from controller.controller import ControllerPID
 from controller.system.quad import Quadcopter
+
+# Load config from JSON
+config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'parameter.json')
+with open(config_path, 'r') as f:
+    config = json.load(f)
 
 class Quadpid(gymnasium.Env):
     reward_tminus1 = 0
@@ -60,7 +66,7 @@ class Quadpid(gymnasium.Env):
         # Initalisierung der Zeitvariable
         self.t = 0
         # Schrittweite
-        self.Ts = config.step_size
+        self.Ts = config["step_size"]
         # Schritt der aktuellen Episode
         self.n = 0
         # Sollgeschwindigkeit
@@ -76,7 +82,7 @@ class Quadpid(gymnasium.Env):
         # Berechnung der ersten Motorbefehle mit dem PID-Regler
         self.controller.controller_step(
             self.quad, 
-            config.step_size,
+            config["step_size"],
             self.quad.velocity_set
         )
         # Initalisierung der Differenzialgleichungen des Quadcopters
@@ -91,7 +97,7 @@ class Quadpid(gymnasium.Env):
         # Definition der Anfangsbedingungen
         self.integrator.set_initial_value(
             self.quad.state, 
-            config.episode_start_time
+            config["episode_start_time"]
         )
         # Drehlage = [
         #   Gierwinkel (rad),
@@ -171,7 +177,7 @@ class Quadpid(gymnasium.Env):
             # Berechnen der Belohnung im aktuellen Zustand
             reward += self.quad.reward()
 
-            if (self.t > config.episode_end_time):
+            if (self.t > config["episode_end_time"]):
                 truncated = True
                 terminated = True
         # Drehlage = [
