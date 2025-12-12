@@ -52,6 +52,24 @@ unsigned long pauseUntil = 0;
 // Global target speed for PWM control (accessible from callbacks)
 int targetSpeed = 0;  // 0 ... 1000
 
+// UART2 RX buffer for incoming data from STM32 (or other MCU)
+static const size_t UART2_RX_BUF_SZ = 512;
+static uint8_t uart2_rx_buf[UART2_RX_BUF_SZ];
+static size_t uart2_rx_idx = 0;
+
+// CRC16-CCITT (poly 0x1021) helper
+static uint16_t crc16_ccitt(const uint8_t *data, size_t len) {
+  uint16_t crc = 0xFFFF;
+  for (size_t i = 0; i < len; ++i) {
+    crc ^= (uint16_t)data[i] << 8;
+    for (int j = 0; j < 8; ++j) {
+      if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
+      else crc <<= 1;
+    }
+  }
+  return crc;
+}
+
 void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
   // If it's a pause message, handle as before
   if (len == sizeof(PauseMessage)) {
@@ -297,6 +315,76 @@ void loop() {
   int period_us = 1000000 / 490;   // ≈ 2041 µs
   int duty = (pulse_us * 65535) / period_us;
   ledcWrite(0, duty);
+
+  // --- Read from hardware UART (Serial2) and forward Quadcom frames via ESP-NOW ---
+  while (Serial2.available()) {
+    int c = Serial2.read();
+    if (c < 0) break;
+    // append to buffer if space
+    if (uart2_rx_idx < UART2_RX_BUF_SZ) {
+      uart2_rx_buf[uart2_rx_idx++] = (uint8_t)c;
+    } else {
+      // overflow - reset buffer
+      uart2_rx_idx = 0;
+    }
+
+    // Try to parse frames in buffer
+    // Frame format expected: 0xAA 0x55 | len_lo | len_hi | payload[len] | crc_lo | crc_hi
+    size_t pos = 0;
+    while (pos + 6 <= uart2_rx_idx) {
+      // search header
+      if (uart2_rx_buf[pos] != 0xAA || uart2_rx_buf[pos+1] != 0x55) {
+        pos++;
+        continue;
+      }
+      // read length
+      uint16_t payload_len = (uint16_t)uart2_rx_buf[pos+2] | ((uint16_t)uart2_rx_buf[pos+3] << 8);
+      size_t full_len = 2 + 2 + payload_len + 2;
+      if (pos + full_len > uart2_rx_idx) {
+        // incomplete frame yet
+        break;
+      }
+      // compute CRC over payload
+      const uint8_t *payload_ptr = &uart2_rx_buf[pos + 4];
+      uint16_t recv_crc = (uint16_t)uart2_rx_buf[pos + 4 + payload_len] | ((uint16_t)uart2_rx_buf[pos + 4 + payload_len + 1] << 8);
+      uint16_t calc_crc = crc16_ccitt(payload_ptr, payload_len);
+      if (calc_crc == recv_crc) {
+        // valid frame -> forward payload via ESP-NOW as-is
+        esp_err_t res = esp_now_send(peerAddress, payload_ptr, payload_len);
+        if (res == ESP_OK) {
+          Serial.print("[UART2->ESPNOW] forwarded payload len="); Serial.println(payload_len);
+        } else {
+          Serial.print("[UART2->ESPNOW] forward failed: "); Serial.println(res);
+        }
+      } else {
+        Serial.print("[UART2] CRC mismatch, recv=0x"); Serial.print(recv_crc, HEX);
+        Serial.print(" calc=0x"); Serial.println(calc_crc, HEX);
+      }
+      // consume this frame from buffer (move remaining bytes to front)
+      size_t rem = uart2_rx_idx - (pos + full_len);
+      if (rem > 0) memmove(uart2_rx_buf, &uart2_rx_buf[pos + full_len], rem);
+      uart2_rx_idx = rem;
+      pos = 0; // restart parsing at buffer start
+    }
+    // Also handle simple ASCII line debugging: if newline present, print and clear up to newline
+    for (size_t i = 0; i < uart2_rx_idx; ++i) {
+      if (uart2_rx_buf[i] == '\n' || uart2_rx_buf[i] == '\r') {
+        // print the preceding bytes as a line
+        if (i > 0) {
+          char line[256];
+          size_t copy_len = (i < sizeof(line)-1) ? i : (sizeof(line)-1);
+          memcpy(line, uart2_rx_buf, copy_len);
+          line[copy_len] = '\0';
+          Serial.print("[UART2 RX LINE] "); Serial.println(line);
+        }
+        // remove consumed bytes including the newline
+        size_t rem = uart2_rx_idx - (i+1);
+        if (rem > 0) memmove(uart2_rx_buf, &uart2_rx_buf[i+1], rem);
+        uart2_rx_idx = rem;
+        break; // process one line per loop, rest will be handled later
+      }
+    }
+  }
 
   delay(10);
 }
