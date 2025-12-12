@@ -5,6 +5,9 @@
 #define LED_GPIO 2
 #define BUTTON_GPIO 18
 #define PWM_PIN 21
+// Hardware UART (to main compute unit / STM32)
+#define UART_TX_PIN 17
+#define UART_RX_PIN 16
 
 const unsigned long blinkInterval = 500;
 unsigned long lastBlink = 0;
@@ -98,6 +101,18 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
         errorState = false;
         idleState = false;
       }
+      // --- Send a small test/info message over hardware UART for debugging ---
+      // This helps verify that the STM32 (or other MCU) receives a notification
+      // whenever we get a packet via ESP-NOW.
+      {
+        String info = "[RX_TEST] len=" + String(len) + ", thrust=" + String(pkt.thrust) + "\n";
+        Serial.print("[UART2 TX] "); Serial.print(info);
+        // Safe write to Serial2 (hardware UART) - non-blocking print
+        Serial2.print(info);
+        // Additionally send a compact CSV line for easy parsing on the other side
+        String csv = String(pkt.thrust) + "," + String(pkt.setpoint_roll) + "," + String(pkt.setpoint_pitch) + "\n";
+        Serial2.print(csv);
+      }
     return;
   }
 }
@@ -107,6 +122,11 @@ const int ledPin = 2;
 void setup() {
   Serial.begin(115200);
   Serial.println("Boot OK");
+  // Initialize hardware UART (Serial2) for communication with STM32 or other MCU
+  // Note: pins used here are the common ESP32 DevKit mapping (TX=17, RX=16).
+  // Adjust UART_TX_PIN / UART_RX_PIN if your wiring differs.
+  Serial2.begin(115200, SERIAL_8N1, UART_RX_PIN, UART_TX_PIN);
+  Serial.println("Serial2 (hardware UART) initialized on TX=" + String(UART_TX_PIN) + " RX=" + String(UART_RX_PIN));
   pinMode(LED_GPIO, OUTPUT);
   pinMode(BUTTON_GPIO, INPUT_PULLUP);
 
