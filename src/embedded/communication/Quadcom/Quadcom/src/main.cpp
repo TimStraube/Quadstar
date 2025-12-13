@@ -9,6 +9,10 @@
 #define UART_TX_PIN 17
 #define UART_RX_PIN 16
 
+// Additional PWM outputs for roll and pitch setpoints (separate wires to STM32)
+#define ROLL_PWM_PIN 22
+#define PITCH_PWM_PIN 23
+
 const unsigned long blinkInterval = 500;
 unsigned long lastBlink = 0;
 bool ledState = false;
@@ -51,6 +55,9 @@ unsigned long pauseUntil = 0;
 
 // Global target speed for PWM control (accessible from callbacks)
 int targetSpeed = 0;  // 0 ... 1000
+// Global roll/pitch setpoints (-100 .. 100)
+int targetRoll = 0;
+int targetPitch = 0;
 
 // UART2 RX buffer for incoming data from STM32 (or other MCU)
 static const size_t UART2_RX_BUF_SZ = 512;
@@ -85,6 +92,8 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
     QuadcomPacket pkt;
     memcpy(&pkt, data, sizeof(pkt));
     targetSpeed = pkt.thrust;
+    targetRoll = pkt.setpoint_roll;
+    targetPitch = pkt.setpoint_pitch;
     Serial.print("[RX] thrust: "); Serial.println(pkt.thrust);
     Serial.print("[RX] setpoint_roll: "); Serial.println(pkt.setpoint_roll);
     Serial.print("[RX] setpoint_pitch: "); Serial.println(pkt.setpoint_pitch);
@@ -149,8 +158,15 @@ void setup() {
   pinMode(BUTTON_GPIO, INPUT_PULLUP);
 
   // 🔧 Initialize PWM for ESC
-  ledcSetup(0, 490, 16);         // Channel 0, 490 Hz (2.04ms), 16-bit resolution
+  // Channel 0 = thrust
+  ledcSetup(0, 490, 16);         // Channel 0, 490 Hz, 16-bit resolution
   ledcAttachPin(PWM_PIN, 0);
+  // Channel 1 = roll
+  ledcSetup(1, 490, 16);
+  ledcAttachPin(ROLL_PWM_PIN, 1);
+  // Channel 2 = pitch
+  ledcSetup(2, 490, 16);
+  ledcAttachPin(PITCH_PWM_PIN, 2);
 
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -306,6 +322,16 @@ void loop() {
         Serial.print("Fehler beim Senden (esp_now_send): ");
         Serial.println(res);
       }
+      // Always forward a compact CSV line over the hardware UART (Serial2)
+      // so the main compute unit (STM32) receives the same control values
+      // regardless of ESP-NOW forwarding success.
+      {
+        String info = "[TX_UART] thrust=" + String(outPkt.thrust) + "\n";
+        Serial.print("[UART2 TX] "); Serial.print(info);
+        Serial2.print(info);
+        String csv = String(outPkt.thrust) + "," + String(outPkt.setpoint_roll) + "," + String(outPkt.setpoint_pitch) + "\n";
+        Serial2.print(csv);
+      }
     }
   }
 
@@ -315,6 +341,15 @@ void loop() {
   int period_us = 1000000 / 490;   // ≈ 2041 µs
   int duty = (pulse_us * 65535) / period_us;
   ledcWrite(0, duty);
+
+  // Write roll + pitch PWM (map -100..100 -> 1000..2000us, center=1500us)
+  int roll_pulse_us = map(targetRoll, -100, 100, 1000, 2000);
+  int roll_duty = (roll_pulse_us * 65535) / period_us;
+  ledcWrite(1, roll_duty);
+
+  int pitch_pulse_us = map(targetPitch, -100, 100, 1000, 2000);
+  int pitch_duty = (pitch_pulse_us * 65535) / period_us;
+  ledcWrite(2, pitch_duty);
 
   // --- Read from hardware UART (Serial2) and forward Quadcom frames via ESP-NOW ---
   while (Serial2.available()) {
