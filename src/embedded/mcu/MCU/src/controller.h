@@ -19,6 +19,6 @@ void controllerSetFromAttitude(int roll_percent, int pitch_percent, int thrust_p
 
 // Executes a control step: computes motor PWM duties from motor command history
 // and applies them to TIM1 CCR registers.
-void control(const double motor_pwm[4], const double motor_pwm_tminus1[4], const double motor_pwm_tminus2[4], float setpoint_thrust, float skalar, float pwmLower, float pwmUpper);
+void control(const double motor_pwm[4], float setpoint_thrust, float skalar, float pwmLower, float pwmUpper);
 
 #endif // CONTROLLER_H

@@ -5,11 +5,7 @@
 #define LED_GPIO 2
 #define BUTTON_GPIO 18
 #define PWM_PIN 21
-// Hardware UART (to main compute unit / STM32)
-#define UART_TX_PIN 17
-#define UART_RX_PIN 16
-
-// Additional PWM outputs for roll and pitch setpoints (separate wires to STM32)
+// PWM outputs for forwarding thrust, roll and pitch to the STM32
 #define ROLL_PWM_PIN 22
 #define PITCH_PWM_PIN 23
 
@@ -55,27 +51,9 @@ unsigned long pauseUntil = 0;
 
 // Global target speed for PWM control (accessible from callbacks)
 int targetSpeed = 0;  // 0 ... 1000
-// Global roll/pitch setpoints (-100 .. 100)
+// Global roll/pitch targets (range -100..100)
 int targetRoll = 0;
 int targetPitch = 0;
-
-// UART2 RX buffer for incoming data from STM32 (or other MCU)
-static const size_t UART2_RX_BUF_SZ = 512;
-static uint8_t uart2_rx_buf[UART2_RX_BUF_SZ];
-static size_t uart2_rx_idx = 0;
-
-// CRC16-CCITT (poly 0x1021) helper
-static uint16_t crc16_ccitt(const uint8_t *data, size_t len) {
-  uint16_t crc = 0xFFFF;
-  for (size_t i = 0; i < len; ++i) {
-    crc ^= (uint16_t)data[i] << 8;
-    for (int j = 0; j < 8; ++j) {
-      if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
-      else crc <<= 1;
-    }
-  }
-  return crc;
-}
 
 void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
   // If it's a pause message, handle as before
@@ -128,18 +106,6 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len) {
         errorState = false;
         idleState = false;
       }
-      // --- Send a small test/info message over hardware UART for debugging ---
-      // This helps verify that the STM32 (or other MCU) receives a notification
-      // whenever we get a packet via ESP-NOW.
-      {
-        String info = "[RX_TEST] len=" + String(len) + ", thrust=" + String(pkt.thrust) + "\n";
-        Serial.print("[UART2 TX] "); Serial.print(info);
-        // Safe write to Serial2 (hardware UART) - non-blocking print
-        Serial2.print(info);
-        // Additionally send a compact CSV line for easy parsing on the other side
-        String csv = String(pkt.thrust) + "," + String(pkt.setpoint_roll) + "," + String(pkt.setpoint_pitch) + "\n";
-        Serial2.print(csv);
-      }
     return;
   }
 }
@@ -149,24 +115,16 @@ const int ledPin = 2;
 void setup() {
   Serial.begin(115200);
   Serial.println("Boot OK");
-  // Initialize hardware UART (Serial2) for communication with STM32 or other MCU
-  // Note: pins used here are the common ESP32 DevKit mapping (TX=17, RX=16).
-  // Adjust UART_TX_PIN / UART_RX_PIN if your wiring differs.
-  Serial2.begin(115200, SERIAL_8N1, UART_RX_PIN, UART_TX_PIN);
-  Serial.println("Serial2 (hardware UART) initialized on TX=" + String(UART_TX_PIN) + " RX=" + String(UART_RX_PIN));
   pinMode(LED_GPIO, OUTPUT);
   pinMode(BUTTON_GPIO, INPUT_PULLUP);
 
   // 🔧 Initialize PWM for ESC
-  // Channel 0 = thrust
-  ledcSetup(0, 490, 16);         // Channel 0, 490 Hz, 16-bit resolution
-  ledcAttachPin(PWM_PIN, 0);
-  // Channel 1 = roll
-  ledcSetup(1, 490, 16);
-  ledcAttachPin(ROLL_PWM_PIN, 1);
-  // Channel 2 = pitch
-  ledcSetup(2, 490, 16);
-  ledcAttachPin(PITCH_PWM_PIN, 2);
+  // Use 50 Hz (standard servo/ESC) and 16-bit resolution for good granularity
+  const int PWM_FREQ_HZ = 50;
+  const int PWM_RES_BITS = 16;
+  ledcSetup(0, PWM_FREQ_HZ, PWM_RES_BITS); ledcAttachPin(PWM_PIN, 0);
+  ledcSetup(1, PWM_FREQ_HZ, PWM_RES_BITS); ledcAttachPin(ROLL_PWM_PIN, 1);
+  ledcSetup(2, PWM_FREQ_HZ, PWM_RES_BITS); ledcAttachPin(PITCH_PWM_PIN, 2);
 
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -322,104 +280,27 @@ void loop() {
         Serial.print("Fehler beim Senden (esp_now_send): ");
         Serial.println(res);
       }
-      // Always forward a compact CSV line over the hardware UART (Serial2)
-      // so the main compute unit (STM32) receives the same control values
-      // regardless of ESP-NOW forwarding success.
-      {
-        String info = "[TX_UART] thrust=" + String(outPkt.thrust) + "\n";
-        Serial.print("[UART2 TX] "); Serial.print(info);
-        Serial2.print(info);
-        String csv = String(outPkt.thrust) + "," + String(outPkt.setpoint_roll) + "," + String(outPkt.setpoint_pitch) + "\n";
-        Serial2.print(csv);
-      }
     }
   }
 
 
 
-  int pulse_us = map(targetSpeed, 0, 100, 1000, 2000);
-  int period_us = 1000000 / 490;   // ≈ 2041 µs
-  int duty = (pulse_us * 65535) / period_us;
-  ledcWrite(0, duty);
+  // Convert targets to servo pulse widths (µs) and write ledc duty for 3 channels
+  const int PWM_FREQ = 50;
+  const int period_us = 1000000 / PWM_FREQ; // 20000 µs
+  const uint32_t maxDuty = (1UL << 16) - 1; // 16-bit resolution
 
-  // Write roll + pitch PWM (map -100..100 -> 1000..2000us, center=1500us)
-  int roll_pulse_us = map(targetRoll, -100, 100, 1000, 2000);
-  int roll_duty = (roll_pulse_us * 65535) / period_us;
+  int thrust_pulse = constrain(map(targetSpeed, 0, 100, 1000, 2000), 1000, 2000);
+  uint32_t thrust_duty = (uint32_t)((uint64_t)thrust_pulse * maxDuty / period_us);
+  ledcWrite(0, thrust_duty);
+
+  int roll_pulse = constrain(map(targetRoll, -100, 100, 1000, 2000), 1000, 2000);
+  uint32_t roll_duty = (uint32_t)((uint64_t)roll_pulse * maxDuty / period_us);
   ledcWrite(1, roll_duty);
 
-  int pitch_pulse_us = map(targetPitch, -100, 100, 1000, 2000);
-  int pitch_duty = (pitch_pulse_us * 65535) / period_us;
+  int pitch_pulse = constrain(map(targetPitch, -100, 100, 1000, 2000), 1000, 2000);
+  uint32_t pitch_duty = (uint32_t)((uint64_t)pitch_pulse * maxDuty / period_us);
   ledcWrite(2, pitch_duty);
-
-  // --- Read from hardware UART (Serial2) and forward Quadcom frames via ESP-NOW ---
-  while (Serial2.available()) {
-    int c = Serial2.read();
-    if (c < 0) break;
-    // append to buffer if space
-    if (uart2_rx_idx < UART2_RX_BUF_SZ) {
-      uart2_rx_buf[uart2_rx_idx++] = (uint8_t)c;
-    } else {
-      // overflow - reset buffer
-      uart2_rx_idx = 0;
-    }
-
-    // Try to parse frames in buffer
-    // Frame format expected: 0xAA 0x55 | len_lo | len_hi | payload[len] | crc_lo | crc_hi
-    size_t pos = 0;
-    while (pos + 6 <= uart2_rx_idx) {
-      // search header
-      if (uart2_rx_buf[pos] != 0xAA || uart2_rx_buf[pos+1] != 0x55) {
-        pos++;
-        continue;
-      }
-      // read length
-      uint16_t payload_len = (uint16_t)uart2_rx_buf[pos+2] | ((uint16_t)uart2_rx_buf[pos+3] << 8);
-      size_t full_len = 2 + 2 + payload_len + 2;
-      if (pos + full_len > uart2_rx_idx) {
-        // incomplete frame yet
-        break;
-      }
-      // compute CRC over payload
-      const uint8_t *payload_ptr = &uart2_rx_buf[pos + 4];
-      uint16_t recv_crc = (uint16_t)uart2_rx_buf[pos + 4 + payload_len] | ((uint16_t)uart2_rx_buf[pos + 4 + payload_len + 1] << 8);
-      uint16_t calc_crc = crc16_ccitt(payload_ptr, payload_len);
-      if (calc_crc == recv_crc) {
-        // valid frame -> forward payload via ESP-NOW as-is
-        esp_err_t res = esp_now_send(peerAddress, payload_ptr, payload_len);
-        if (res == ESP_OK) {
-          Serial.print("[UART2->ESPNOW] forwarded payload len="); Serial.println(payload_len);
-        } else {
-          Serial.print("[UART2->ESPNOW] forward failed: "); Serial.println(res);
-        }
-      } else {
-        Serial.print("[UART2] CRC mismatch, recv=0x"); Serial.print(recv_crc, HEX);
-        Serial.print(" calc=0x"); Serial.println(calc_crc, HEX);
-      }
-      // consume this frame from buffer (move remaining bytes to front)
-      size_t rem = uart2_rx_idx - (pos + full_len);
-      if (rem > 0) memmove(uart2_rx_buf, &uart2_rx_buf[pos + full_len], rem);
-      uart2_rx_idx = rem;
-      pos = 0; // restart parsing at buffer start
-    }
-    // Also handle simple ASCII line debugging: if newline present, print and clear up to newline
-    for (size_t i = 0; i < uart2_rx_idx; ++i) {
-      if (uart2_rx_buf[i] == '\n' || uart2_rx_buf[i] == '\r') {
-        // print the preceding bytes as a line
-        if (i > 0) {
-          char line[256];
-          size_t copy_len = (i < sizeof(line)-1) ? i : (sizeof(line)-1);
-          memcpy(line, uart2_rx_buf, copy_len);
-          line[copy_len] = '\0';
-          Serial.print("[UART2 RX LINE] "); Serial.println(line);
-        }
-        // remove consumed bytes including the newline
-        size_t rem = uart2_rx_idx - (i+1);
-        if (rem > 0) memmove(uart2_rx_buf, &uart2_rx_buf[i+1], rem);
-        uart2_rx_idx = rem;
-        break; // process one line per loop, rest will be handled later
-      }
-    }
-  }
 
   delay(10);
 }

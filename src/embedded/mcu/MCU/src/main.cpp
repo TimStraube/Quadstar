@@ -1,20 +1,29 @@
 #include <Arduino.h>
-#include <HardwareSerial.h>
 #include <Wire.h>
 #include <math.h>
 #include "controller.h"
 #include "sensor.h"
 
-// Provide a HardwareSerial instance bound to USART2 (PA2/PA3) so we can
-// read the CSV lines coming from the ESP32 over the hardware UART.
-HardwareSerial Serial1(USART2);
-
-// Minimal firmware: heartbeat LED + PWM input measurement
-
 // Heartbeat LED pin (PH1 used previously)
 const int HEARTBEAT_PIN = PH1;
 // Visual feedback LED (PWM capable pin). Change if this pin conflicts with your board wiring.
 const int LED_PWM_PIN = PC7;
+
+// PWM input pins (connect NodeMCU/ESP32 PWM outputs here)
+// Change these if you wire to different MCU pins.
+const int PWM_IN_THR_PIN = PC0;   // thrust PWM input
+const int PWM_IN_ROLL_PIN = PC1;  // roll PWM input
+const int PWM_IN_PITCH_PIN = PC2; // pitch PWM input
+
+// PWM capture raw pulse widths in microseconds (updated in ISRs)
+volatile unsigned long pwm_thrust_us = 0;
+volatile unsigned long pwm_roll_us = 0;
+volatile unsigned long pwm_pitch_us = 0;
+
+// internal rise timestamps
+volatile unsigned long pwm_thrust_rise = 0;
+volatile unsigned long pwm_roll_rise = 0;
+volatile unsigned long pwm_pitch_rise = 0;
 
 // Measured thrust/roll/pitch from UART CSV
 // measuredThrust: 0..100, -1 = invalid
@@ -26,17 +35,13 @@ volatile bool uartUpdated = false;
 volatile int joystick_thrust_cmd = -1;
 volatile int joystick_roll_cmd = 0;
 volatile int joystick_pitch_cmd = 0;
-// motor_pwm history for TIM1-based regulator
+// motor_pwm for TIM1-based regulator
 static double motor_pwm[4] = {0,0,0,0};
-static double motor_pwm_tminus1[4] = {0,0,0,0};
-static double motor_pwm_tminus2[4] = {0,0,0,0};
-float pwmunteregrenze = 800.0f;
-float pwmoberegrenze = 880.0f;
+// Default PWM limits set to standard hobby servo/ESC pulse widths (µs)
+float pwmunteregrenze = 1000.0f; // 1000 µs
+float pwmoberegrenze = 2000.0f; // 2000 µs
 float skalar = 0.08f; // will be overwritten in loop to (pwmoberegrenze-pwmunteregrenze)/1000
 uint8_t regleran = 0;
-
-// Toggle to disable hardware Serial1 (USART2) when debugging I2C bus issues
-const bool ENABLE_SERIAL1 = false;
 
 
 // Simple ported regler helper: for now apply uniform thrust from joystick
@@ -49,7 +54,7 @@ const bool ENABLE_SERIAL1 = false;
 // - A simple P (or PD with small D) rate controller is used to compute control efforts for roll/pitch.
 // - Mixer follows an X-quad layout and combines thrust + roll/pitch efforts.
 // - motor_pwm values are normalized [0..1] and control is called with regleran=true.
-static void regelschritt_ported() {
+static void control_step() {
   // Read joystick inputs atomically (thrust: 0..100, roll/pitch: -100..100)
   int thrust_cmd, roll_cmd, pitch_cmd;
   noInterrupts();
@@ -155,18 +160,16 @@ static void regelschritt_ported() {
     for (int i = 0; i < 4; ++i) m[i] = (m[i] - minv) / span;
   }
 
-  // Update motor_pwm history arrays (they are globals)
+  // Update motor_pwm array (current normalized motor commands)
   for (int i = 0; i < 4; ++i) {
-    motor_pwm_tminus2[i] = motor_pwm_tminus1[i];
-    motor_pwm_tminus1[i] = motor_pwm[i];
     motor_pwm[i] = (double)constrain(m[i], 0.0f, 1.0f);
   }
 
   // Compute skalar as in original
-  float skalar = (pwmoberegrenze - pwmunteregrenze) / 1000.0f;
+  float skalar_local = (pwmoberegrenze - pwmunteregrenze) / 1000.0f;
 
   // Apply to hardware
-  control(motor_pwm, motor_pwm_tminus1, motor_pwm_tminus2, setpoint_thrust, skalar, pwmunteregrenze, pwmoberegrenze);
+  control(motor_pwm, setpoint_thrust, skalar_local, pwmunteregrenze, pwmoberegrenze);
 }
  
 void setup() {
@@ -174,32 +177,55 @@ void setup() {
   pinMode(HEARTBEAT_PIN, OUTPUT);
   digitalWrite(HEARTBEAT_PIN, LOW);
 
-  // Configure PWM input pin and attach interrupt to measure pulse width.
-  // PWM input removed — receiving thrust/roll/pitch via UART CSV
+  // Configure PWM input pins and attach interrupts to measure pulse widths.
+  // We use CHANGE interrupts and micros() timestamps to measure pulse length in µs.
+  pinMode(PWM_IN_THR_PIN, INPUT);
+  pinMode(PWM_IN_ROLL_PIN, INPUT);
+  pinMode(PWM_IN_PITCH_PIN, INPUT);
+  // Attach change interrupts. Each handler decides if rising or falling.
+  attachInterrupt(digitalPinToInterrupt(PWM_IN_THR_PIN), []() {
+    // thrust pin change handler
+    if (digitalRead(PWM_IN_THR_PIN)) {
+      pwm_thrust_rise = micros();
+    } else {
+      unsigned long now = micros();
+      unsigned long dur = now - pwm_thrust_rise;
+      // sanity clamp: ignore implausible long pulses (> 50000 µs)
+      if (dur < 50000U) pwm_thrust_us = dur; else pwm_thrust_us = 0;
+    }
+  }, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(PWM_IN_ROLL_PIN), []() {
+    if (digitalRead(PWM_IN_ROLL_PIN)) {
+      pwm_roll_rise = micros();
+    } else {
+      unsigned long now = micros();
+      unsigned long dur = now - pwm_roll_rise;
+      if (dur < 50000U) pwm_roll_us = dur; else pwm_roll_us = 0;
+    }
+  }, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(PWM_IN_PITCH_PIN), []() {
+    if (digitalRead(PWM_IN_PITCH_PIN)) {
+      pwm_pitch_rise = micros();
+    } else {
+      unsigned long now = micros();
+      unsigned long dur = now - pwm_pitch_rise;
+      if (dur < 50000U) pwm_pitch_us = dur; else pwm_pitch_us = 0;
+    }
+  }, CHANGE);
 
   // Enable USB serial for debug output (non-blocking prints)
   Serial.begin(115200);
   Serial.println("MCU UART test - boot");
 
-  // Safe Serial1 initialization: optionally enable Serial1. When
-  // debugging I2C, set ENABLE_SERIAL1=false to avoid any UART pin conflicts.
-  if (ENABLE_SERIAL1) {
-    // set PA2/PA3 to pull-down, wait briefly and then start the UART.
-    pinMode(PA2, INPUT_PULLDOWN);
-    pinMode(PA3, INPUT_PULLDOWN);
-    delay(50);
-    Serial1.begin(115200);
-    Serial1.setTimeout(0);
-    Serial.println("Serial1 started @115200");
-  } else {
-    Serial.println("Serial1 is DISABLED (I2C debug mode)");
-  }
   // initialize sensor module (I2C, MPU6050, offsets)
   sensor_init();
   // Configure LED PWM pin as output (analogWrite will initialize timers)
   pinMode(LED_PWM_PIN, OUTPUT);
   // Configure motor pins (PA8..PA11 used on the original board). Change if needed
   controllerConfigurePins(PA8, PA9, PA10, PA11);
+
+  // Set thrust to 55% by default for quick spin test (0..100)
+  joystick_thrust_cmd = 55;
 }
 
 void loop() {
@@ -207,59 +233,7 @@ void loop() {
   static const size_t RX_BUF_LEN = 128;
   static char rxBuf[RX_BUF_LEN];
   static size_t rxLen = 0;
-  if (ENABLE_SERIAL1 && Serial1) {
-    int rxProcessed = 0;
-    const int MAX_RX_PER_LOOP = 32;
-    while (Serial1.available() > 0 && rxProcessed < MAX_RX_PER_LOOP) {
-      int c = Serial1.read();
-      rxProcessed++;
-      if (c < 0) break;
-      // Raw-byte debug: print each received byte in hex (very short)
-      // This helps verify that bytes physically arrive on PA3.
-      Serial.print("B:");
-      if (c < 16) Serial.print('0');
-      Serial.print(c, HEX);
-      Serial.print(' ');
-      if (c == '\r') continue;
-      if (c == '\n') {
-        rxBuf[rxLen] = '\0';
-        if (rxLen > 0) {
-          int t = 0, r = 0, p = 0;
-          int got = sscanf(rxBuf, "%d,%d,%d", &t, &r, &p);
-          // Only update values we parsed; keep everything atomic via interrupts
-          noInterrupts();
-          if (got >= 1) {
-            // clamp thrust to sensible range (0..100)
-            if (t < 0) t = 0;
-            if (t > 100) t = 100;
-            joystick_thrust_cmd = t;
-          }
-          if (got >= 2) {
-            if (r < -100) r = -100;
-            if (r > 100) r = 100;
-            joystick_roll_cmd = r;
-          }
-          if (got >= 3) {
-            if (p < -100) p = -100;
-            if (p > 100) p = 100;
-            joystick_pitch_cmd = p;
-          }
-          interrupts();
-          // Immediate USB debug print of the raw line so you see it right away
-          Serial.print("[Serial1 LINE] ");
-          Serial.println(rxBuf);
-          // Send a simple ACK back to the sender (ESP32) so it can detect a reply
-          Serial1.print("ACK\n");
-          // Also set the delayed debug flag (used for periodic full-value prints)
-          uartUpdated = true;
-        }
-        rxLen = 0;
-      } else {
-        if (rxLen < RX_BUF_LEN - 1) rxBuf[rxLen++] = (char)c;
-        else rxLen = 0; // overflow -> resync
-      }
-    }
-  }
+ 
 
   // Blink LED slowly (~1s on / 1s off) using non-blocking timing
   // static bool ledState = false;
@@ -309,6 +283,45 @@ void loop() {
   // use joystick command as source for thrust to drive the regulator
   localThrust = joystick_thrust_cmd;
   interrupts();
+
+  // --- PWM input mapping: map captured pulse widths (µs) to joystick commands
+  // Read volatile pulse widths atomically
+  noInterrupts();
+  unsigned long thr_us = pwm_thrust_us;
+  unsigned long rol_us = pwm_roll_us;
+  unsigned long pit_us = pwm_pitch_us;
+  interrupts();
+
+  // Map thrust: expect 1000..2000 µs => 0..100
+  if (thr_us >= 900 && thr_us <= 2100) {
+    int mapped = map((int)thr_us, 1000, 2000, 0, 100);
+    joystick_thrust_cmd = constrain(mapped, 0, 100);
+  } else {
+    // no valid PWM on thrust pin -> leave joystick_thrust_cmd as-is (may be -1)
+  }
+
+  // Map roll/pitch: expect 1000..2000 µs => -100..100
+  if (rol_us >= 900 && rol_us <= 2100) {
+    int mapped = map((int)rol_us, 1000, 2000, -100, 100);
+    joystick_roll_cmd = constrain(mapped, -100, 100);
+  }
+  if (pit_us >= 900 && pit_us <= 2100) {
+    int mapped = map((int)pit_us, 1000, 2000, -100, 100);
+    joystick_pitch_cmd = constrain(mapped, -100, 100);
+  }
+
+  // Periodic debug print of pulse widths and mapped setpoints
+  static unsigned long lastPwmPrint = 0;
+  if (millis() - lastPwmPrint >= 500UL) {
+    lastPwmPrint = millis();
+    Serial.print("PWM(us): T="); Serial.print(thr_us);
+    Serial.print(", R="); Serial.print(rol_us);
+    Serial.print(", P="); Serial.print(pit_us);
+    Serial.print("  -> setpoints: ");
+    Serial.print("T="); Serial.print(joystick_thrust_cmd);
+    Serial.print(", R="); Serial.print(joystick_roll_cmd);
+    Serial.print(", P="); Serial.println(joystick_pitch_cmd);
+  }
   if (localThrust >= 0) {
     int duty = map(localThrust, 0, 100, 0, 255);
     analogWrite(HEARTBEAT_PIN, duty);
@@ -329,7 +342,29 @@ void loop() {
   // Always run the control step (it will use default test constants when no
   // joystick/serial input is present). This ensures motors get updated even
   // when Serial input is not available.
-  regelschritt_ported();
+  control_step();
+
+  // Replace the slow sinusoidal ramp with a faster linear ramp for thrust
+  static float test_thrust = 0.0f;
+  static bool increasing = true;
+
+  // Update test_thrust in loop
+  if (joystick_thrust_cmd < 0) {
+      if (increasing) {
+          test_thrust += 20.0f; // Increase faster
+          if (test_thrust >= 100.0f) {
+              test_thrust = 100.0f;
+              increasing = false;
+          }
+      } else {
+          test_thrust -= 20.0f; // Decrease faster
+          if (test_thrust <= 0.0f) {
+              test_thrust = 0.0f;
+              increasing = true;
+          }
+      }
+      joystick_thrust_cmd = (int)test_thrust;
+  }
 
   delay(10);
 }
