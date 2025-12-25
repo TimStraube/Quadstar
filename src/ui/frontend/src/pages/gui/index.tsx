@@ -1,3 +1,5 @@
+import "./style.css";
+
 import {
   IonContent,
   IonPage,
@@ -6,15 +8,13 @@ import {
   IonCol,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { connectJoystick, disconnectJoystick } from "../services/Joystick";
-import ConnectionCard from "../components/Connection";
-import InfoCard from "../components/Info";
-import JoystickCard from "../components/Joystick";
+import { connectJoystick, disconnectJoystick } from "../../services/Joystick";
+import ConnectionCard from "../../components/Connection";
+import InfoCard from "../../components/Info";
+import JoystickCard from "../../components/Joystick";
+import Controller from "../../components/Controller";
 
-import "./Home.css";
-import Controller from "../components/Controller";
-
-const Home: React.FC = () => {
+const GUI: React.FC = () => {
   const [connected, setConnected] = useState(false);
   const [joystickConnected, setJoystickConnected] = useState(false);
   // Joystick verbinden/trennen
@@ -117,4 +117,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default GUI;
