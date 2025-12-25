@@ -253,6 +253,41 @@ const Simulation: React.FC = () => {
       canvasContainerRef.current.innerHTML = '';
       canvasContainerRef.current.appendChild(renderer.domElement);
     }
+    // Renderer settings suitable for environment maps
+    try {
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+      renderer.outputEncoding = THREE.sRGBEncoding;
+    } catch (e) { /* ignore if properties missing */ }
+    // Try to load an EXR environment map from public/models
+    (async () => {
+      try {
+        // dynamic import of EXRLoader
+        // @ts-ignore
+        const mod = await import('https://cdn.jsdelivr.net/npm/three@0.125.2/examples/jsm/loaders/EXRLoader.js');
+        const EXRLoader = mod.EXRLoader || (mod as any).default;
+        const exrLoader = new EXRLoader();
+        exrLoader.load('/models/autumn_field_puresky_512.exr', (texture: any) => {
+          try {
+            const pmremGenerator = new THREE.PMREMGenerator(renderer);
+            pmremGenerator.compileEquirectangularShader();
+            const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+            scene.environment = envMap;
+            scene.background = envMap;
+            texture.dispose();
+            pmremGenerator.dispose();
+            // render once so background appears immediately
+            try { renderer.render(scene, camera); } catch (e) {}
+          } catch (e) {
+            console.error('Failed to apply EXR as env map', e);
+          }
+        }, undefined, (err: any) => {
+          console.warn('Failed to load EXR environment', err);
+        });
+      } catch (err) {
+        console.warn('EXRLoader dynamic import failed', err);
+      }
+    })();
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
