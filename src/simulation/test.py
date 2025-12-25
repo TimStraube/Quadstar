@@ -24,6 +24,9 @@ class Testbench():
         self.quaternion = Quaternion()
         self.initModell()
         self.reset()
+        # list of tuples (x,north, y/east, z/down)
+        self.waypoints = []
+        self.current_wp_index = 0
 
     def initModell(self):
         """Modell laden - nicht benötigt für PID-only Simulation
@@ -76,6 +79,11 @@ class Testbench():
 
         # Sollvektor [Norden (m), Osten (m), Unten (m)]
         self.velocity_set = [1, 0, 0]
+        # reset waypoint tracking
+        self.waypoints = []
+        self.current_wp_index = 0
+        # waypoint switching tolerance (meters)
+        self.wp_tolerance = 0.2
         
 
     def simulationStep(self):
@@ -95,16 +103,46 @@ class Testbench():
                     self.quad.state[3:7]
                 )
 
-                # Sinusförmige Trajektorie - jetzt in North-Achse (vor/zurück in UI)
-                amplitude = 2.0  # Amplitude der Sinusbewegung in m/s
-                frequency = 0.5  # Frequenz in Hz (0.5 Hz = eine Periode alle 2 Sekunden)
-                
-                # Berechne Sollgeschwindigkeiten (North oszilliert für vor/zurück Bewegung)
-                self.velocity_set = [
-                    amplitude * numpy.sin(2 * numpy.pi * frequency * self.t),  # North: sinusförmig (vor/zurück)
-                    0,  # East: konstant null
-                    0   # Down: konstante Höhe
-                ]
+                # If waypoints are provided, compute velocity setpoint toward current waypoint
+                if len(self.waypoints) > 0:
+                    # ensure current_wp_index is always within bounds (loop)
+                    if self.current_wp_index >= len(self.waypoints) or self.current_wp_index < 0:
+                        self.current_wp_index = self.current_wp_index % len(self.waypoints)
+                    target = self.waypoints[self.current_wp_index]
+                    # current position (north, east, down)
+                    cur_pos = [self.quad.state[0], self.quad.state[1], self.quad.state[2]]
+                    # stored target: (north, east, altitude)
+                    # convert target altitude (up) to down coordinate for comparison
+                    target_down = -target[2]
+                    # error vector target - current (down coordinate)
+                    err = [target[0] - cur_pos[0], target[1] - cur_pos[1], target_down - cur_pos[2]]
+                    # simple proportional law to convert position error to velocity setpoint
+                    kp = 0.8
+                    vx = kp * err[0]
+                    vy = kp * err[1]
+                    vz = kp * err[2]
+                    # cap velocities to reasonable limits
+                    vmax = 3.0
+                    def cap(v):
+                        return max(min(v, vmax), -vmax)
+                    self.velocity_set = [cap(vx), cap(vy), cap(vz)]
+                    # if close to waypoint, advance
+                    dist = numpy.linalg.norm(numpy.array(err))
+                    # use configurable tolerance (default 0.2 m)
+                    if dist < getattr(self, 'wp_tolerance', 0.2):
+                        # advance to next waypoint and loop back to start when finished
+                        if len(self.waypoints) > 0:
+                            self.current_wp_index = (self.current_wp_index + 1) % len(self.waypoints)
+                else:
+                    # Sinusförmige Trajektorie - jetzt in North-Achse (vor/zurück in UI)
+                    amplitude = 2.0  # Amplitude der Sinusbewegung in m/s
+                    frequency = 0.5  # Frequenz in Hz (0.5 Hz = eine Periode alle 2 Sekunden)
+                    # Berechne Sollgeschwindigkeiten (North oszilliert für vor/zurück Bewegung)
+                    self.velocity_set = [
+                        amplitude * numpy.sin(2 * numpy.pi * frequency * self.t),  # North: sinusförmig (vor/zurück)
+                        0,  # East: konstant null
+                        0   # Down: konstante Höhe
+                    ]
 
                 # Quadcopter einen Schritt vorwärts simulieren
                 self.quad.update(

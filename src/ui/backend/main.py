@@ -118,6 +118,12 @@ async def simulation_data():
         pitch = res[5]
         roll = res[6]
 
+        # include the current waypoint index so the frontend can highlight it
+        current_idx = None
+        try:
+            current_idx = int(_testbench_instance.current_wp_index)
+        except Exception:
+            current_idx = None
         return JSONResponse(content={
             "t": t,
             "north": north,
@@ -125,8 +131,10 @@ async def simulation_data():
             "down": down,
             "roll": roll,
             "pitch": pitch,
-            "yaw": yaw
+            "yaw": yaw,
+            "current_wp_index": current_idx
         })
+        
     except Exception as e:
         # Return a 500 error instead of a zero-value fallback so the frontend
         # can surface the problem to the user and avoid silently masking bugs.
@@ -134,4 +142,54 @@ async def simulation_data():
             "error": "simulation step failed",
             "detail": str(e)
         })
+
+
+@app.post("/waypoints")
+async def set_waypoints(payload: dict):
+    """Accepts JSON payload {"waypoints": [{"x":..,"y":..,"z":..}, ...]} and stores
+    them in the running Testbench instance so the simulation will follow them.
+    """
+    try:
+        wp_list = payload.get("waypoints", [])
+    except Exception:
+        return JSONResponse(status_code=400, content={"error": "invalid payload"})
+
+    # ensure testbench instance exists
+    global _testbench_instance
+    try:
+        _testbench_instance
+    except NameError:
+        try:
+            from simulation.test import Testbench
+            _testbench_instance = Testbench()
+        except Exception as e:
+            return JSONResponse(status_code=500, content={"error": "failed to create testbench", "detail": str(e)})
+
+    # map payload into internal waypoint representation
+    newwps = []
+    for w in wp_list:
+        try:
+            x = float(w.get('x'))
+            y = float(w.get('y'))
+            z = float(w.get('z'))
+            # Frontend sends z as altitude (up). Store altitude as-is in backend.
+            # Testbench will convert altitude -> down when computing errors.
+            newwps.append((x, y, z))
+        except Exception:
+            continue
+    _testbench_instance.waypoints = newwps
+    _testbench_instance.current_wp_index = 0
+    # optional tolerance parameter (meters) from frontend
+    try:
+        tol = float(payload.get('tolerance'))
+        # clamp to reasonable range 0..2
+        tol = max(0.0, min(2.0, tol))
+        _testbench_instance.wp_tolerance = tol
+    except Exception:
+        # if not provided, keep existing tolerance or default
+        try:
+            _testbench_instance.wp_tolerance = float(getattr(_testbench_instance, 'wp_tolerance', 0.2))
+        except Exception:
+            _testbench_instance.wp_tolerance = 0.2
+    return JSONResponse(content={"status": "ok", "count": len(newwps)})
 
