@@ -133,7 +133,7 @@ class ControllerPID():
 
         self.step_current += 1
 
-        # self.saturate_velocity()
+        self.saturate_velocity()
         self.controller_down(quadcopter)
         self.controller_north_east(quadcopter, step_size)
         self.thrust2attitude()
@@ -160,7 +160,13 @@ class ControllerPID():
                     self.velocity_max_all
                 )
 
-    # Test
+    
+    def controller_yaw(self, quadcopter):
+        """Yaw controller to set yaw rate setpoint
+        """
+        yaw_error = self.setpoint - quadcopter.state[2]
+        self.velocity_set[2] += self.vel_P_gain[2] * yaw_error
+    
     def controller_down(self, quadcopter):
         """Geschwindigkeitsregler für die Unten-Achse
         """

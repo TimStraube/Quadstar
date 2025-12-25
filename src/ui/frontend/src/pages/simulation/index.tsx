@@ -864,15 +864,15 @@ const Simulation: React.FC = () => {
           {openPanel === 'waypoints' && <>
             {waypoints.map((wp, i) => (
               <div key={i} style={{display: 'flex', gap: 6, marginBottom: 6, alignItems: 'center'}}>
-                <input type="number" step="0.1" placeholder="north" value={wp.x} onChange={(e)=>{
+                <input type="number" step="0.1" placeholder="north" value={typeof wp.x === 'number' ? wp.x.toFixed(2) : wp.x} onChange={(e)=>{
                   const v = e.target.value === '' ? 0 : Number(e.target.value);
                   const copy = [...waypoints]; copy[i] = {x:v,y:copy[i].y,z:copy[i].z}; setWaypoints(copy);
                 }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
-                <input type="number" step="0.1" placeholder="east" value={wp.y} onChange={(e)=>{
+                <input type="number" step="0.1" placeholder="east" value={typeof wp.y === 'number' ? wp.y.toFixed(2) : wp.y} onChange={(e)=>{
                   const v = e.target.value === '' ? 0 : Number(e.target.value);
                   const copy = [...waypoints]; copy[i] = {x:copy[i].x,y:v,z:copy[i].z}; setWaypoints(copy);
                 }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
-                <input type="number" min={0} max={3} step="0.1" placeholder="alt" value={wp.z} onChange={(e)=>{
+                <input type="number" min={0} max={3} step="0.1" placeholder="alt" value={typeof wp.z === 'number' ? wp.z.toFixed(2) : wp.z} onChange={(e)=>{
                   const raw = e.target.value;
                   const num = raw === '' ? 0 : Number(raw);
                   let v = Number.isNaN(num) ? 0 : Math.max(0, num);

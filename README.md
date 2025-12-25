@@ -26,16 +26,6 @@ The PID controller as well as the flight dynamic model inplementation from [quad
 ### BLDC-motors
 
 The following motors are currently being used on my quadcopter model Axisflying C227 1960KV FPV Motor schwarz and I can recommend them. They even worked fine with a 11.2V (S3) power source while the specification recommends 22.2V (S6). It is probably wise to go with the specification for a build. So did I at least. 
-
-### BLDC-driver
-
-Following troubles with other ESCs I found out about the B-G431B-ESC1. I can recommend it but it a little bit of electronics and programming knowledge to get up and running.
-
-![screenshot](docs/images/B-G431B-ESC1.png)
-
-When using the provided tools by ST for configuration a Windows OS is needed at the time of writing. 
-
-Using the following software, MCSDK, Motor Profiler and STM32CubeIDE provided by ST the B-G431B-ESC1 board can be programmed.
  
 ### Akkumulator
 
