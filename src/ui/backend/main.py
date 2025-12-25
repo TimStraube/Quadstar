@@ -348,3 +348,59 @@ async def debug_state():
 
     return JSONResponse(content=out)
 
+
+@app.post("/set_position")
+async def set_position(payload: dict):
+    """Set the quad's absolute position once. Accepts JSON keys 'north', 'east', 'alt' (altitude, positive up).
+    Converts altitude to Testbench's down coordinate and writes into quad.state[0:3].
+    """
+    try:
+        # allow multiple key names
+        north = payload.get('north', payload.get('x', None))
+        east = payload.get('east', payload.get('y', None))
+        alt = payload.get('alt', payload.get('z', None))
+        if north is None or east is None or alt is None:
+            return JSONResponse(status_code=400, content={"error": "expected keys north,east,alt"})
+        north = float(north)
+        east = float(east)
+        alt = float(alt)
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"error": "invalid payload", "detail": str(e)})
+
+    # ensure testbench exists
+    global _testbench_instance
+    try:
+        _testbench_instance
+    except NameError:
+        try:
+            from simulation.test import Testbench
+            _testbench_instance = Testbench()
+        except Exception as e:
+            return JSONResponse(status_code=500, content={"error": "failed to create testbench", "detail": str(e)})
+
+    try:
+        # quad.state uses NED (north, east, down)
+        _testbench_instance.quad.state[0] = north
+        _testbench_instance.quad.state[1] = east
+        _testbench_instance.quad.state[2] = -alt
+        # also update some saved lists so visualization/history remains coherent
+        try:
+            _testbench_instance.x_all.append(north)
+            _testbench_instance.y_all.append(east)
+            _testbench_instance.z_all.append(-alt)
+        except Exception:
+            pass
+        return JSONResponse(content={"status": "ok", "north": north, "east": east, "alt": alt})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": "failed to set position", "detail": str(e)})
+
+
+@app.options("/set_position")
+async def options_set_position():
+    headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+    }
+    return Response(status_code=204, headers=headers)
+

@@ -44,8 +44,9 @@ const Simulation: React.FC = () => {
   // follow mode: when true, camera will follow the quad (unless user interacts)
   const [followQuad, setFollowQuad] = useState<boolean>(false);
   const followQuadRef = useRef<boolean>(followQuad);
-  const [wpCollapsed, setWpCollapsed] = useState<boolean>(false);
-  const [pidCollapsed, setPidCollapsed] = useState<boolean>(false);
+  // which panel is currently open: 'waypoints' | 'pid' | 'position' | null
+  const [openPanel, setOpenPanel] = useState<string | null>('waypoints');
+  const [singlePos, setSinglePos] = useState<{north:number,east:number,alt:number}>({north:0,east:0,alt:0});
   // PID parameters state (each is array of 3 numbers: [roll, pitch, yaw] or [x,y,z])
   const [velP, setVelP] = useState<number[]>([5.0, 5.0, 4.0]);
   const [velI, setVelI] = useState<number[]>([5.0, 5.0, 5.0]);
@@ -758,9 +759,9 @@ const Simulation: React.FC = () => {
         }}>
           <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6}}>
             <div style={{fontWeight: 700}}>PID Einstellungen (live)</div>
-            <button onClick={() => setPidCollapsed(c => !c)} style={{background: 'transparent', border: 'none', color: 'white', cursor: 'pointer'}}>{pidCollapsed ? '▸' : '▾'}</button>
+            <button onClick={() => setOpenPanel(op => op === 'pid' ? null : 'pid')} style={{background: 'transparent', border: 'none', color: 'white', cursor: 'pointer'}}>{openPanel === 'pid' ? '▾' : '▸'}</button>
           </div>
-          {!pidCollapsed && <>
+          {openPanel === 'pid' && <>
             <div style={{fontSize:12, marginBottom:6}}>Velocity P / I / D</div>
           <div style={{display:'flex', gap:6, marginBottom:6}}>
             <input min={0.001} step={0.001} value={String(velP[0])} onChange={(e)=>{ const v = Number(e.target.value||0); setVelP(s=>{const n=[...s];n[0]=v; return n}); schedulePidSend({vel_P_gain: [Number(e.target.value||0), velP[1], velP[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
@@ -853,10 +854,14 @@ const Simulation: React.FC = () => {
           pointerEvents: 'auto'
         }}>
           <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6}}>
-            <div style={{fontWeight:700}}>Waypoints (north, east, alt)</div>
-            <button onClick={() => setWpCollapsed(c => !c)} style={{background:'transparent', border:'none', color:'white', cursor:'pointer'}}>{wpCollapsed ? '▸' : '▾'}</button>
+            <div style={{display:'flex', gap:8, alignItems:'center'}}>
+              <div style={{fontWeight:700}}>Waypoints (north, east, alt)</div>
+            </div>
+            <div>
+              <button onClick={() => setOpenPanel(op => op === 'waypoints' ? null : 'waypoints')} style={{background: 'transparent', border: 'none', color: 'white', cursor: 'pointer'}}>{openPanel === 'waypoints' ? '▾' : '▸'}</button>
+            </div>
           </div>
-          {!wpCollapsed && <>
+          {openPanel === 'waypoints' && <>
             {waypoints.map((wp, i) => (
               <div key={i} style={{display: 'flex', gap: 6, marginBottom: 6, alignItems: 'center'}}>
                 <input type="number" step="0.1" placeholder="north" value={wp.x} onChange={(e)=>{
@@ -884,7 +889,40 @@ const Simulation: React.FC = () => {
                 Regenerate Waypoints
               </IonButton>
             </div>
-          </>}
+            </>}
+            {/* Single-position setter (immer sichtbar) */}
+            <div style={{marginTop:8, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop:8}}>
+              <div style={{fontWeight:600, fontSize:13, marginBottom:6}}>Setze Quad-Position (einmalig)</div>
+              <div style={{display:'flex', gap:6, marginBottom:6}}>
+                <input type="number" step="0.1" placeholder="north" value={singlePos.north} onChange={(e)=>{ const v = e.target.value === '' ? 0 : Number(e.target.value); setSinglePos(p=>({...p, north:v})); }} style={{width:'33%', background: '#ffffff', color: '#000000', padding: '6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+                <input type="number" step="0.1" placeholder="east" value={singlePos.east} onChange={(e)=>{ const v = e.target.value === '' ? 0 : Number(e.target.value); setSinglePos(p=>({...p, east:v})); }} style={{width:'33%', background: '#ffffff', color: '#000000', padding: '6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+                <input type="number" min={0} step="0.1" placeholder="alt" value={singlePos.alt} onChange={(e)=>{ const raw = e.target.value; const num = raw === '' ? 0 : Number(raw); const v = Number.isNaN(num) ? 0 : Math.max(0, num); setSinglePos(p=>({...p, alt:v})); }} style={{width:'33%', background: '#ffffff', color: '#000000', padding: '6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+              </div>
+              <div style={{display:'flex', gap:6}}>
+                <IonButton onClick={() => {
+                  // Send to backend
+                  const payload = { north: Number(singlePos.north), east: Number(singlePos.east), alt: Number(singlePos.alt) };
+                  fetch('http://localhost:5001/set_position', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+                    .then(r => r.json()).then(j => { console.log('set_position response', j); })
+                    .catch(e => console.error('set_position error', e));
+                  // Also update local model for immediate feedback if available
+                  try {
+                    const objs = simulationObjects.current;
+                    if (objs) {
+                      const alt = Number(singlePos.alt);
+                      if (objs.model) {
+                        objs.model.position.set(-Number(singlePos.east), alt, Number(singlePos.north));
+                      } else if (objs.cube1) {
+                        objs.cube1.position.set(-Number(singlePos.east), alt, Number(singlePos.north));
+                        objs.cube2.position.set(-Number(singlePos.east), alt, Number(singlePos.north));
+                        objs.cube3.position.set(-Number(singlePos.east), alt, Number(singlePos.north));
+                      }
+                      try { objs.renderer.render(objs.scene, objs.camera); } catch(e){}
+                    }
+                  } catch(e){}
+                }}>Set Quad Position</IonButton>
+              </div>
+            </div>
         </div>
       </IonContent>
     </IonPage>
