@@ -57,7 +57,7 @@ const Simulation: React.FC = () => {
     // Frontend waypoint input uses z as altitude (up). Send altitude as-is;
     // backend will convert to 'down' internally. Also include tolerance.
     const payload = waypoints.map(w => ({ x: Number(w.x), y: Number(w.y), z: Number(w.z) }));
-    fetch('http://localhost:8000/waypoints', {
+    fetch('http://localhost:5001/waypoints', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ waypoints: payload, tolerance: wpTolerance })
@@ -77,12 +77,6 @@ const Simulation: React.FC = () => {
         }
       } catch (e) { /* ignore */ }
     }, [autoRotateEnabled, threeLoaded]);
-
-  const startSimulation = () => {
-    console.log('Start pressed');
-    setRunning(true);
-    setResetFlag(false);
-  };
 
   // --- Waypoint helpers ---
   const createOrUpdateWaypoint = (index: number) => {
@@ -449,8 +443,8 @@ const Simulation: React.FC = () => {
     // --- Polling Loop ---
     function connectServer() {
       if (!pollingRef.current) return;
-      // Backend runs on port 8000 by default in this repo; use that port
-      fetch('http://localhost:8000/', {
+      // Backend runs on port 5001 (changed to avoid system service using 5000)
+      fetch('http://localhost:5001/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({})
@@ -720,7 +714,7 @@ const Simulation: React.FC = () => {
               setWpTolerance(v);
               // send current waypoints + new tolerance to backend
               const payload = waypoints.map(w => ({ x: Number(w.x), y: Number(w.y), z: Number(w.z) }));
-              fetch('http://localhost:8000/waypoints', {
+              fetch('http://localhost:5001/waypoints', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ waypoints: payload, tolerance: v })

@@ -5,7 +5,7 @@ import asyncio
 # `controller` and `simulation` can be imported as packages.
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 import threading
 import time
 from fastapi.middleware.cors import CORSMiddleware
@@ -144,6 +144,17 @@ async def simulation_data():
         })
 
 
+@app.options("/")
+async def options_root():
+    # Explicit OPTIONS handler as a fallback in case middleware doesn't catch preflight
+    headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+    }
+    return Response(status_code=204, headers=headers)
+
+
 @app.post("/waypoints")
 async def set_waypoints(payload: dict):
     """Accepts JSON payload {"waypoints": [{"x":..,"y":..,"z":..}, ...]} and stores
@@ -192,4 +203,14 @@ async def set_waypoints(payload: dict):
         except Exception:
             _testbench_instance.wp_tolerance = 0.2
     return JSONResponse(content={"status": "ok", "count": len(newwps)})
+
+
+@app.options("/waypoints")
+async def options_waypoints():
+    headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+    }
+    return Response(status_code=204, headers=headers)
 

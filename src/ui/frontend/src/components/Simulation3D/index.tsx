@@ -127,7 +127,7 @@ const Simulation3D: React.FC = () => {
   // Fetch simulation data from Flask backend
   const fetchSimulationData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/simulation/step');
+      const response = await fetch('http://localhost:5001/api/simulation/step');
       const data = await response.json();
       setSimulationData({
         t: data.t,
