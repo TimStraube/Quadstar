@@ -37,6 +37,8 @@ const Simulation: React.FC = () => {
   const [activeWaypoint, setActiveWaypoint] = useState<number | null>(null);
   // waypoint switching tolerance (meters) - user configurable 0..2
   const [wpTolerance, setWpTolerance] = useState<number>(0.2);
+  // enable/disable automatic scene rotation
+  const [autoRotateEnabled, setAutoRotateEnabled] = useState<boolean>(true);
 
   // send waypoints to backend when changed
   useEffect(() => {
@@ -59,6 +61,16 @@ const Simulation: React.FC = () => {
   }, [waypoints]);
 
   // --- Simulation Control Functions ---
+    // Keep OrbitControls.autoRotate in sync with React state
+    useEffect(() => {
+      try {
+        const objs = simulationObjects.current;
+        if (objs && objs.controls) {
+          objs.controls.autoRotate = Boolean(autoRotateEnabled) && !userInteractingRef.current;
+        }
+      } catch (e) { /* ignore */ }
+    }, [autoRotateEnabled, threeLoaded]);
+
   const startSimulation = () => {
     console.log('Start pressed');
     setRunning(true);
@@ -159,6 +171,11 @@ const Simulation: React.FC = () => {
         grp.add(closingLine);
         simulationObjects.current.waypointClosingLine = closingLine;
       } catch (e) { /* ignore closing line errors */ }
+      // render scene once so lines appear even while paused
+      try {
+        const objs = simulationObjects.current;
+        if (objs && objs.renderer && objs.scene && objs.camera) objs.renderer.render(objs.scene, objs.camera);
+      } catch (err) { /* ignore */ }
     }
   };
   const pauseSimulation = () => setRunning(false);
@@ -247,14 +264,14 @@ const Simulation: React.FC = () => {
     controls.minDistance = 1;
     controls.screenSpacePanning = false;
     // Position camera at fixed distance CAMERA_DISTANCE with a small elevation
-    const camElev = 0.5;
-    // slight right offset for a 'biased' initial view
-    const camX = 1.5;
+    const camElev = 2.0;
+    // stronger right offset for a more side-looking camera
+    const camX = 4.0;
     const camZ = Math.sqrt(Math.max(0, CAMERA_DISTANCE * CAMERA_DISTANCE - camElev * camElev - camX * camX));
     camera.position.set(camX, camElev, camZ);
-    // look slightly off-center (keeps scene feeling a bit 'wrong' initially)
-    camera.lookAt(0.2, 0, 0);
-    controls.target.set(0.2, 0, 0);
+    // look slightly off-center to the right
+    camera.lookAt(1.0, 0, 0);
+    controls.target.set(1.0, 0, 0);
 
     // Interactivity handling: pause auto-rotate while user interacts, resume after idle
     controls.addEventListener('start', () => {
@@ -267,13 +284,13 @@ const Simulation: React.FC = () => {
       // resume auto-rotate after 3s of inactivity
       if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
       idleTimerRef.current = window.setTimeout(() => {
-        controls.autoRotate = true;
+        controls.autoRotate = autoRotateEnabled;
         idleTimerRef.current = null;
       }, 3000) as unknown as number;
     });
     // If the user never interacts, enable auto-rotate after initial idle
     if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-    idleTimerRef.current = window.setTimeout(() => { controls.autoRotate = true; idleTimerRef.current = null; }, 3000) as unknown as number;
+    idleTimerRef.current = window.setTimeout(() => { controls.autoRotate = autoRotateEnabled; idleTimerRef.current = null; }, 3000) as unknown as number;
     const geometry1 = new THREE.BoxGeometry(0.6, 0.02, 0.02);
     const material1 = new THREE.MeshBasicMaterial({color: 0x00ff00});
     const cube1 = new THREE.Mesh(geometry1, material1);
@@ -301,8 +318,59 @@ const Simulation: React.FC = () => {
     const gridHelper = new THREE.GridHelper(10, 20, 0x444444, 0x444444);
     gridHelper.position.y = 0.01;
     scene.add(gridHelper);
+    // Add simple lighting so GLTF models are visible
+    try {
+      const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+      hemi.position.set(0, 20, 0);
+      scene.add(hemi);
+      const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+      dir.position.set(-5, 10, 5);
+      scene.add(dir);
+      const amb = new THREE.AmbientLight(0x666666, 0.4);
+      scene.add(amb);
+    } catch (e) { /* ignore if THREE missing */ }
     camera.position.set(0, 5, 3);
     camera.lookAt(0, 0, 0);
+    // Try to load a local GLTF model if present in `public/models/model.glb`.
+    // If loading succeeds, replace the placeholder cubes with the model.
+    (async () => {
+      try {
+        // dynamic import of GLTFLoader (match Three.js version used above)
+        // @ts-ignore
+        const mod = await import('https://cdn.jsdelivr.net/npm/three@0.125.2/examples/jsm/loaders/GLTFLoader.js');
+        const GLTFLoader = mod.GLTFLoader || (mod as any).default;
+        const loader = new GLTFLoader();
+        loader.load('/models/model.glb', (gltf: any) => {
+          try {
+            const model = gltf.scene || gltf.scenes?.[0];
+            if (!model) {
+              console.warn('GLTF loaded but contains no scene');
+              return;
+            }
+            model.traverse((o: any) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+            // Adjust scale/rotation if the model is too large/small (scale down ~4x)
+            model.scale.set(0.25, 0.25, 0.25);
+            model.rotation.set(0, 0, 0);
+            model.position.set(0, 0, 0);
+            model.name = 'quadModel';
+            scene.add(model);
+            simulationObjects.current.model = model;
+            // remove placeholder geometry so the model is visible instead
+            try { scene.remove(cube1); } catch (e) {}
+            try { scene.remove(cube2); } catch (e) {}
+            try { scene.remove(cube3); } catch (e) {}
+            // render once so the loaded model appears immediately
+            try { renderer.render(scene, camera); } catch (e) {}
+          } catch (e) {
+            console.error('Error when adding GLTF to scene', e);
+          }
+        }, undefined, (err: any) => {
+          console.error('Failed to load GLTF model /models/model.glb', err);
+        });
+      } catch (err) {
+        console.warn('GLTFLoader dynamic import failed', err);
+      }
+    })();
     // prepare waypoint group and storage
     const waypointGroup = new THREE.Group();
     scene.add(waypointGroup);
@@ -314,6 +382,17 @@ const Simulation: React.FC = () => {
       waypointLine: null,
       waypointClosingLine: null
     };
+    // set initial quad visual positions and render once so scene is visible before Play
+    try {
+      const objs = simulationObjects.current;
+      objs.cube1.position.set(0, 0, 0);
+      objs.cube2.position.set(0, 0, 0);
+      objs.cube3.position.set(0, 0, 0);
+      objs.cube1.rotation.set(0,0,0);
+      objs.cube2.rotation.set(0,0,0);
+      objs.cube3.rotation.set(0,0,0);
+      objs.renderer.render(objs.scene, objs.camera);
+    } catch (e) { /* ignore */ }
   };
 
   // --- Animation & Polling Loop ---
@@ -380,26 +459,38 @@ const Simulation: React.FC = () => {
     function animate() {
       try {
         if (!running || stop) return;
-        const { cube1, cube2, cube3, controls, renderer, scene, camera } = simulationObjects.current;
-        // Update quadcopter position
-        cube1.position.x = -osten;
-        cube1.position.z = norden;
-        cube1.position.y = altitude;
-        cube1.rotation.z = rollen;
-        cube1.rotation.x = nicken;
-        cube1.rotation.y = gieren;
-        cube2.position.x = -osten;
-        cube2.position.z = norden;
-        cube2.position.y = altitude;
-        cube2.rotation.z = rollen;
-        cube2.rotation.x = nicken;
-        cube2.rotation.y = gieren;
-        cube3.position.x = -osten;
-        cube3.position.z = norden;
-        cube3.position.y = altitude;
-        cube3.rotation.z = rollen;
-        cube3.rotation.x = nicken;
-        cube3.rotation.y = gieren;
+        const { cube1, cube2, cube3, controls, renderer, scene, camera, model } = simulationObjects.current;
+        // If a GLTF model was loaded, move/rotate it. Otherwise, update the placeholder cubes.
+        if (model) {
+          try {
+            // mapping: scene x = -east, y = altitude (up), z = north
+            model.position.set(-osten, altitude, norden);
+            // maintain same rotation mapping as the cubes: rotation.set(x=nicken, y=gieren, z=rollen)
+            model.rotation.set(nicken || 0, gieren || 0, rollen || 0);
+          } catch (e) { /* ignore model update errors */ }
+        } else {
+          // Update quadcopter position on placeholder parts
+          try {
+            cube1.position.x = -osten;
+            cube1.position.z = norden;
+            cube1.position.y = altitude;
+            cube1.rotation.z = rollen;
+            cube1.rotation.x = nicken;
+            cube1.rotation.y = gieren;
+            cube2.position.x = -osten;
+            cube2.position.z = norden;
+            cube2.position.y = altitude;
+            cube2.rotation.z = rollen;
+            cube2.rotation.x = nicken;
+            cube2.rotation.y = gieren;
+            cube3.position.x = -osten;
+            cube3.position.z = norden;
+            cube3.position.y = altitude;
+            cube3.rotation.z = rollen;
+            cube3.rotation.x = nicken;
+            cube3.rotation.y = gieren;
+          } catch (e) { /* ignore cube update errors */ }
+        }
         controls.update();
         renderer.render(scene, camera);
         animationRef.current = requestAnimationFrame(animate);
@@ -475,6 +566,13 @@ const Simulation: React.FC = () => {
             {running ? 'Pause' : 'Play'}
           </IonButton>
           <IonButton onClick={resetSimulation}>Reset</IonButton>
+          <IonButton onClick={() => {
+            setAutoRotateEnabled(v => !v);
+            // immediately update controls if present
+            try { const c = simulationObjects.current?.controls; if (c) c.autoRotate = !autoRotateEnabled && !userInteractingRef.current; } catch(e) {}
+          }}>
+            {autoRotateEnabled ? 'Auto-Rotate: On' : 'Auto-Rotate: Off'}
+          </IonButton>
         </div>
         {/* Speed slider - centered at bottom */}
         <div style={{
