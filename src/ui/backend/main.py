@@ -214,3 +214,137 @@ async def options_waypoints():
     }
     return Response(status_code=204, headers=headers)
 
+
+@app.post("/pid")
+async def set_pid(payload: dict):
+    """Accepts JSON payload to update PID parameters on the running Testbench.controller.
+    Example payload keys (all optional):
+      - vel_P_gain, vel_I_gain, vel_D_gain : list[3] or single number
+      - attitute_p_gain : list[3] or single number
+      - rate_P_gain, rate_D_gain : list[3] or single number
+    The endpoint will create the Testbench instance if missing.
+    """
+    # Ensure testbench exists
+    global _testbench_instance
+    try:
+        _testbench_instance
+    except NameError:
+        try:
+            from simulation.test import Testbench
+            _testbench_instance = Testbench()
+        except Exception as e:
+            return JSONResponse(status_code=500, content={"error": "failed to create testbench", "detail": str(e)})
+
+    controller = getattr(_testbench_instance, 'controller', None)
+    if controller is None:
+        return JSONResponse(status_code=500, content={"error": "no controller present on testbench"})
+
+    def apply_param(key, attr_name):
+        if key not in payload:
+            return
+        val = payload.get(key)
+        try:
+            # If a single number provided, expand to 3
+            if isinstance(val, (int, float)):
+                arr = [float(val)] * 3
+            else:
+                arr = [float(x) for x in val]
+            if len(arr) == 1:
+                arr = arr * 3
+            # sanitize: prevent zero or negative gains which can freeze sim
+            min_gain = 1e-3
+            arr = [max(float(x), min_gain) for x in arr]
+            # set attribute if exists
+            if hasattr(controller, attr_name):
+                setattr(controller, attr_name, np.array(arr))
+        except Exception:
+            pass
+
+    import numpy as np
+    apply_param('vel_P_gain', 'vel_P_gain')
+    apply_param('vel_I_gain', 'vel_I_gain')
+    apply_param('vel_D_gain', 'vel_D_gain')
+    apply_param('attitute_p_gain', 'attitute_p_gain')
+    apply_param('rate_P_gain', 'rate_P_gain')
+    apply_param('rate_D_gain', 'rate_D_gain')
+
+    # Return current parameters for UI to show
+    def to_list(x):
+        try:
+            return [float(v) for v in list(x)]
+        except Exception:
+            return None
+
+    return JSONResponse(content={
+        'vel_P_gain': to_list(getattr(controller, 'vel_P_gain', None)),
+        'vel_I_gain': to_list(getattr(controller, 'vel_I_gain', None)),
+        'vel_D_gain': to_list(getattr(controller, 'vel_D_gain', None)),
+        'attitute_p_gain': to_list(getattr(controller, 'attitute_p_gain', None)),
+        'rate_P_gain': to_list(getattr(controller, 'rate_P_gain', None)),
+        'rate_D_gain': to_list(getattr(controller, 'rate_D_gain', None)),
+    })
+
+
+@app.options("/pid")
+async def options_pid():
+    headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+    }
+    return Response(status_code=204, headers=headers)
+
+
+@app.get("/debug")
+async def debug_state():
+    """Return internal state useful for debugging the simulation & controller.
+    This is a development-only endpoint.
+    """
+    try:
+        from simulation.test import Testbench
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": "failed to import Testbench", "detail": str(e)})
+
+    global _testbench_instance
+    try:
+        _testbench_instance
+    except NameError:
+        _testbench_instance = Testbench()
+
+    tb = _testbench_instance
+    ctrl = getattr(tb, 'controller', None)
+    quad = getattr(tb, 'quad', None)
+
+    def to_list(x):
+        try:
+            return [float(v) for v in list(x)]
+        except Exception:
+            try:
+                return list(map(float, x))
+            except Exception:
+                return None
+
+    out = {
+        'velocity_set': to_list(getattr(tb, 'velocity_set', [])),
+        'wp_tolerance': float(getattr(tb, 'wp_tolerance', 0.2)),
+        'current_wp_index': int(getattr(tb, 'current_wp_index', 0)),
+    }
+    if ctrl is not None:
+        out.update({
+            'controller.vel_P_gain': to_list(getattr(ctrl, 'vel_P_gain', [])),
+            'controller.vel_I_gain': to_list(getattr(ctrl, 'vel_I_gain', [])),
+            'controller.vel_D_gain': to_list(getattr(ctrl, 'vel_D_gain', [])),
+            'controller.rate_set': to_list(getattr(ctrl, 'rate_set', [])),
+            'controller.rate_sp': to_list(getattr(ctrl, 'rate_sp', [])),
+            'controller.motor_commands': to_list(getattr(ctrl, 'motor_commands', [])),
+            'controller.thrust_set': to_list(getattr(ctrl, 'thrust_set', [])),
+        })
+    if quad is not None:
+        out.update({
+            'quad.state': to_list(getattr(quad, 'state', [])),
+            'quad.wMotor': to_list(getattr(quad, 'wMotor', [])),
+            'quad.thr': to_list(getattr(quad, 'thr', [])),
+        })
+
+    return JSONResponse(content=out)
+

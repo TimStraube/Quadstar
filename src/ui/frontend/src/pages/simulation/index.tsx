@@ -44,6 +44,16 @@ const Simulation: React.FC = () => {
   // follow mode: when true, camera will follow the quad (unless user interacts)
   const [followQuad, setFollowQuad] = useState<boolean>(false);
   const followQuadRef = useRef<boolean>(followQuad);
+  const [wpCollapsed, setWpCollapsed] = useState<boolean>(false);
+  const [pidCollapsed, setPidCollapsed] = useState<boolean>(false);
+  // PID parameters state (each is array of 3 numbers: [roll, pitch, yaw] or [x,y,z])
+  const [velP, setVelP] = useState<number[]>([5.0, 5.0, 4.0]);
+  const [velI, setVelI] = useState<number[]>([5.0, 5.0, 5.0]);
+  const [velD, setVelD] = useState<number[]>([0.5, 0.5, 0.5]);
+  const [attP, setAttP] = useState<number[]>([8.0, 8.0, 1.5]);
+  const [rateP, setRateP] = useState<number[]>([1.5, 1.5, 1.0]);
+  const [rateD, setRateD] = useState<number[]>([0.04, 0.04, 0.1]);
+  const pidDebounceRef = useRef<number | null>(null);
 
   // send waypoints to backend when changed
   useEffect(() => {
@@ -64,6 +74,54 @@ const Simulation: React.FC = () => {
     }).catch(err => console.error('failed to send waypoints', err));
     // eslint-disable-next-line
   }, [waypoints]);
+
+  // Load current PID values from backend on mount
+  useEffect(() => {
+    fetch('http://localhost:5001/pid', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
+      .then(r => r.json())
+      .then(obj => {
+        if (!obj) return;
+        try { if (obj.vel_P_gain) setVelP(obj.vel_P_gain); } catch(e){}
+        try { if (obj.vel_I_gain) setVelI(obj.vel_I_gain); } catch(e){}
+        try { if (obj.vel_D_gain) setVelD(obj.vel_D_gain); } catch(e){}
+        try { if (obj.attitute_p_gain) setAttP(obj.attitute_p_gain); } catch(e){}
+        try { if (obj.rate_P_gain) setRateP(obj.rate_P_gain); } catch(e){}
+        try { if (obj.rate_D_gain) setRateD(obj.rate_D_gain); } catch(e){}
+      }).catch(() => {});
+  }, []);
+
+  // helper: send PID to backend (debounced)
+  const schedulePidSend = (payload: any) => {
+    if (pidDebounceRef.current) { window.clearTimeout(pidDebounceRef.current); pidDebounceRef.current = null; }
+    pidDebounceRef.current = window.setTimeout(() => {
+      // sanitize payload: prevent zero/negative gains
+      const minGain = 1e-3;
+      const sanitize = (obj) => {
+        const out = {};
+        for (const k of Object.keys(obj)) {
+          const v = obj[k];
+          if (Array.isArray(v)) out[k] = v.map(x => Math.max(Number(x) || 0, minGain));
+          else if (typeof v === 'number') out[k] = Math.max(v, minGain);
+          else out[k] = v;
+        }
+        return out;
+      };
+      const safePayload = sanitize(payload);
+      fetch('http://localhost:5001/pid', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(safePayload)
+      }).then(r => r.json()).then(j => {
+        // update local state with canonical values from backend
+        try { if (j.vel_P_gain) setVelP(j.vel_P_gain); } catch(e){}
+        try { if (j.vel_I_gain) setVelI(j.vel_I_gain); } catch(e){}
+        try { if (j.vel_D_gain) setVelD(j.vel_D_gain); } catch(e){}
+        try { if (j.attitute_p_gain) setAttP(j.attitute_p_gain); } catch(e){}
+        try { if (j.rate_P_gain) setRateP(j.rate_P_gain); } catch(e){}
+        try { if (j.rate_D_gain) setRateD(j.rate_D_gain); } catch(e){}
+      }).catch(() => {});
+    }, 250) as unknown as number;
+  };
 
   // --- Simulation Control Functions ---
     // Keep OrbitControls.autoRotate in sync with React state
@@ -684,6 +742,62 @@ const Simulation: React.FC = () => {
           />
           <div style={{width: 90, textAlign: 'right', fontWeight: '600'}}>{Number(speed).toFixed(2)}x</div>
         </div>
+        {/* PID editor - bottom-left panel (collapsible) */}
+        <div style={{
+          position: 'fixed',
+          bottom: 12,
+          left: 12,
+          zIndex: 250,
+          width: 360,
+          maxWidth: '90vw',
+          background: 'rgba(0,0,0,0.75)',
+          color: 'white',
+          padding: 8,
+          borderRadius: 8,
+          pointerEvents: 'auto'
+        }}>
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6}}>
+            <div style={{fontWeight: 700}}>PID Einstellungen (live)</div>
+            <button onClick={() => setPidCollapsed(c => !c)} style={{background: 'transparent', border: 'none', color: 'white', cursor: 'pointer'}}>{pidCollapsed ? '▸' : '▾'}</button>
+          </div>
+          {!pidCollapsed && <>
+            <div style={{fontSize:12, marginBottom:6}}>Velocity P / I / D</div>
+          <div style={{display:'flex', gap:6, marginBottom:6}}>
+            <input min={0.001} step={0.001} value={String(velP[0])} onChange={(e)=>{ const v = Number(e.target.value||0); setVelP(s=>{const n=[...s];n[0]=v; return n}); schedulePidSend({vel_P_gain: [Number(e.target.value||0), velP[1], velP[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(velP[1])} onChange={(e)=>{ const v = Number(e.target.value||0); setVelP(s=>{const n=[...s];n[1]=v; return n}); schedulePidSend({vel_P_gain: [velP[0], Number(e.target.value||0), velP[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(velP[2])} onChange={(e)=>{ const v = Number(e.target.value||0); setVelP(s=>{const n=[...s];n[2]=v; return n}); schedulePidSend({vel_P_gain: [velP[0], velP[1], Number(e.target.value||0)]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+          </div>
+          <div style={{fontSize:12, marginBottom:6}}>Velocity I</div>
+          <div style={{display:'flex', gap:6, marginBottom:6}}>
+            <input value={String(velI[0])} onChange={(e)=>{ setVelI(s=>{const n=[...s];n[0]=Number(e.target.value||0); return n}); schedulePidSend({vel_I_gain: [Number(e.target.value||0), velI[1], velI[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(velI[1])} onChange={(e)=>{ setVelI(s=>{const n=[...s];n[1]=Number(e.target.value||0); return n}); schedulePidSend({vel_I_gain: [velI[0], Number(e.target.value||0), velI[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(velI[2])} onChange={(e)=>{ setVelI(s=>{const n=[...s];n[2]=Number(e.target.value||0); return n}); schedulePidSend({vel_I_gain: [velI[0], velI[1], Number(e.target.value||0)]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+          </div>
+          <div style={{fontSize:12, marginBottom:6}}>Velocity D</div>
+          <div style={{display:'flex', gap:6, marginBottom:6}}>
+            <input value={String(velD[0])} onChange={(e)=>{ setVelD(s=>{const n=[...s];n[0]=Number(e.target.value||0); return n}); schedulePidSend({vel_D_gain: [Number(e.target.value||0), velD[1], velD[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(velD[1])} onChange={(e)=>{ setVelD(s=>{const n=[...s];n[1]=Number(e.target.value||0); return n}); schedulePidSend({vel_D_gain: [velD[0], Number(e.target.value||0), velD[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(velD[2])} onChange={(e)=>{ setVelD(s=>{const n=[...s];n[2]=Number(e.target.value||0); return n}); schedulePidSend({vel_D_gain: [velD[0], velD[1], Number(e.target.value||0)]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+          </div>
+          <div style={{fontSize:12, marginBottom:6}}>Attitude P (roll,pitch,yaw)</div>
+          <div style={{display:'flex', gap:6, marginBottom:6}}>
+            <input value={String(attP[0])} onChange={(e)=>{ setAttP(s=>{const n=[...s];n[0]=Number(e.target.value||0); return n}); schedulePidSend({attitute_p_gain: [Number(e.target.value||0), attP[1], attP[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(attP[1])} onChange={(e)=>{ setAttP(s=>{const n=[...s];n[1]=Number(e.target.value||0); return n}); schedulePidSend({attitute_p_gain: [attP[0], Number(e.target.value||0), attP[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(attP[2])} onChange={(e)=>{ setAttP(s=>{const n=[...s];n[2]=Number(e.target.value||0); return n}); schedulePidSend({attitute_p_gain: [attP[0], attP[1], Number(e.target.value||0)]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+          </div>
+          <div style={{fontSize:12, marginBottom:6}}>Rate P / D</div>
+          <div style={{display:'flex', gap:6, marginBottom:6}}>
+            <input value={String(rateP[0])} onChange={(e)=>{ setRateP(s=>{const n=[...s];n[0]=Number(e.target.value||0); return n}); schedulePidSend({rate_P_gain: [Number(e.target.value||0), rateP[1], rateP[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(rateP[1])} onChange={(e)=>{ setRateP(s=>{const n=[...s];n[1]=Number(e.target.value||0); return n}); schedulePidSend({rate_P_gain: [rateP[0], Number(e.target.value||0), rateP[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(rateP[2])} onChange={(e)=>{ setRateP(s=>{const n=[...s];n[2]=Number(e.target.value||0); return n}); schedulePidSend({rate_P_gain: [rateP[0], rateP[1], Number(e.target.value||0)]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+          </div>
+          <div style={{display:'flex', gap:6}}>
+            <input value={String(rateD[0])} onChange={(e)=>{ setRateD(s=>{const n=[...s];n[0]=Number(e.target.value||0); return n}); schedulePidSend({rate_D_gain: [Number(e.target.value||0), rateD[1], rateD[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(rateD[1])} onChange={(e)=>{ setRateD(s=>{const n=[...s];n[1]=Number(e.target.value||0); return n}); schedulePidSend({rate_D_gain: [rateD[0], Number(e.target.value||0), rateD[2]]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+            <input value={String(rateD[2])} onChange={(e)=>{ setRateD(s=>{const n=[...s];n[2]=Number(e.target.value||0); return n}); schedulePidSend({rate_D_gain: [rateD[0], rateD[1], Number(e.target.value||0)]}); }} style={{width:'33%', background:'#ffffff', color:'#000000', padding:'6px', borderRadius:4, border:'1px solid rgba(0,0,0,0.2)'}} />
+          </div>
+          </>}
+        </div>
         {/* Tolerance slider - just above bottom */}
         <div style={{
           position: 'fixed',
@@ -724,7 +838,7 @@ const Simulation: React.FC = () => {
           />
           <div style={{width: 60, textAlign: 'right', fontWeight: '600'}}>{wpTolerance.toFixed(2)} m</div>
         </div>
-        {/* Waypoint editor - top-left panel */}
+        {/* Waypoint editor - top-left panel (collapsible) */}
         <div style={{
           position: 'fixed',
           top: 12,
@@ -738,35 +852,39 @@ const Simulation: React.FC = () => {
           borderRadius: 8,
           pointerEvents: 'auto'
         }}>
-          <div style={{fontWeight: 700, marginBottom: 6}}>Waypoints (north, east, alt)</div>
-          {waypoints.map((wp, i) => (
-            <div key={i} style={{display: 'flex', gap: 6, marginBottom: 6, alignItems: 'center'}}>
-              <input type="number" step="0.1" placeholder="north" value={wp.x} onChange={(e)=>{
-                const v = e.target.value === '' ? 0 : Number(e.target.value);
-                const copy = [...waypoints]; copy[i] = {x:v,y:copy[i].y,z:copy[i].z}; setWaypoints(copy);
-              }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
-              <input type="number" step="0.1" placeholder="east" value={wp.y} onChange={(e)=>{
-                const v = e.target.value === '' ? 0 : Number(e.target.value);
-                const copy = [...waypoints]; copy[i] = {x:copy[i].x,y:v,z:copy[i].z}; setWaypoints(copy);
-              }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
-                  <input type="number" min={0} max={3} step="0.1" placeholder="alt" value={wp.z} onChange={(e)=>{
-                    const raw = e.target.value;
-                    const num = raw === '' ? 0 : Number(raw);
-                    let v = Number.isNaN(num) ? 0 : Math.max(0, num);
-                    v = Math.min(3, v);
-                    const copy = [...waypoints]; copy[i] = {x:copy[i].x,y:copy[i].y,z:v}; setWaypoints(copy);
-                  }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
-            </div>
-          ))}
-          <div style={{display:'flex', gap:6, marginTop:6}}>
-            <IonButton onClick={() => {
-              // regenerate random waypoints: x,y in [-3,3], z (altitude) in [0,3]
-              const newwps = Array.from({length:5}, () => ({x: (Math.random() * 6) - 3, y: (Math.random() * 6) - 3, z: (Math.random() * 3)}));
-              setWaypoints(newwps);
-            }}>
-              Regenerate Waypoints
-            </IonButton>
+          <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6}}>
+            <div style={{fontWeight:700}}>Waypoints (north, east, alt)</div>
+            <button onClick={() => setWpCollapsed(c => !c)} style={{background:'transparent', border:'none', color:'white', cursor:'pointer'}}>{wpCollapsed ? '▸' : '▾'}</button>
           </div>
+          {!wpCollapsed && <>
+            {waypoints.map((wp, i) => (
+              <div key={i} style={{display: 'flex', gap: 6, marginBottom: 6, alignItems: 'center'}}>
+                <input type="number" step="0.1" placeholder="north" value={wp.x} onChange={(e)=>{
+                  const v = e.target.value === '' ? 0 : Number(e.target.value);
+                  const copy = [...waypoints]; copy[i] = {x:v,y:copy[i].y,z:copy[i].z}; setWaypoints(copy);
+                }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
+                <input type="number" step="0.1" placeholder="east" value={wp.y} onChange={(e)=>{
+                  const v = e.target.value === '' ? 0 : Number(e.target.value);
+                  const copy = [...waypoints]; copy[i] = {x:copy[i].x,y:v,z:copy[i].z}; setWaypoints(copy);
+                }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
+                <input type="number" min={0} max={3} step="0.1" placeholder="alt" value={wp.z} onChange={(e)=>{
+                  const raw = e.target.value;
+                  const num = raw === '' ? 0 : Number(raw);
+                  let v = Number.isNaN(num) ? 0 : Math.max(0, num);
+                  v = Math.min(3, v);
+                  const copy = [...waypoints]; copy[i] = {x:copy[i].x,y:copy[i].y,z:v}; setWaypoints(copy);
+                }} style={{width: '32%', background: '#ffffff', color: '#000000', padding: '4px', borderRadius: 4, border: '1px solid rgba(0,0,0,0.2)'}} />
+              </div>
+            ))}
+            <div style={{display:'flex', gap:6, marginTop:6}}>
+              <IonButton onClick={() => {
+                const newwps = Array.from({length:5}, () => ({x: (Math.random() * 6) - 3, y: (Math.random() * 6) - 3, z: (Math.random() * 3)}));
+                setWaypoints(newwps);
+              }}>
+                Regenerate Waypoints
+              </IonButton>
+            </div>
+          </>}
         </div>
       </IonContent>
     </IonPage>
