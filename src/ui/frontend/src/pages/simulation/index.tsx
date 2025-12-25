@@ -39,6 +39,11 @@ const Simulation: React.FC = () => {
   const [wpTolerance, setWpTolerance] = useState<number>(0.2);
   // enable/disable automatic scene rotation
   const [autoRotateEnabled, setAutoRotateEnabled] = useState<boolean>(true);
+  // mutable ref that always holds latest auto-rotate state for callbacks created earlier
+  const autoRotateRef = useRef<boolean>(autoRotateEnabled);
+  // follow mode: when true, camera will follow the quad (unless user interacts)
+  const [followQuad, setFollowQuad] = useState<boolean>(false);
+  const followQuadRef = useRef<boolean>(followQuad);
 
   // send waypoints to backend when changed
   useEffect(() => {
@@ -67,6 +72,8 @@ const Simulation: React.FC = () => {
         const objs = simulationObjects.current;
         if (objs && objs.controls) {
           objs.controls.autoRotate = Boolean(autoRotateEnabled) && !userInteractingRef.current;
+          // update ref so older timeouts use current value
+          autoRotateRef.current = Boolean(autoRotateEnabled);
         }
       } catch (e) { /* ignore */ }
     }, [autoRotateEnabled, threeLoaded]);
@@ -319,13 +326,13 @@ const Simulation: React.FC = () => {
       // resume auto-rotate after 3s of inactivity
       if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
       idleTimerRef.current = window.setTimeout(() => {
-        controls.autoRotate = autoRotateEnabled;
+        try { controls.autoRotate = !!autoRotateRef.current; } catch (e) {}
         idleTimerRef.current = null;
       }, 3000) as unknown as number;
     });
     // If the user never interacts, enable auto-rotate after initial idle
     if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
-    idleTimerRef.current = window.setTimeout(() => { controls.autoRotate = autoRotateEnabled; idleTimerRef.current = null; }, 3000) as unknown as number;
+    idleTimerRef.current = window.setTimeout(() => { try { controls.autoRotate = !!autoRotateRef.current; } catch(e) {} idleTimerRef.current = null; }, 3000) as unknown as number;
     const geometry1 = new THREE.BoxGeometry(0.6, 0.02, 0.02);
     const material1 = new THREE.MeshBasicMaterial({color: 0x00ff00});
     const cube1 = new THREE.Mesh(geometry1, material1);
@@ -526,6 +533,25 @@ const Simulation: React.FC = () => {
             cube3.rotation.y = gieren;
           } catch (e) { /* ignore cube update errors */ }
         }
+        // Camera follow mode: smoothly follow the quad when enabled and user not interacting
+        try {
+          // ensure we use the latest follow flag
+          if (followQuadRef.current && !userInteractingRef.current) {
+            // @ts-ignore
+            const THREE = window.THREE;
+            if (THREE && (model || cube1)) {
+              const target = new THREE.Vector3();
+              if (model && model.position) target.copy(model.position);
+              else target.set(cube1.position.x, cube1.position.y, cube1.position.z);
+              // desired camera offset relative to target
+              const camOffset = new THREE.Vector3(4, 2, 0);
+              const desired = new THREE.Vector3().copy(target).add(camOffset);
+              // smooth lerp the camera and controls.target
+              camera.position.lerp(desired, 0.16);
+              controls.target.lerp(target, 0.18);
+            }
+          }
+        } catch (e) { /* ignore follow errors */ }
         controls.update();
         renderer.render(scene, camera);
         animationRef.current = requestAnimationFrame(animate);
@@ -604,10 +630,30 @@ const Simulation: React.FC = () => {
           <IonButton onClick={() => {
             setAutoRotateEnabled(v => !v);
             // immediately update controls if present
-            try { const c = simulationObjects.current?.controls; if (c) c.autoRotate = !autoRotateEnabled && !userInteractingRef.current; } catch(e) {}
+            try { const c = simulationObjects.current?.controls; if (c) { const next = !autoRotateRef.current; c.autoRotate = next && !userInteractingRef.current; autoRotateRef.current = next; } } catch(e) {}
           }}>
             {autoRotateEnabled ? 'Auto-Rotate: On' : 'Auto-Rotate: Off'}
           </IonButton>
+          <IonButton onClick={() => {
+            // focus camera on quad/model
+            try {
+              const objs = simulationObjects.current;
+              // @ts-ignore
+              const THREE = window.THREE;
+              if (!objs || !objs.controls || !objs.camera || !THREE) return;
+              let target = new THREE.Vector3(0,0,0);
+              if (objs.model && objs.model.position) target.copy(objs.model.position);
+              else if (objs.cube1) target.set(objs.cube1.position.x, objs.cube1.position.y, objs.cube1.position.z);
+              // set camera to a reasonable offset relative to the quad
+              const camOffset = new THREE.Vector3(4, 2, 0);
+              objs.camera.position.copy(target).add(camOffset);
+              objs.controls.target.copy(target);
+              objs.controls.update();
+            } catch (e) { console.error('focus camera error', e); }
+          }}>Focus Quad</IonButton>
+          <IonButton onClick={() => {
+            setFollowQuad(f => { const next = !f; followQuadRef.current = next; return next; });
+          }}>{followQuad ? 'Following: On' : 'Following: Off'}</IonButton>
         </div>
         {/* Speed slider - centered at bottom */}
         <div style={{
