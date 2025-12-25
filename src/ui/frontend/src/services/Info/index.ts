@@ -12,7 +12,7 @@ export type InfoValues = {
   speed: number;
 };
 
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:5000";
 
 export async function getInfoValues(): Promise<InfoValues> {
   const res = await fetch(`${API_URL}/infoValues`);
