@@ -1,5 +1,6 @@
 import React from 'react';
-import { IonPage, IonContent, IonButton } from '@ionic/react';
+import Footer from '../../components/Footer';
+import { IonPage, IonContent, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonImg } from '@ionic/react';
 
 // try to read version from package.json at frontend package root
 // relative path from this file -> ../../../package.json
@@ -19,16 +20,30 @@ const Landing: React.FC = () => {
 		<IonPage>
 			<IonContent fullscreen style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24, background: 'transparent' }}>
 				{/* fixed full-screen background so Vite/public assets at /img/... are reliably shown */}
-					   <div style={{position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, backgroundImage: "url('/img/0001.jpeg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', zIndex: 0, pointerEvents: 'none'}} />
-					   <div style={{position: 'absolute', left:0, top:0, right:0, bottom:0, backgroundColor: 'rgba(0,0,0,0.35)', zIndex:1, pointerEvents: 'none'}} />
+					   {/* full-screen solid black background */}
+					   <div style={{position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, backgroundColor: '#2b2b2b', zIndex: 0, pointerEvents: 'none'}} />
+					   <div style={{position: 'absolute', left:0, top:0, right:0, bottom:0, backgroundColor: 'rgba(0,0,0,0.0)', zIndex:1, pointerEvents: 'none'}} />
 					   <div style={{position: 'relative', maxWidth: 800, margin: '0 auto', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', zIndex: 3, color: '#fff'}}>
 					<h1 style={{marginBottom: 8, color: '#fff'}}>THETAFLY</h1>
 					<p style={{color: 'rgba(255,255,255,0.9)', marginBottom: 20}}>Simulation and testbench frontend for Thetafly — control, visualize and tune your quadcopter.</p>
 
-					<div style={{marginTop: 16}}>
-						<div style={{display: 'flex', gap: 12, justifyContent: 'center'}}>
-							<IonButton href="/simulation" routerDirection="forward">Open Simulation</IonButton>
-							<IonButton href="/gui" routerDirection="forward" color="tertiary">Open GUI</IonButton>
+					<div style={{marginTop: 16, width: '100%'}}>
+						<div style={{display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap'}}>
+							<IonCard href="/simulation" routerDirection="forward" style={{width: 300, cursor: 'pointer', background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))', border: '1px solid rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', borderRadius: 12, overflow: 'hidden'}}>
+								<IonImg src={'/img/0001.jpeg'} style={{height: 160, objectFit: 'cover', filter: 'brightness(0.55) contrast(0.9)'}} />
+								<IonCardHeader style={{background: 'transparent', padding: '12px 16px'}}>
+									<IonCardTitle style={{ color: '#fff', fontSize: 18, fontWeight: 700 }}>Simulation</IonCardTitle>
+								</IonCardHeader>
+								<IonCardContent style={{minHeight: 12, paddingBottom: 18}} />
+							</IonCard>
+
+							<IonCard href="/gui" routerDirection="forward" style={{width: 300, cursor: 'pointer', background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))', border: '1px solid rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', borderRadius: 12, overflow: 'hidden'}}>
+								<IonImg src={'/img/0001.jpeg'} style={{height: 160, objectFit: 'cover', filter: 'brightness(0.5) contrast(0.9)'}} />
+								<IonCardHeader style={{background: 'transparent', padding: '12px 16px'}}>
+									<IonCardTitle style={{ color: '#fff', fontSize: 18, fontWeight: 700 }}>GUI</IonCardTitle>
+								</IonCardHeader>
+								<IonCardContent style={{minHeight: 12, paddingBottom: 18}} />
+							</IonCard>
 						</div>
 					</div>
 
@@ -44,9 +59,7 @@ const Landing: React.FC = () => {
 					</div>
 				</div>
 
-				<div style={{position: 'fixed', left: 0, right: 0, bottom: 12, display: 'flex', justifyContent: 'center', width: '100%'}}>
-					<small style={{color: 'rgba(255,255,255,0.6)'}}>© {new Date().getFullYear()} Thetafly</small>
-				</div>
+				<Footer />
 			</IonContent>
 		</IonPage>
 	);

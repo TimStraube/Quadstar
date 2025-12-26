@@ -22,7 +22,7 @@ const ControllerPanel: React.FC<Props> = ({ velP, setVelP, velI, setVelI, velD, 
   return (
     <div className="panel-root">
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6, cursor: 'pointer'}} onClick={() => setOpenPanel(op => op === 'controller' ? null : 'controller')}>
-        <div style={{fontWeight: 700}}>Controller</div>
+        <div style={{fontWeight: 700}}>CONTROLLER</div>
         <div className="panel-toggle" aria-hidden>{openPanel === 'controller' ? '▾' : '▸'}</div>
       </div>
       {openPanel === 'controller' && <>

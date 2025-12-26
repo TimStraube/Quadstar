@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Simulation from './pages/simulation';
@@ -36,6 +36,8 @@ import './theme/variables.css';
 import './global.css';
 import GUI from './pages/gui';
 import Landing from './pages/landing';
+import Contact from './pages/contact';
+import Imprint from './pages/imprint';
 
 setupIonicReact();
 
@@ -51,6 +53,12 @@ const App: React.FC = () => (
         </Route>
         <Route exact path="/settings">
           <Settings />
+        </Route>
+        <Route exact path="/contact">
+          <Contact />
+        </Route>
+        <Route exact path="/imprint">
+          <Imprint />
         </Route>
         <Route exact path="/">
           <Landing />

@@ -2,15 +2,16 @@ import React, { useMemo, useState } from 'react';
 
 type Sample = { t: number; p: number }; // t = unix seconds, p = watts
 
-interface Props {
+ interface Props {
   samples: Sample[];
   // keep these props optional so the panel is independent
   openPanel?: string | null;
   setOpenPanel?: (s: string | null) => void;
-}
+  asideList?: React.ReactNode;
+ }
 
 // Collapsible SVG sparkline + total energy (last minute)
-const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel }) => {
+const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel, asideList }) => {
   const now = Date.now() / 1000;
   const windowStart = now - 60;
 
@@ -55,7 +56,7 @@ const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel }) => {
     return (
       <div className="panel-root" style={{ position: 'fixed', right: 12, bottom: 12, width: 220, zIndex: 400, cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontWeight: 700 }}>Energy</div>
+          <div style={{ fontWeight: 700 }}>ENERGY</div>
           <div style={{ fontSize: 12, opacity: 0.9 }}>{(energyJ / 1000).toFixed(3)} kJ</div>
         </div>
       </div>
@@ -84,6 +85,11 @@ const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel }) => {
           {path && <path d={`${path} L 276 60 L 4 60 Z`} fill="url(#g)" opacity={0.18} />}
         </svg>
       </div>
+      {asideList && (
+        <div className="energy-aside-list" style={{ marginTop: 8 }}>
+          {asideList}
+        </div>
+      )}
     </div>
   );
 };

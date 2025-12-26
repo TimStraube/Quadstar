@@ -5,12 +5,16 @@ import ParamsPanel from './components/ParamsPanel';
 import SimulationPanel from './components/SimulationPanel';
 import PositionPanel from './components/PositionPanel';
 import EnergyPanel from './components/EnergyPanel';
+import OptimizerPanel from './components/OptimizerPanel';
 import { getPidValues, setPidValues, postWaypoints } from '../../services/Info';
 import {
   IonContent,
   IonPage,
-  IonButton
+  IonButton,
+  IonIcon,
+  useIonViewWillEnter
 } from "@ionic/react";
+import { settings as settingsIcon, home as homeIcon } from 'ionicons/icons';
 
 const Simulation: React.FC = () => {
   const [running, setRunning] = useState(true); // start simulation automatically when page opens
@@ -18,7 +22,7 @@ const Simulation: React.FC = () => {
   const animationRef = useRef<number | null>(null);
   const pollingRef = useRef<boolean>(false);
   const [threeLoaded, setThreeLoaded] = useState(false);
-  const [speed, setSpeed] = useState<number>(1.0); // simulation speed multiplier
+  const [speed, setSpeed] = useState<number>(() => { try { const v = localStorage.getItem('sim.defaultSpeed'); return v === null ? 1.0 : Number(v); } catch(e) { return 1.0; } }); // simulation speed multiplier
   // sliderVal is linear 0..1 but maps to speed logarithmically between minSpeed and maxSpeed
   const minSpeed = 0.25;
   const maxSpeed = 100;
@@ -30,6 +34,11 @@ const Simulation: React.FC = () => {
     return minSpeed * Math.pow(maxSpeed / minSpeed, v);
   };
   const [sliderVal, setSliderVal] = useState<number>(speedToSlider(speed));
+  const speedRef = useRef<number>(speed);
+  useEffect(() => {
+    speedRef.current = speed;
+    try { setSliderVal(speedToSlider(speed)); } catch(e) {}
+  }, [speed]);
   const [energySamples, setEnergySamples] = useState<Array<{t:number,p:number}>>([]);
   const simulationObjects = useRef<any>({});
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -51,16 +60,28 @@ const Simulation: React.FC = () => {
   // follow mode: when true, camera will follow the quad (unless user interacts)
   const [followQuad, setFollowQuad] = useState<boolean>(false);
   const followQuadRef = useRef<boolean>(followQuad);
+  // show/hide grid in the scene
+  const [showGrid, setShowGrid] = useState<boolean>(() => { try { const v = localStorage.getItem('sim.showGrid'); return v === null ? true : v === '1'; } catch(e){ return true; } });
+  const showGridRef = useRef<boolean>(showGrid);
   // initialize settings from localStorage and listen for changes from settings page
   useEffect(() => {
     try {
       const f = localStorage.getItem('sim.followQuad');
       const a = localStorage.getItem('sim.autoRotate');
+      const g = localStorage.getItem('sim.showGrid');
+      const ds = localStorage.getItem('sim.defaultSpeed');
       if (f !== null) {
         const fv = f === '1'; setFollowQuad(fv); followQuadRef.current = fv;
       }
       if (a !== null) {
         const av = a === '1'; setAutoRotateEnabled(av); autoRotateRef.current = av;
+      }
+      if (g !== null) {
+        const gv = g === '1'; setShowGrid(gv); showGridRef.current = gv;
+      }
+      if (ds !== null) {
+        const v = Number(ds);
+        if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
       }
     } catch (e) {}
     const handler = (ev: any) => {
@@ -68,6 +89,19 @@ const Simulation: React.FC = () => {
         const d = ev?.detail || {};
         if (typeof d.follow === 'boolean') { setFollowQuad(d.follow); followQuadRef.current = d.follow; }
         if (typeof d.autoRotate === 'boolean') { setAutoRotateEnabled(d.autoRotate); autoRotateRef.current = d.autoRotate; }
+        if (typeof d.showGrid === 'boolean') {
+          setShowGrid(d.showGrid); showGridRef.current = d.showGrid;
+          try {
+            const gh = simulationObjects.current?.gridHelper; if (gh) gh.visible = d.showGrid;
+          } catch(e) {}
+          try {
+            const gp = simulationObjects.current?.groundPlane; if (gp) gp.visible = d.showGrid;
+          } catch(e) {}
+        }
+        if (typeof d.defaultSpeed !== 'undefined') {
+          const v = Number(d.defaultSpeed);
+          if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
+        }
         // if controls exist, update them immediately
         try { const c = simulationObjects.current?.controls; if (c) c.autoRotate = autoRotateRef.current && !userInteractingRef.current; } catch(e) {}
       } catch(e){}
@@ -75,6 +109,32 @@ const Simulation: React.FC = () => {
     window.addEventListener('settingsChanged', handler as EventListener);
     return () => { window.removeEventListener('settingsChanged', handler as EventListener); };
   }, []);
+
+  // Re-apply settings when the view becomes active (handles Ionic page caching)
+  useIonViewWillEnter(() => {
+    try {
+      const f = localStorage.getItem('sim.followQuad');
+      const a = localStorage.getItem('sim.autoRotate');
+      const g = localStorage.getItem('sim.showGrid');
+      const ds = localStorage.getItem('sim.defaultSpeed');
+      if (f !== null) {
+        const fv = f === '1'; setFollowQuad(fv); followQuadRef.current = fv;
+      }
+      if (a !== null) {
+        const av = a === '1'; setAutoRotateEnabled(av); autoRotateRef.current = av;
+      }
+      if (g !== null) {
+        const gv = g === '1'; setShowGrid(gv); showGridRef.current = gv; try { const gh = simulationObjects.current?.gridHelper; if (gh) gh.visible = gv; } catch(e) {}
+        try { const gp = simulationObjects.current?.groundPlane; if (gp) gp.visible = gv; } catch(e) {}
+      }
+      if (ds !== null) {
+        const v = Number(ds);
+        if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
+      }
+      // Update controls immediately if present
+      try { const c = simulationObjects.current?.controls; if (c) c.autoRotate = autoRotateRef.current && !userInteractingRef.current; } catch(e) {}
+    } catch (e) {}
+  });
   // which panel is currently open: 'waypoints' | 'pid' | 'position' | null
   const [openPanel, setOpenPanel] = useState<string | null>('waypoints');
   const [singlePos, setSinglePos] = useState<{north:number,east:number,alt:number}>({north:0,east:0,alt:0});
@@ -491,6 +551,8 @@ const Simulation: React.FC = () => {
     const gridHelper = new THREE.GridHelper(10, 20, 0x444444, 0x444444);
     gridHelper.position.y = 0.01;
     scene.add(gridHelper);
+    try { gridHelper.visible = !!showGridRef.current; } catch(e) {}
+    try { groundPlane.visible = !!showGridRef.current; } catch(e) {}
     // Add simple lighting so GLTF models are visible
     try {
       const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
@@ -601,6 +663,8 @@ const Simulation: React.FC = () => {
       waypointClosingLine: null,
       pickable,
       raycaster,
+      gridHelper,
+      groundPlane,
       _onPointerDown: onPointerDown
     };
     // set initial quad visual positions and render once so scene is visible before Play
@@ -661,6 +725,10 @@ const Simulation: React.FC = () => {
         const timeElement = document.getElementById('time');
         // Display time with lowercase 't' and ' sec' suffix, formatted to 2 decimals
         if (timeElement) timeElement.textContent = `t = ${Number(t).toFixed(2)} s`;
+        try {
+          const speedElem = document.getElementById('speedLabel');
+          if (speedElem) speedElem.textContent = `${Number(speedRef.current || 1).toFixed(2)}x`;
+        } catch(e) {}
         // schedule next poll only while running, delay controlled by slider
         if (pollingRef.current) setTimeout(connectServer, pollingDelayRef.current);
         // update active waypoint index if provided by backend
@@ -828,6 +896,13 @@ const Simulation: React.FC = () => {
       } catch(e){}
       document.querySelectorAll('canvas').forEach(c => c.remove());
       setTimeout(() => {
+        try {
+          const ds = localStorage.getItem('sim.defaultSpeed');
+          if (ds !== null) {
+            const v = Number(ds);
+            if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
+          }
+        } catch(e) {}
         setupScene();
         setResetFlag(false);
       }, 100);
@@ -852,11 +927,16 @@ const Simulation: React.FC = () => {
           pointerEvents: 'none'
         }}>
           <h1 id="time">t = 0.00 s</h1>
+          <div id="speedLabel" style={{fontSize: '12px', marginTop: '2px', opacity: 0.9}}>1.00x</div>
         </div>
         {/* Landing + Settings buttons top-right */}
         <div style={{position: 'fixed', top: 12, right: 12, zIndex: 300, pointerEvents: 'auto', display: 'flex', gap: '8px'}}>
-          <IonButton href="/" routerDirection="forward" color="primary" style={{ marginRight: 4 }}>Landing</IonButton>
-          <IonButton href="/settings" routerDirection="forward" color="tertiary">Einstellungen</IonButton>
+          <IonButton href="/" routerDirection="forward" title="Landing" aria-label="Landing" className="panel-icon-button" style={{marginRight:4}}>
+            <IonIcon icon={homeIcon} slot="icon-only" style={{fontSize:20}} />
+          </IonButton>
+          <IonButton href="/settings" routerDirection="forward" title="Einstellungen" aria-label="Einstellungen" className="panel-icon-button">
+            <IonIcon icon={settingsIcon} slot="icon-only" style={{fontSize:20}} />
+          </IonButton>
         </div>
         <div
           id="three-canvas-container"
@@ -941,7 +1021,11 @@ const Simulation: React.FC = () => {
           schedulePidSend={schedulePidSend}
           />
         </div>
-        <EnergyPanel samples={energySamples} openPanel={openPanel} setOpenPanel={setOpenPanel} />
+        <EnergyPanel samples={energySamples} openPanel={openPanel} setOpenPanel={setOpenPanel} asideList={
+          <>
+            <OptimizerPanel waypoints={waypoints} speed={sliderToSpeed(sliderVal)} baseMass={mass} payloadMass={0} />
+          </>
+        } />
       </IonContent>
     </IonPage>
   );

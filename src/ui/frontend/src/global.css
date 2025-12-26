@@ -1,11 +1,30 @@
 /* Global styles for the frontend UI */
 :root{
+	--ion-background-color: #2b2b2b;
 	--panel-bg: rgba(0,0,0,0.6);
 	--panel-color: #ffffff;
 	--input-bg: rgba(255,255,255,0.04);
 	--input-border: rgba(255,255,255,0.15);
 	--input-padding: 6px;
 	--input-radius: 4px;
+}
+
+/* Load Orbitron font from public folder */
+@font-face {
+	font-family: 'Orbitron';
+	src: url('/fonts/Orbitron-Regular.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+
+/* Make app background fully black and ensure readable text */
+html, body, #root, ion-app, ion-content {
+	background-color: #2b2b2b !important;
+	/* softer general text color to avoid full-white everywhere */
+	color: #ddd !important;
+	font-family: 'Orbitron', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* Transparent input used across panels */
@@ -32,6 +51,48 @@
 	box-sizing: border-box;
 }
 
+/* Icon buttons that visually match the panel background */
+.panel-icon-button {
+	/* lighter, subtle glass-like button matching panel feel but less black */
+	background: rgba(255,255,255,0.025) !important;
+	color: var(--panel-color) !important;
+	border-radius: 8px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 40px !important;
+	height: 40px !important;
+	min-width: 40px !important;
+	padding: 0 !important;
+	border: 1px solid rgba(255,255,255,0.06) !important;
+	box-shadow: none !important;
+}
+.panel-icon-button ion-icon {
+	color: var(--panel-color) !important;
+}
+.panel-icon-button:hover {
+	background: rgba(255,255,255,0.045) !important;
+}
+
+/* Stronger Ionic variable overrides to prevent primary-blue from leaking in */
+.panel-icon-button {
+	--background: var(--panel-bg) !important;
+	--background-activated: rgba(255,255,255,0.03) !important;
+	--background-focused: rgba(255,255,255,0.02) !important;
+	--background-hover: rgba(255,255,255,0.03) !important;
+	--color: var(--panel-color) !important;
+	--ripple-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Also handle cases where Ionic adds color classes like .ion-color-primary */
+.panel-icon-button.ion-color-primary,
+.panel-icon-button.ion-color-primary:hover,
+.panel-icon-button.ion-color-primary:active {
+	--background: var(--panel-bg) !important;
+	--background-hover: rgba(255,255,255,0.03) !important;
+	--color: var(--panel-color) !important;
+}
+
 /* Stack container for top-left panels */
 .panel-stack{
 	position: fixed;
@@ -42,6 +103,18 @@
 	flex-direction: column;
 	gap: 8px;
 	pointer-events: auto;
+}
+
+/* small list area inside Energy panel to host small panels (e.g., optimizer) */
+.energy-aside-list{
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.energy-aside-list .panel-root{
+	width: 100%;
+	box-sizing: border-box;
 }
 
 /* Bottom control bar (pill) */
@@ -84,7 +157,7 @@
 .control-button{
 	background: transparent;
 	border: none;
-	color: white;
+	color: #ddd;
 	padding: 8px 12px;
 	border-radius: 8px;
 	cursor: pointer;
@@ -97,7 +170,35 @@
 .panel-toggle{
 	background: transparent;
 	border: none;
-	color: white;
+	color: #ddd;
 	cursor: pointer;
 }
+
+
+
+/* Improve visibility for form controls on dark background */
+ion-item, .ion-item {
+	background: transparent !important;
+	color: inherit !important;
+}
+
+ion-label, .ion-label {
+	color: #e6e6e6 !important;
+}
+
+ion-input, ion-textarea, input, textarea, .textarea-native, .input-native {
+	background: var(--input-bg) !important;
+	color: #ddd !important;
+	border-radius: 6px;
+	padding: 6px 8px !important;
+}
+
+ion-card-title, .ion-card-title {
+	color: #fff !important;
+}
+
+input::placeholder, textarea::placeholder {
+	color: rgba(255,255,255,0.55) !important;
+}
+
 
