@@ -44,6 +44,55 @@
 	pointer-events: auto;
 }
 
+/* Bottom control bar (pill) */
+.control-bar{
+	position: fixed;
+	bottom: 8px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 500;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 8px 18px;
+	background: rgba(0,0,0,0.45);
+	border-radius: 999px;
+	box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+	pointer-events: auto;
+	overflow: hidden;
+}
+
+/* subtle soft fades on left and right sides of the pill */
+.control-bar::before,
+.control-bar::after{
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 18px;
+	pointer-events: none;
+}
+.control-bar::before{
+	left: -12px;
+	background: linear-gradient(90deg, rgba(0,0,0,0.0), rgba(0,0,0,0.45));
+}
+.control-bar::after{
+	right: -12px;
+	background: linear-gradient(270deg, rgba(0,0,0,0.0), rgba(0,0,0,0.45));
+}
+
+.control-button{
+	background: transparent;
+	border: none;
+	color: white;
+	padding: 8px 12px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+.control-button:hover{
+	background: rgba(255,255,255,0.04);
+}
+
 /* Small toggle button style used in headers */
 .panel-toggle{
 	background: transparent;

@@ -3,6 +3,7 @@ import WaypointsPanel from './components/WaypointsPanel';
 import ControllerPanel from './components/ControllerPanel';
 import ParamsPanel from './components/ParamsPanel';
 import SimulationPanel from './components/SimulationPanel';
+import PositionPanel from './components/PositionPanel';
 import { getPidValues, setPidValues, postWaypoints } from '../../services/Info';
 import {
   IonContent,
@@ -741,30 +742,11 @@ const Simulation: React.FC = () => {
           }}
         />
         
-        {/* Centered Play / Reset bar above sliders */}
-        <div style={{
-          position: 'fixed',
-          bottom: 100,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 210,
-          width: '360px',
-          maxWidth: '80%',
-          background: 'rgba(0,0,0,0.35)',
-          padding: '8px 12px',
-          borderRadius: 8,
-          color: 'white',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 12,
-          pointerEvents: 'auto'
-        }}>
-          <IonButton onClick={() => { setRunning(r => !r); }}>
-            {running ? 'Pause' : 'Play'}
-          </IonButton>
-          <IonButton onClick={resetSimulation}>Reset</IonButton>
-          <IonButton onClick={focusCamera}>Focus</IonButton>
+        {/* Bottom docked Play / Reset pill */}
+        <div className="control-bar">
+          <button className="control-button" onClick={() => { setRunning(r => !r); }}>{running ? 'Pause' : 'Play'}</button>
+          <button className="control-button" onClick={resetSimulation}>Reset</button>
+          <button className="control-button" onClick={focusCamera}>Focus</button>
         </div>
         <div className="panel-stack">
           <WaypointsPanel
@@ -779,6 +761,13 @@ const Simulation: React.FC = () => {
             singlePos={singlePos}
             setSinglePos={setSinglePos}
             simulationObjects={simulationObjects}
+          />
+          <PositionPanel
+            singlePos={singlePos}
+            setSinglePos={setSinglePos}
+            simulationObjects={simulationObjects}
+            openPanel={openPanel}
+            setOpenPanel={setOpenPanel}
           />
           <SimulationPanel
             sliderVal={sliderVal}
