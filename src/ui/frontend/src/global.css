@@ -1,3 +1,19 @@
+/* Ensure the three-canvas container reserves space for fixed footer/control on small screens
+	 so the footer does not overlap content and the page becomes scrollable if needed. */
+#three-canvas-container {
+	height: 100vh;
+}
+@media (max-width: 720px) {
+	/* reserve space at bottom for control-bar + footer */
+	#three-canvas-container {
+		height: calc(100vh - 140px);
+	}
+
+	/* additionally ensure the overall page has bottom padding so other content isn't hidden */
+	ion-content, .ion-page, body, #root {
+		padding-bottom: 160px !important;
+	}
+}
 /* Global styles for the frontend UI */
 :root{
 	--ion-background-color: #2b2b2b;
@@ -7,6 +23,25 @@
 	--input-border: rgba(255,255,255,0.15);
 	--input-padding: 6px;
 	--input-radius: 4px;
+}
+
+/* Responsive: on small screens hide side panels and only show minimal controls */
+@media (max-width: 720px) {
+	.panel-stack, .panel-stack-bottom-right {
+		display: none !important;
+	}
+	/* make control bar slightly larger and centered for thumb access */
+	.control-bar {
+		bottom: 12px;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 10px 16px;
+		gap: 8px;
+	}
+	.control-button {
+		padding: 10px 12px;
+		font-size: 16px;
+	}
 }
 
 /* Load Orbitron font from public folder */
@@ -96,11 +131,11 @@ html, body, #root, ion-app, ion-content {
 /* Stack container for top-left panels */
 .panel-stack{
 	position: fixed;
-	top: 12px;
+	bottom: 12px;
 	left: 12px;
 	z-index: 300;
 	display: flex;
-	flex-direction: column;
+	flex-direction: column-reverse; /* render first child at bottom */
 	gap: 8px;
 	pointer-events: auto;
 }
@@ -178,12 +213,98 @@ html, body, #root, ion-app, ion-content {
 	background: rgba(255,255,255,0.04);
 }
 
+/* PayPal styled button */
+.paypal-button {
+	/* Match the app's accent blue used in progress bars and controls */
+	--background: #4da6ff !important;
+	background: linear-gradient(180deg, #59b0ff, #4da6ff) !important;
+	color: #fff !important;
+	border: 1px solid rgba(77,166,255,0.18) !important;
+	box-shadow: 0 6px 14px rgba(77,166,255,0.09) !important;
+	/* Make rectangular button consistent with other UI buttons */
+	--border-radius: 8px !important;
+	border-radius: 8px !important;
+	--padding-start: 12px !important;
+	--padding-end: 12px !important;
+	--min-height: 36px !important;
+	height: auto !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+.paypal-button ion-icon {
+	color: #fff !important;
+}
+.paypal-button:hover {
+	filter: brightness(1.02) !important;
+}
+
 /* Small toggle button style used in headers */
 .panel-toggle{
 	background: transparent;
 	border: none;
 	color: #ddd;
 	cursor: pointer;
+}
+
+/* Footer layout and responsive adjustments */
+.footer-bar{
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 50;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px 20px;
+	background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.6));
+	gap: 12px;
+}
+.footer-links-left, .footer-links-right{
+	display: flex;
+	gap: 18px;
+	align-items: center;
+}
+.footer-link{
+	color: rgba(255,255,255,0.9);
+	text-decoration: none;
+	font-size: 14px;
+	padding: 6px 8px;
+	border-radius: 6px;
+}
+.footer-link:hover{ background: rgba(255,255,255,0.02); }
+.footer-copy{
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 12px;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	z-index: 60;
+	pointer-events: none;
+	color: rgba(255,255,255,0.6);
+}
+
+@media (max-width: 720px) {
+	.footer-bar{
+		flex-direction: column;
+		align-items: center;
+		padding: 14px 16px;
+		gap: 8px;
+		bottom: 56px; /* leave space for control-bar */
+	}
+	.footer-links-left, .footer-links-right{
+		width: 100%;
+		justify-content: center;
+		gap: 12px;
+	}
+	.footer-link{
+		font-size: 16px;
+		padding: 10px 12px;
+	}
+	.footer-copy{ bottom: 12px; font-size: 13px; }
 }
 
 

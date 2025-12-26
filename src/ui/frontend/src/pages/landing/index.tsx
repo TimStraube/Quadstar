@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from '../../components/Footer';
-import { IonPage, IonContent, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonImg } from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonImg, IonIcon } from '@ionic/react';
+import { logoPaypal } from 'ionicons/icons';
 
 // try to read version from package.json at frontend package root
 // relative path from this file -> ../../../package.json
@@ -25,7 +26,7 @@ const Landing: React.FC = () => {
 					   <div style={{position: 'absolute', left:0, top:0, right:0, bottom:0, backgroundColor: 'rgba(0,0,0,0.0)', zIndex:1, pointerEvents: 'none'}} />
 					   <div style={{position: 'relative', maxWidth: 800, margin: '0 auto', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', zIndex: 3, color: '#fff'}}>
 					<h1 style={{marginBottom: 8, color: '#fff'}}>THETAFLY</h1>
-					<p style={{color: 'rgba(255,255,255,0.9)', marginBottom: 20}}>Simulation and testbench frontend for Thetafly — control, visualize and tune your quadcopter.</p>
+					<p style={{color: 'rgba(255,255,255,0.9)', marginBottom: 20}}>Wingcopter simulator.</p>
 
 					<div style={{marginTop: 16, width: '100%'}}>
 						<div style={{display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap'}}>
@@ -34,7 +35,7 @@ const Landing: React.FC = () => {
 								<IonCardHeader style={{background: 'transparent', padding: '12px 16px'}}>
 									<IonCardTitle style={{ color: '#fff', fontSize: 18, fontWeight: 700 }}>Simulation</IonCardTitle>
 								</IonCardHeader>
-								<IonCardContent style={{minHeight: 12, paddingBottom: 18}} />
+								<IonCardContent style={{minHeight: 0, paddingBottom: 0}} />
 							</IonCard>
 
 							{/* <IonCard href="/gui" routerDirection="forward" style={{width: 300, cursor: 'pointer', background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))', border: '1px solid rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', borderRadius: 12, overflow: 'hidden'}}>
@@ -49,8 +50,11 @@ const Landing: React.FC = () => {
 
 					<div style={{marginTop: 36}}>
 						<p style={{color: 'rgba(255,255,255,0.9)'}}>If you find this project useful, consider supporting development:</p>
-						<a href="https://www.patreon.com/" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}>
-							<IonButton color="secondary">Support on Patreon</IonButton>
+						<a href="https://www.paypal.com/donate" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}>
+							<IonButton className="paypal-button">
+								<IonIcon icon={logoPaypal} slot="start" />
+								Support
+							</IonButton>
 						</a>
 					</div>
 

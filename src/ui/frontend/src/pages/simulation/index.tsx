@@ -176,8 +176,23 @@ const Simulation: React.FC = () => {
 
   // send waypoints to backend when changed
   useEffect(() => {
-    // update visualization
-    // update visualization for all waypoints
+    // cleanup any leftover waypoint meshes for indices that no longer exist
+    try {
+      const objs = simulationObjects.current || {};
+      if (objs && Array.isArray(objs.waypointMeshes) && objs.waypointGroup) {
+        for (let idx = waypoints.length; idx < objs.waypointMeshes.length; idx++) {
+          const existing = objs.waypointMeshes[idx];
+          if (existing) {
+            try { objs.waypointGroup.remove(existing); } catch(e) {}
+            try { if (existing.geometry) existing.geometry.dispose(); } catch(e) {}
+            try { if (existing.material) existing.material.dispose(); } catch(e) {}
+            objs.waypointMeshes[idx] = null;
+          }
+        }
+      }
+    } catch (e) { /* ignore cleanup errors */ }
+
+    // update visualization for all current waypoints
     waypoints.forEach((_, i) => {
       try { createOrUpdateWaypoint(i); } catch (e) { /* ignore */ }
     });
@@ -929,11 +944,15 @@ const Simulation: React.FC = () => {
           <h1 id="time">t = 0.00 s</h1>
           <div id="speedLabel" style={{fontSize: '12px', marginTop: '2px', opacity: 0.9}}>1.00x</div>
         </div>
-        {/* Landing + Settings buttons top-right */}
-        <div style={{position: 'fixed', top: 12, right: 12, zIndex: 300, pointerEvents: 'auto', display: 'flex', gap: '8px'}}>
+        {/* Home button top-left */}
+        <div style={{position: 'fixed', top: 12, left: 12, zIndex: 300, pointerEvents: 'auto', display: 'flex', gap: '8px'}}>
           <IonButton href="/" routerDirection="forward" title="Landing" aria-label="Landing" className="panel-icon-button" style={{marginRight:4}}>
             <IonIcon icon={homeIcon} slot="icon-only" style={{fontSize:20}} />
           </IonButton>
+        </div>
+
+        {/* Settings button remains top-right */}
+        <div style={{position: 'fixed', top: 12, right: 12, zIndex: 300, pointerEvents: 'auto', display: 'flex', gap: '8px'}}>
           <IonButton href="/settings" routerDirection="forward" title="Einstellungen" aria-label="Einstellungen" className="panel-icon-button">
             <IonIcon icon={settingsIcon} slot="icon-only" style={{fontSize:20}} />
           </IonButton>
@@ -1023,7 +1042,7 @@ const Simulation: React.FC = () => {
         </div>
         <div className="panel-stack-bottom-right">
           <EnergyPanel samples={energySamples} openPanel={openPanel} setOpenPanel={setOpenPanel} />
-          <OptimizerPanel waypoints={waypoints} speed={sliderToSpeed(sliderVal)} baseMass={mass} payloadMass={0} />
+          <OptimizerPanel waypoints={waypoints} speed={sliderToSpeed(sliderVal)} baseMass={mass} payloadMass={0} simulationObjects={simulationObjects} />
         </div>
       </IonContent>
     </IonPage>
