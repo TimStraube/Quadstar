@@ -6,6 +6,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonButton,
 } from "@ionic/react";
 import React, { useState } from "react";
 import { connectJoystick, disconnectJoystick } from "../../services/Joystick";
@@ -77,6 +78,9 @@ const GUI: React.FC = () => {
         fullscreen
         className="ion-content"
       >
+        <IonButton href="/" routerDirection="back" color="tertiary" style={{ position: 'fixed', top: 12, left: 12, zIndex: 800 }}>
+          Landing
+        </IonButton>
         <IonGrid
           style={{
             height: "100vh",

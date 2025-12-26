@@ -27,7 +27,7 @@ const RotatingCube: React.FC<{ quaternion: { w: number; x: number; y: number; z:
       <directionalLight position={[2, 2, 2]} />
       <mesh rotation={[roll, pitch, yaw]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#1976d2" />
+        <meshStandardMaterial color="#90a4ae" />
       </mesh>
     </Canvas>
   );
@@ -53,9 +53,9 @@ const InfoCard: React.FC<{ cardClass: (base: string) => string }> = ({ cardClass
         <div style={{ width: "100%", height: "220px", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "32px", marginBottom: "16px" }}>
           <RotatingCube quaternion={quaternion} />
           {/* Künstliche Flugzeug-Lageanzeige */}
-          <div style={{ width: "140px", height: "140px", borderRadius: "50%", background: "#e3f2fd", boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: "140px", height: "140px", borderRadius: "50%", background: "var(--input-bg)", boxShadow: "0 2px 8px rgba(0,0,0,0.3)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }} className="panel-circle">
             <svg width="140" height="140" viewBox="0 0 140 140" style={{ position: "absolute", left: 0, top: 0 }}>
-              <circle cx="70" cy="70" r="68" stroke="#1976d2" strokeWidth="4" fill="#e3f2fd" />
+              <circle cx="70" cy="70" r="68" className="horizon-circle" strokeWidth="4" />
               {/* Horizont-Linie: Pitch */}
               {(() => {
                 // Roll und Pitch aus Quaternion
@@ -76,20 +76,20 @@ const InfoCard: React.FC<{ cardClass: (base: string) => string }> = ({ cardClass
                 const y1 = 70 + r * Math.sin(angle + Math.PI/2);
                 const x2 = px + r * Math.cos(angle - Math.PI/2);
                 const y2 = 70 + r * Math.sin(angle - Math.PI/2);
-                return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#d32f2f" strokeWidth="6" />;
+                return <line x1={x1} y1={y1} x2={x2} y2={y2} className="horizon-line" strokeWidth="6" />;
               })()}
               {/* Flugzeug-Symbol */}
-              <rect x="60" y="65" width="20" height="10" rx="4" fill="#1976d2" />
-              <rect x="67" y="60" width="6" height="20" rx="3" fill="#1976d2" />
+              <rect x="60" y="65" width="20" height="10" rx="4" className="aircraft-box" />
+              <rect x="67" y="60" width="6" height="20" rx="3" className="aircraft-box" />
             </svg>
           </div>
         </div>
         {/* Geschwindigkeit */}
         <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "24px" }}>
-          <div style={{ background: "#e3f2fd", borderRadius: "18px", boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)", padding: "18px 36px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <div style={{ fontSize: "1.3em", color: "#1976d2", fontWeight: "bold", marginBottom: "8px" }}>Geschwindigkeit</div>
-            <div style={{ fontSize: "2em", color: "#1976d2", fontWeight: "bold", marginTop: "8px" }}>{speed.toFixed(2)} m/s</div>
-            <div style={{ fontSize: "1em", color: "#555" }}>horizontal</div>
+          <div style={{ background: "var(--input-bg)", borderRadius: "18px", boxShadow: "0 2px 8px rgba(0,0,0,0.3)", padding: "18px 36px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ fontSize: "1.3em", color: "var(--panel-color)", fontWeight: "bold", marginBottom: "8px" }}>Geschwindigkeit</div>
+            <div style={{ fontSize: "2em", color: "var(--panel-color)", fontWeight: "bold", marginTop: "8px" }}>{speed.toFixed(2)} m/s</div>
+            <div style={{ fontSize: "1em", color: "rgba(255,255,255,0.8)" }}>horizontal</div>
           </div>
         </div>
       </IonCardContent>

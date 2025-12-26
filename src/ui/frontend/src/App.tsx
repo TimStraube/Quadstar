@@ -49,14 +49,11 @@ const App: React.FC = () => (
         <Route exact path="/simulation">
           <Simulation />
         </Route>
-        <Route exact path="/landing">
-          <Landing />
-        </Route>
         <Route exact path="/settings">
           <Settings />
         </Route>
         <Route exact path="/">
-          <Redirect to="/simulation" />
+          <Landing />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

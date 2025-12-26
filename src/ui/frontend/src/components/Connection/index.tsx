@@ -41,7 +41,7 @@ const ConnectionCard: React.FC<{
         <span className={connected ? "lamp lamp-green lamp-large" : "lamp lamp-red lamp-large"} style={{ marginLeft: "12px" }}></span>
       </div>
       <div style={{ marginTop: "18px" }}>
-        <div style={{ fontWeight: "bold", color: "#fff", marginBottom: "6px", display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ fontWeight: "bold", color: "var(--panel-color)", marginBottom: "6px", display: "flex", alignItems: "center", gap: "10px" }}>
           Joystick Verbindung
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

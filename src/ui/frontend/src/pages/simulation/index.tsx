@@ -13,7 +13,7 @@ import {
 } from "@ionic/react";
 
 const Simulation: React.FC = () => {
-  const [running, setRunning] = useState(false);
+  const [running, setRunning] = useState(true); // start simulation automatically when page opens
   const [resetFlag, setResetFlag] = useState(false);
   const animationRef = useRef<number | null>(null);
   const pollingRef = useRef<boolean>(false);
@@ -853,8 +853,9 @@ const Simulation: React.FC = () => {
         }}>
           <h1 id="time">t = 0.00 s</h1>
         </div>
-        {/* Settings button top-right */}
-        <div style={{position: 'fixed', top: 12, right: 12, zIndex: 300, pointerEvents: 'auto'}}>
+        {/* Landing + Settings buttons top-right */}
+        <div style={{position: 'fixed', top: 12, right: 12, zIndex: 300, pointerEvents: 'auto', display: 'flex', gap: '8px'}}>
+          <IonButton href="/" routerDirection="forward" color="primary" style={{ marginRight: 4 }}>Landing</IonButton>
           <IonButton href="/settings" routerDirection="forward" color="tertiary">Einstellungen</IonButton>
         </div>
         <div
