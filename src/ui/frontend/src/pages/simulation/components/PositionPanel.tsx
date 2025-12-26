@@ -37,9 +37,9 @@ const PositionPanel: React.FC<Props> = ({ singlePos, setSinglePos, simulationObj
 
   return (
     <div className="panel-root">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => setOpenPanel(op => op === 'position' ? null : 'position')}>
         <div style={{ fontWeight: 700 }}>Set Position</div>
-        <button className="panel-toggle" onClick={() => setOpenPanel(op => op === 'position' ? null : 'position')}>{isOpen ? '▾' : '▸'}</button>
+        <div className="panel-toggle" aria-hidden>{isOpen ? '▾' : '▸'}</div>
       </div>
 
       {isOpen && (

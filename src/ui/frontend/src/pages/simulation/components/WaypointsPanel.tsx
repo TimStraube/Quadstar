@@ -20,12 +20,12 @@ interface Props {
 const WaypointsPanel: React.FC<Props> = ({ waypoints, setWaypoints, wpTolerance, setWpTolerance, openPanel, setOpenPanel, activeWaypoint, setActiveWaypoint, singlePos, setSinglePos, simulationObjects }) => {
   return (
     <div className="panel-root">
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6}}>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6, cursor:'pointer'}} onClick={() => setOpenPanel(op => op === 'waypoints' ? null : 'waypoints')}>
         <div style={{display:'flex', gap:8, alignItems:'center'}}>
-          <div style={{fontWeight:700}}>Waypoints (north, east, alt)</div>
+          <div style={{fontWeight:700}}>Waypoints</div>
         </div>
         <div style={{display: 'flex', gap: 6, alignItems: 'center'}}>
-          <button title="Toggle waypoints list" onClick={() => setOpenPanel(op => op === 'waypoints' ? null : 'waypoints')} className="panel-toggle">{openPanel === 'waypoints' ? '▾' : '▸'}</button>
+          <div className="panel-toggle" aria-hidden>{openPanel === 'waypoints' ? '▾' : '▸'}</div>
         </div>
       </div>
       {openPanel === 'waypoints' && <>

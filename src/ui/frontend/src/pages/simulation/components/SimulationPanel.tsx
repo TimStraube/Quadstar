@@ -15,11 +15,9 @@ const SimulationPanel: React.FC<Props> = ({ sliderVal, setSliderVal, sliderToSpe
   const isOpen = openPanel === 'simulation';
   return (
     <div className="panel-root">
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6}}>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6, cursor: 'pointer'}} onClick={() => setOpenPanel(op => op === 'simulation' ? null : 'simulation')}>
         <div style={{fontWeight:700}}>Simulation</div>
-        <div>
-          <button title="Toggle simulation panel" onClick={() => setOpenPanel(op => op === 'simulation' ? null : 'simulation')} className="panel-toggle">{isOpen ? '▾' : '▸'}</button>
-        </div>
+        <div className="panel-toggle" aria-hidden>{isOpen ? '▾' : '▸'}</div>
       </div>
       {isOpen && (
         <div style={{display:'flex', flexDirection:'column', gap:8}}>

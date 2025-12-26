@@ -29,9 +29,9 @@ const ParamsPanel: React.FC<Props> = ({ mass, setMass, inertia, setInertia, armL
 
   return (
     <div className="panel-root">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => setOpenPanel(op => op === 'params' ? null : 'params')}>
         <div style={{ fontWeight: 700 }}>Quad Parameters</div>
-        <button onClick={() => setOpenPanel(op => op === 'params' ? null : 'params')} className="panel-toggle">{isOpen ? '▾' : '▸'}</button>
+        <div className="panel-toggle" aria-hidden>{isOpen ? '▾' : '▸'}</div>
       </div>
 
       {isOpen && (
