@@ -1,11 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 type Sample = { t: number; p: number }; // t = unix seconds, p = watts
 
 interface Props {
   samples: Sample[];
-  openPanel: string | null;
-  setOpenPanel: (s: string | null) => void;
+  // keep these props optional so the panel is independent
+  openPanel?: string | null;
+  setOpenPanel?: (s: string | null) => void;
 }
 
 // Collapsible SVG sparkline + total energy (last minute)
@@ -46,12 +47,13 @@ const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel }) => {
     return 'M' + coords.join(' L ');
   }, [last, windowStart, now]);
 
-  const isOpen = openPanel === 'energy';
+  // manage local open state so EnergyPanel is independent from left-side panels
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // compact header when closed
   if (!isOpen) {
     return (
-      <div className="panel-root" style={{ position: 'fixed', right: 12, bottom: 12, width: 220, zIndex: 400, cursor: 'pointer' }} onClick={() => setOpenPanel('energy')}>
+      <div className="panel-root" style={{ position: 'fixed', right: 12, bottom: 12, width: 220, zIndex: 400, cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontWeight: 700 }}>Energy</div>
           <div style={{ fontSize: 12, opacity: 0.9 }}>{(energyJ / 1000).toFixed(3)} kJ</div>
@@ -62,7 +64,7 @@ const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel }) => {
 
   return (
     <div className="panel-root" style={{ position: 'fixed', right: 12, bottom: 12, width: 320, zIndex: 400 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => setOpenPanel(null)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => setIsOpen(false)}>
         <div style={{ fontWeight: 700 }}>Energy (last 60s)</div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: 12, opacity: 0.9 }}>{latestP.toFixed(1)} W</div>
