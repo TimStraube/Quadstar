@@ -132,7 +132,17 @@ async def simulation_data():
             "roll": roll,
             "pitch": pitch,
             "yaw": yaw,
-            "current_wp_index": current_idx
+            "current_wp_index": current_idx,
+            # include motor and quad parameters helpful for frontend energy calculations
+            # wMotor: array of motor angular speeds (rad/s or RPM depending on Testbench)
+            # thr: per-motor thrust (N)
+            # kTo/kTh: motor torque/thrust coefficients
+            # mass: quad mass (kg)
+            "wMotor": (lambda q: [float(x) for x in getattr(q, 'wMotor', [])])(getattr(_testbench_instance, 'quad', None)),
+            "thr": (lambda q: [float(x) for x in getattr(q, 'thr', [])])(getattr(_testbench_instance, 'quad', None)),
+            "kTo": (lambda q: float(getattr(q, 'kTo', 1.632e-7)))(getattr(_testbench_instance, 'quad', None)),
+            "kTh": (lambda q: float(getattr(q, 'kTh', 1.076e-5)))(getattr(_testbench_instance, 'quad', None)),
+            "mass": (lambda q: float(getattr(q, 'mass', 1.0)))(getattr(_testbench_instance, 'quad', None))
         })
         
     except Exception as e:
