@@ -23,17 +23,17 @@ typedef struct __attribute__((packed)) {
   uint8_t pause; // Wert egal, nur als Signal
 } PauseMessage;
 
-// Quadstar states used in the packet
+// Thetafly states used in the packet
 typedef enum {
   STATE_IDLE = 0,
   STATE_ACTIVE = 1,
   STATE_RECOVERY = 2,
-} QuadstarState;
+} ThetaflyState;
 
 // Packet that will be sent over ESP-NOW. Use fixed-size fields and a
 // fixed-length C string for status to keep the packet binary-safe.
-typedef struct __attribute__((packed)) quadstarData {
-  int8_t state;      // use int8_t to keep size predictable (stores QuadstarState)
+typedef struct __attribute__((packed)) thetaflyData {
+  int8_t state;      // use int8_t to keep size predictable (stores ThetaflyState)
   int16_t setpoint_roll;      // -100 .. 100
   int16_t setpoint_pitch;     // -100 .. 100
   int16_t setpoint_yaw;       // -100 .. 100

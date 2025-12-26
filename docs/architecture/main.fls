@@ -1,9 +1,9 @@
-PWD /home/timstraube/Programme/Quadstar/doc/architecture
+PWD /home/timstraube/Programme/Thetafly/doc/architecture
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /home/timstraube/.texlive2023/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /home/timstraube/Programme/Quadstar/doc/architecture/main.tex
+INPUT /home/timstraube/Programme/Thetafly/doc/architecture/main.tex
 OUTPUT main.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls

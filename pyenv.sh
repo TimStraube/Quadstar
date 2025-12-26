@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Name des Environments
-ENV_NAME="quadstar"
+ENV_NAME="thetafly"
 PYTHON_VERSION="3.13.1"
 
 # Prüfen, ob pyenv installiert ist

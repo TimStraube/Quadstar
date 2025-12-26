@@ -135,7 +135,7 @@ def save_results_to_json(results, app_info):
 
 def main():
     print(f"\n{Colors.BOLD}{Colors.HEADER}{'='*80}{Colors.ENDC}")
-    print(f"{Colors.BOLD}{Colors.HEADER}                    QUADSTAR INTEGRATION TEST                        {Colors.ENDC}")
+    print(f"{Colors.BOLD}{Colors.HEADER}                    THETAFLY INTEGRATION TEST                        {Colors.ENDC}")
     print(f"{Colors.BOLD}{Colors.HEADER}{'='*80}{Colors.ENDC}")
     project = input(f"\n{Colors.BOLD}Bitte gib den Projektnamen ein: {Colors.ENDC}") or "FREAK"
     version = input(f"{Colors.BOLD}Bitte gib die Version ein [optional]: {Colors.ENDC}").strip()

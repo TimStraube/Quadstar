@@ -132,7 +132,7 @@ def main():
     """Hauptfunktion des Skripts."""
     
     print(f"\n{Colors.BOLD}{Colors.HEADER}{'='*80}{Colors.ENDC}")
-    print(f"{Colors.BOLD}{Colors.HEADER}                    QUADSTAR UNIT TEST                        {Colors.ENDC}")
+    print(f"{Colors.BOLD}{Colors.HEADER}                    THETAFLY UNIT TEST                        {Colors.ENDC}")
     print(f"{Colors.BOLD}{Colors.HEADER}{'='*80}{Colors.ENDC}")
     
     # App-Informationen erfragen
