@@ -5,7 +5,7 @@
 Quadstar is a project which includes python classes for simulating a quadcopter system. A basic PID flight controller implementation is provided in the folder ```./quadsoft/``` for STM32F411 processors including KiCad shematics. 
 With the help of the functionality a quadcopter prototyp has beeing build, mainly for fun and research purposes. Future work may include the development of fixed wing simulation functionality.
 
-![screenshot](docs/images/Prototyp.png)
+![screenshot](docs/images/0001.jpeg)
 
 ## Architecture
 
