@@ -1021,11 +1021,10 @@ const Simulation: React.FC = () => {
           schedulePidSend={schedulePidSend}
           />
         </div>
-        <EnergyPanel samples={energySamples} openPanel={openPanel} setOpenPanel={setOpenPanel} asideList={
-          <>
-            <OptimizerPanel waypoints={waypoints} speed={sliderToSpeed(sliderVal)} baseMass={mass} payloadMass={0} />
-          </>
-        } />
+        <div className="panel-stack-bottom-right">
+          <EnergyPanel samples={energySamples} openPanel={openPanel} setOpenPanel={setOpenPanel} />
+          <OptimizerPanel waypoints={waypoints} speed={sliderToSpeed(sliderVal)} baseMass={mass} payloadMass={0} />
+        </div>
       </IonContent>
     </IonPage>
   );

@@ -5,9 +5,9 @@ const Footer: React.FC = () => {
     <>
       <div style={{position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 50, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px', background: 'linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.6))'}}>
         <div style={{display: 'flex', gap: 18, alignItems: 'center'}}>
-          <div style={{color: 'rgba(255,255,255,0.9)', fontWeight: 600, marginRight: 8}}>Product</div>
+          {/* <div style={{color: 'rgba(255,255,255,0.9)', fontWeight: 600, marginRight: 8}}>Product</div> */}
           <a href="/simulation" style={{color: 'rgba(255,255,255,0.9)', textDecoration: 'none'}}>Simulation</a>
-          <a href="/gui" style={{color: 'rgba(255,255,255,0.9)', textDecoration: 'none'}}>GUI</a>
+          <a href="/" style={{color: 'rgba(255,255,255,0.9)', textDecoration: 'none'}}>Landing</a>
         </div>
         <div style={{display: 'flex', gap: 18, alignItems: 'center'}}>
           <a href="/imprint" style={{color: 'rgba(255,255,255,0.8)', textDecoration: 'none'}}>Impressum</a>

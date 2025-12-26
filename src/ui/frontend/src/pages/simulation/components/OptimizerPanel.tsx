@@ -98,7 +98,7 @@ const OptimizerPanel: React.FC<Props> = ({ waypoints, speed, baseMass, payloadMa
   // collapsible panel that lives inside the left-side panel stack
   if (!isOpen) {
     return (
-      <div className="panel-root" style={{ width: 220, cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
+      <div className="panel-root" style={{ cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontWeight: 700 }}>OPTIMIZER</div>
         </div>

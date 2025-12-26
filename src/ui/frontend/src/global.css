@@ -105,6 +105,18 @@ html, body, #root, ion-app, ion-content {
 	pointer-events: auto;
 }
 
+/* Bottom-right stack for panels (Energy, Optimizer, etc.) */
+.panel-stack-bottom-right{
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column-reverse; /* render first child at bottom */
+  gap: 8px;
+  pointer-events: auto;
+}
+
 /* small list area inside Energy panel to host small panels (e.g., optimizer) */
 .energy-aside-list{
 	display: flex;

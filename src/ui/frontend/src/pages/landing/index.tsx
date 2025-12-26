@@ -30,20 +30,20 @@ const Landing: React.FC = () => {
 					<div style={{marginTop: 16, width: '100%'}}>
 						<div style={{display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap'}}>
 							<IonCard href="/simulation" routerDirection="forward" style={{width: 300, cursor: 'pointer', background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))', border: '1px solid rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', borderRadius: 12, overflow: 'hidden'}}>
-								<IonImg src={'/img/0001.jpeg'} style={{height: 160, objectFit: 'cover', filter: 'brightness(0.55) contrast(0.9)'}} />
+								<IonImg src={'/img/quad.png'} style={{height: 160, objectFit: 'cover', filter: 'brightness(0.55) contrast(0.9)'}} />
 								<IonCardHeader style={{background: 'transparent', padding: '12px 16px'}}>
 									<IonCardTitle style={{ color: '#fff', fontSize: 18, fontWeight: 700 }}>Simulation</IonCardTitle>
 								</IonCardHeader>
 								<IonCardContent style={{minHeight: 12, paddingBottom: 18}} />
 							</IonCard>
 
-							<IonCard href="/gui" routerDirection="forward" style={{width: 300, cursor: 'pointer', background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))', border: '1px solid rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', borderRadius: 12, overflow: 'hidden'}}>
+							{/* <IonCard href="/gui" routerDirection="forward" style={{width: 300, cursor: 'pointer', background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))', border: '1px solid rgba(255,255,255,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', borderRadius: 12, overflow: 'hidden'}}>
 								<IonImg src={'/img/0001.jpeg'} style={{height: 160, objectFit: 'cover', filter: 'brightness(0.5) contrast(0.9)'}} />
 								<IonCardHeader style={{background: 'transparent', padding: '12px 16px'}}>
 									<IonCardTitle style={{ color: '#fff', fontSize: 18, fontWeight: 700 }}>GUI</IonCardTitle>
 								</IonCardHeader>
 								<IonCardContent style={{minHeight: 12, paddingBottom: 18}} />
-							</IonCard>
+							</IonCard> */}
 						</div>
 					</div>
 

@@ -54,7 +54,7 @@ const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel, asideL
   // compact header when closed
   if (!isOpen) {
     return (
-      <div className="panel-root" style={{ position: 'fixed', right: 12, bottom: 12, width: 220, zIndex: 400, cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
+      <div className="panel-root" style={{ cursor: 'pointer' }} onClick={() => setIsOpen(true)}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontWeight: 700 }}>ENERGY</div>
           <div style={{ fontSize: 12, opacity: 0.9 }}>{(energyJ / 1000).toFixed(3)} kJ</div>
@@ -64,7 +64,7 @@ const EnergyPanel: React.FC<Props> = ({ samples, openPanel, setOpenPanel, asideL
   }
 
   return (
-    <div className="panel-root" style={{ position: 'fixed', right: 12, bottom: 12, width: 320, zIndex: 400 }}>
+    <div className="panel-root">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} onClick={() => setIsOpen(false)}>
         <div style={{ fontWeight: 700 }}>Energy (last 60s)</div>
         <div style={{ textAlign: 'right' }}>
