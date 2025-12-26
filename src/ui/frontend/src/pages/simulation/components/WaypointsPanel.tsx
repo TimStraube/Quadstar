@@ -19,26 +19,14 @@ interface Props {
 
 const WaypointsPanel: React.FC<Props> = ({ waypoints, setWaypoints, wpTolerance, setWpTolerance, openPanel, setOpenPanel, activeWaypoint, setActiveWaypoint, singlePos, setSinglePos, simulationObjects }) => {
   return (
-    <div style={{
-      position: 'fixed',
-      top: 12,
-      left: 12,
-      zIndex: 250,
-      width: 320,
-      maxWidth: '90vw',
-      background: 'rgba(0,0,0,0.5)',
-      color: 'white',
-      padding: 8,
-      borderRadius: 8,
-      pointerEvents: 'auto'
-    }}>
+    <div className="panel-root">
       <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6}}>
         <div style={{display:'flex', gap:8, alignItems:'center'}}>
           <div style={{fontWeight:700}}>Waypoints (north, east, alt)</div>
         </div>
         <div style={{display: 'flex', gap: 6, alignItems: 'center'}}>
-          <button title="Toggle waypoints list" onClick={() => setOpenPanel(op => op === 'waypoints' ? null : 'waypoints')} style={{background: 'transparent', border: 'none', color: 'white', cursor: 'pointer'}}>{openPanel === 'waypoints' ? '▾' : '▸'}</button>
-          <button title="Toggle position setter" onClick={() => setOpenPanel(op => op === 'position' ? null : 'position')} style={{background: 'transparent', border: 'none', color: 'white', cursor: 'pointer'}}>{openPanel === 'position' ? '▾' : '▸'}</button>
+          <button title="Toggle waypoints list" onClick={() => setOpenPanel(op => op === 'waypoints' ? null : 'waypoints')} className="panel-toggle">{openPanel === 'waypoints' ? '▾' : '▸'}</button>
+          <button title="Toggle position setter" onClick={() => setOpenPanel(op => op === 'position' ? null : 'position')} className="panel-toggle">{openPanel === 'position' ? '▾' : '▸'}</button>
         </div>
       </div>
       {openPanel === 'waypoints' && <>
@@ -47,18 +35,18 @@ const WaypointsPanel: React.FC<Props> = ({ waypoints, setWaypoints, wpTolerance,
             <input type="number" step="0.1" placeholder="north" value={typeof wp.x === 'number' ? wp.x.toFixed(2) : wp.x} onChange={(e)=>{
               const v = e.target.value === '' ? 0 : Number(e.target.value);
               const copy = [...waypoints]; copy[i] = {x:v,y:copy[i].y,z:copy[i].z}; setWaypoints(copy);
-            }} style={{width: '32%', background: 'rgba(255,255,255,0.04)', color: '#fff', padding: '6px', borderRadius: 4, border: '1px solid rgba(255,255,255,0.15)'}} />
+            }} className="transparent-input" style={{width: '32%'}} />
             <input type="number" step="0.1" placeholder="east" value={typeof wp.y === 'number' ? wp.y.toFixed(2) : wp.y} onChange={(e)=>{
               const v = e.target.value === '' ? 0 : Number(e.target.value);
               const copy = [...waypoints]; copy[i] = {x:copy[i].x,y:v,z:copy[i].z}; setWaypoints(copy);
-            }} style={{width: '32%', background: 'rgba(255,255,255,0.04)', color: '#fff', padding: '6px', borderRadius: 4, border: '1px solid rgba(255,255,255,0.15)'}} />
+            }} className="transparent-input" style={{width: '32%'}} />
             <input type="number" min={0} max={3} step="0.1" placeholder="alt" value={typeof wp.z === 'number' ? wp.z.toFixed(2) : wp.z} onChange={(e)=>{
               const raw = e.target.value;
               const num = raw === '' ? 0 : Number(raw);
               let v = Number.isNaN(num) ? 0 : Math.max(0, num);
               v = Math.min(3, v);
               const copy = [...waypoints]; copy[i] = {x:copy[i].x,y:copy[i].y,z:v}; setWaypoints(copy);
-            }} style={{width: '32%', background: 'rgba(255,255,255,0.04)', color: '#fff', padding: '6px', borderRadius: 4, border: '1px solid rgba(255,255,255,0.15)'}} />
+            }} className="transparent-input" style={{width: '32%'}} />
           </div>
         ))}
         <div style={{display:'flex', gap:6, marginTop:6}}>
@@ -76,9 +64,9 @@ const WaypointsPanel: React.FC<Props> = ({ waypoints, setWaypoints, wpTolerance,
       <div style={{marginTop:8, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop:8}}>
         <div style={{fontWeight:600, fontSize:13, marginBottom:6}}>Setze Quad-Position (einmalig)</div>
         <div style={{display:'flex', gap:6, marginBottom:6}}>
-          <input type="number" step="0.1" placeholder="north" value={singlePos.north} onChange={(e)=>{ const v = e.target.value === '' ? 0 : Number(e.target.value); setSinglePos(p=>({...p, north:v})); }} style={{width:'33%', background: 'rgba(255,255,255,0.04)', color: '#fff', padding: '6px', borderRadius:4, border:'1px solid rgba(255,255,255,0.15)'}} />
-          <input type="number" step="0.1" placeholder="east" value={singlePos.east} onChange={(e)=>{ const v = e.target.value === '' ? 0 : Number(e.target.value); setSinglePos(p=>({...p, east:v})); }} style={{width:'33%', background: 'rgba(255,255,255,0.04)', color: '#fff', padding: '6px', borderRadius:4, border:'1px solid rgba(255,255,255,0.15)'}} />
-          <input type="number" min={0} step="0.1" placeholder="alt" value={singlePos.alt} onChange={(e)=>{ const raw = e.target.value; const num = raw === '' ? 0 : Number(raw); const v = Number.isNaN(num) ? 0 : Math.max(0, num); setSinglePos(p=>({...p, alt:v})); }} style={{width:'33%', background: 'rgba(255,255,255,0.04)', color: '#fff', padding: '6px', borderRadius:4, border:'1px solid rgba(255,255,255,0.15)'}} />
+          <input type="number" step="0.1" placeholder="north" value={singlePos.north} onChange={(e)=>{ const v = e.target.value === '' ? 0 : Number(e.target.value); setSinglePos(p=>({...p, north:v})); }} className="transparent-input" style={{width:'33%'}} />
+          <input type="number" step="0.1" placeholder="east" value={singlePos.east} onChange={(e)=>{ const v = e.target.value === '' ? 0 : Number(e.target.value); setSinglePos(p=>({...p, east:v})); }} className="transparent-input" style={{width:'33%'}} />
+          <input type="number" min={0} step="0.1" placeholder="alt" value={singlePos.alt} onChange={(e)=>{ const raw = e.target.value; const num = raw === '' ? 0 : Number(raw); const v = Number.isNaN(num) ? 0 : Math.max(0, num); setSinglePos(p=>({...p, alt:v})); }} className="transparent-input" style={{width:'33%'}} />
         </div>
         <div style={{display:'flex', gap:6}}>
           <IonButton onClick={() => {

@@ -20,15 +20,7 @@ interface Props {
 
 const ControllerPanel: React.FC<Props> = ({ velP, setVelP, velI, setVelI, velD, setVelD, attP, setAttP, rateP, setRateP, rateD, setRateD, openPanel, setOpenPanel, schedulePidSend }) => {
   return (
-    <div className="panel-root" style={{
-      position: 'fixed',
-      bottom: 12,
-      left: 12,
-      zIndex: 250,
-      width: 360,
-      maxWidth: '90vw',
-      pointerEvents: 'auto'
-    }}>
+    <div className="panel-root">
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6}}>
         <div style={{fontWeight: 700}}>Controller Einstellungen (live)</div>
         <button onClick={() => setOpenPanel(op => op === 'controller' ? null : 'controller')} className="panel-toggle">{openPanel === 'controller' ? '▾' : '▸'}</button>

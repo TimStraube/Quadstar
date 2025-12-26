@@ -14,8 +14,9 @@ type Props = {
 const RangeSlider: React.FC<Props> = ({ label, min, max, step = 0.01, value, onChange, display, valueStyle }) => {
   const fmt = display || ((v: number) => String(v));
   return (
-    <>
-      <label style={{fontSize: 14}}>{label}</label>
+    <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+      <label style={{fontSize: 14, minWidth: 110}}>{label}</label>
+      <div style={{width: 60, textAlign: 'left', fontWeight: 600, ...valueStyle}}>{fmt(value)}</div>
       <input
         type="range"
         min={min}
@@ -25,8 +26,7 @@ const RangeSlider: React.FC<Props> = ({ label, min, max, step = 0.01, value, onC
         onChange={(e) => { const v = Number(e.target.value); onChange(v); }}
         style={{flex: 1}}
       />
-      <div style={{width: 90, textAlign: 'right', fontWeight: '600', ...valueStyle}}>{fmt(value)}</div>
-    </>
+    </div>
   );
 };
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import WaypointsPanel from './components/WaypointsPanel';
 import ControllerPanel from './components/ControllerPanel';
-import RangeSlider from './components/RangeSlider';
 import ParamsPanel from './components/ParamsPanel';
+import SimulationPanel from './components/SimulationPanel';
 import { getPidValues, setPidValues, postWaypoints } from '../../services/Info';
 import {
   IonContent,
@@ -744,7 +744,7 @@ const Simulation: React.FC = () => {
         {/* Centered Play / Reset bar above sliders */}
         <div style={{
           position: 'fixed',
-          bottom: 120,
+          bottom: 100,
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 210,
@@ -766,36 +766,47 @@ const Simulation: React.FC = () => {
           <IonButton onClick={resetSimulation}>Reset</IonButton>
           <IonButton onClick={focusCamera}>Focus</IonButton>
         </div>
-        {/* Speed slider - centered at bottom */}
-        <div style={{
-          position: 'fixed',
-          bottom: 24,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 200,
-          width: '360px',
-          maxWidth: '80%',
-          background: 'rgba(0,0,0,0.35)',
-          padding: '8px 12px',
-          borderRadius: 8,
-          color: 'white',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          pointerEvents: 'auto'
-        }}>
-          <RangeSlider
-            label="Speed (log)"
-            min={0}
-            max={1}
-            step={0.001}
-            value={sliderVal}
-            onChange={(v) => { setSliderVal(v); setSpeed(sliderToSpeed(v)); }}
-            display={(v) => `${Number(sliderToSpeed(v)).toFixed(2)}x`}
-            valueStyle={{width: 90}}
+        <div className="panel-stack">
+          <WaypointsPanel
+            waypoints={waypoints}
+            setWaypoints={setWaypoints}
+            wpTolerance={wpTolerance}
+            setWpTolerance={setWpTolerance}
+            openPanel={openPanel}
+            setOpenPanel={setOpenPanel}
+            activeWaypoint={activeWaypoint}
+            setActiveWaypoint={setActiveWaypoint}
+            singlePos={singlePos}
+            setSinglePos={setSinglePos}
+            simulationObjects={simulationObjects}
           />
-        </div>
-        <ControllerPanel
+          <SimulationPanel
+            sliderVal={sliderVal}
+            setSliderVal={(v) => { setSliderVal(v); setSpeed(sliderToSpeed(v)); }}
+            sliderToSpeed={sliderToSpeed}
+            wpTolerance={wpTolerance}
+            onToleranceChange={(v) => {
+              setWpTolerance(v);
+              const payload = waypoints.map(w => ({ x: Number(w.x), y: Number(w.y), z: Number(w.z) }));
+              (async () => {
+                try { await postWaypoints({ waypoints: payload, tolerance: v }); } catch (err) { console.error('failed to send waypoints', err); }
+              })();
+            }}
+            openPanel={openPanel}
+            setOpenPanel={setOpenPanel}
+          />
+          <ParamsPanel
+            mass={mass}
+            setMass={setMass}
+            inertia={inertia}
+            setInertia={setInertia}
+            armLength={armLength}
+            setArmLength={setArmLength}
+            openPanel={openPanel}
+            setOpenPanel={setOpenPanel}
+            onApplyScene={applyParamsToScene}
+          />
+          <ControllerPanel
           velP={velP}
           setVelP={setVelP}
           velI={velI}
@@ -811,66 +822,8 @@ const Simulation: React.FC = () => {
           openPanel={openPanel}
           setOpenPanel={setOpenPanel}
           schedulePidSend={schedulePidSend}
-        />
-        <ParamsPanel
-          mass={mass}
-          setMass={setMass}
-          inertia={inertia}
-          setInertia={setInertia}
-          armLength={armLength}
-          setArmLength={setArmLength}
-          openPanel={openPanel}
-          setOpenPanel={setOpenPanel}
-          onApplyScene={applyParamsToScene}
-        />
-        {/* Tolerance slider - just above bottom */}
-        <div style={{
-          position: 'fixed',
-          bottom: 80,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 200,
-          width: '360px',
-          maxWidth: '80%',
-          background: 'rgba(0,0,0,0.35)',
-          padding: '8px 12px',
-          borderRadius: 8,
-          color: 'white',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          pointerEvents: 'auto'
-        }}>
-          <RangeSlider
-            label="Tolerance"
-            min={0}
-            max={2}
-            step={0.01}
-            value={wpTolerance}
-            onChange={(v) => {
-              setWpTolerance(v);
-              const payload = waypoints.map(w => ({ x: Number(w.x), y: Number(w.y), z: Number(w.z) }));
-              (async () => {
-                try { await postWaypoints({ waypoints: payload, tolerance: v }); } catch (err) { console.error('failed to send waypoints', err); }
-              })();
-            }}
-            display={(v) => `${v.toFixed(2)} m`}
-            valueStyle={{width: 60}}
           />
         </div>
-        <WaypointsPanel
-          waypoints={waypoints}
-          setWaypoints={setWaypoints}
-          wpTolerance={wpTolerance}
-          setWpTolerance={setWpTolerance}
-          openPanel={openPanel}
-          setOpenPanel={setOpenPanel}
-          activeWaypoint={activeWaypoint}
-          setActiveWaypoint={setActiveWaypoint}
-          singlePos={singlePos}
-          setSinglePos={setSinglePos}
-          simulationObjects={simulationObjects}
-        />
       </IonContent>
     </IonPage>
   );
