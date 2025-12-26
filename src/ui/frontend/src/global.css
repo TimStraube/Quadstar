@@ -1,0 +1,39 @@
+/* Global styles for the frontend UI */
+:root{
+	--panel-bg: rgba(0,0,0,0.6);
+	--panel-color: #ffffff;
+	--input-bg: rgba(255,255,255,0.04);
+	--input-border: rgba(255,255,255,0.15);
+	--input-padding: 6px;
+	--input-radius: 4px;
+}
+
+/* Transparent input used across panels */
+.transparent-input{
+	background: var(--input-bg);
+	color: #fff;
+	padding: var(--input-padding);
+	border-radius: var(--input-radius);
+	border: 1px solid var(--input-border);
+	outline: none;
+}
+.transparent-input::placeholder{
+	color: rgba(255,255,255,0.6);
+}
+
+/* Panel common tweaks */
+.panel-root{
+	background: var(--panel-bg);
+	color: var(--panel-color);
+	padding: 8px;
+	border-radius: 8px;
+}
+
+/* Small toggle button style used in headers */
+.panel-toggle{
+	background: transparent;
+	border: none;
+	color: white;
+	cursor: pointer;
+}
+

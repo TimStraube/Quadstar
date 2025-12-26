@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import WaypointsPanel from './components/WaypointsPanel';
 import ControllerPanel from './components/ControllerPanel';
 import RangeSlider from './components/RangeSlider';
+import ParamsPanel from './components/ParamsPanel';
 import { getPidValues, setPidValues, postWaypoints } from '../../services/Info';
 import {
   IonContent,
@@ -47,6 +48,30 @@ const Simulation: React.FC = () => {
   // follow mode: when true, camera will follow the quad (unless user interacts)
   const [followQuad, setFollowQuad] = useState<boolean>(false);
   const followQuadRef = useRef<boolean>(followQuad);
+  // initialize settings from localStorage and listen for changes from settings page
+  useEffect(() => {
+    try {
+      const f = localStorage.getItem('sim.followQuad');
+      const a = localStorage.getItem('sim.autoRotate');
+      if (f !== null) {
+        const fv = f === '1'; setFollowQuad(fv); followQuadRef.current = fv;
+      }
+      if (a !== null) {
+        const av = a === '1'; setAutoRotateEnabled(av); autoRotateRef.current = av;
+      }
+    } catch (e) {}
+    const handler = (ev: any) => {
+      try {
+        const d = ev?.detail || {};
+        if (typeof d.follow === 'boolean') { setFollowQuad(d.follow); followQuadRef.current = d.follow; }
+        if (typeof d.autoRotate === 'boolean') { setAutoRotateEnabled(d.autoRotate); autoRotateRef.current = d.autoRotate; }
+        // if controls exist, update them immediately
+        try { const c = simulationObjects.current?.controls; if (c) c.autoRotate = autoRotateRef.current && !userInteractingRef.current; } catch(e) {}
+      } catch(e){}
+    };
+    window.addEventListener('settingsChanged', handler as EventListener);
+    return () => { window.removeEventListener('settingsChanged', handler as EventListener); };
+  }, []);
   // which panel is currently open: 'waypoints' | 'pid' | 'position' | null
   const [openPanel, setOpenPanel] = useState<string | null>('waypoints');
   const [singlePos, setSinglePos] = useState<{north:number,east:number,alt:number}>({north:0,east:0,alt:0});
@@ -58,6 +83,33 @@ const Simulation: React.FC = () => {
   const [rateP, setRateP] = useState<number[]>([1.5, 1.5, 1.0]);
   const [rateD, setRateD] = useState<number[]>([0.04, 0.04, 0.1]);
   const pidDebounceRef = useRef<number | null>(null);
+  // physical parameters configurable by user
+  const [mass, setMass] = useState<number>(1.2);
+  const [inertia, setInertia] = useState<number[]>([0.01, 0.01, 0.02]);
+  const [armLength, setArmLength] = useState<number>(0.18);
+
+  // Apply physical params visually to the Three.js scene (scaling/model params)
+  const applyParamsToScene = () => {
+    try {
+      const objs = simulationObjects.current;
+      if (!objs) return;
+      // store params for potential future use
+      objs.params = { mass, inertia, armLength };
+      const defaultArm = 0.18;
+      const scale = (armLength > 0) ? (armLength / defaultArm) : 1.0;
+      if (objs.model) {
+        try { objs.model.scale.set(scale, scale, scale); } catch (e) {}
+      } else {
+        try { if (objs.cube1) objs.cube1.scale.set(scale, scale, scale); } catch (e) {}
+        try { if (objs.cube2) objs.cube2.scale.set(scale, scale, scale); } catch (e) {}
+        try { if (objs.cube3) objs.cube3.scale.set(scale, scale, scale); } catch (e) {}
+      }
+      try { if (objs.renderer && objs.scene && objs.camera) objs.renderer.render(objs.scene, objs.camera); } catch (e) {}
+      console.log('Applied params to scene', objs.params);
+    } catch (e) {
+      console.warn('applyParamsToScene error', e);
+    }
+  };
 
   // send waypoints to backend when changed
   useEffect(() => {
@@ -245,6 +297,22 @@ const Simulation: React.FC = () => {
     console.log('Reset pressed');
     setRunning(false);
     setResetFlag(true);
+  };
+
+  const focusCamera = () => {
+    try {
+      const objs = simulationObjects.current;
+      // @ts-ignore
+      const THREE = (window as any).THREE;
+      if (!objs || !objs.controls || !objs.camera || !THREE) return;
+      let target = new THREE.Vector3(0,0,0);
+      if (objs.model && objs.model.position) target.copy(objs.model.position);
+      else if (objs.cube1) target.set(objs.cube1.position.x, objs.cube1.position.y, objs.cube1.position.z);
+      const camOffset = new THREE.Vector3(4, 2, 0);
+      objs.camera.position.copy(target).add(camOffset);
+      objs.controls.target.copy(target);
+      objs.controls.update();
+    } catch (e) { console.error('focus camera error', e); }
   };
 
   // Update polling delay when speed changes
@@ -657,6 +725,10 @@ const Simulation: React.FC = () => {
         }}>
           <h1 id="time">t = 0.00 sec</h1>
         </div>
+        {/* Settings button top-right */}
+        <div style={{position: 'fixed', top: 12, right: 12, zIndex: 300, pointerEvents: 'auto'}}>
+          <IonButton href="/settings" routerDirection="forward" color="tertiary">Einstellungen</IonButton>
+        </div>
         <div
           id="three-canvas-container"
           ref={canvasContainerRef}
@@ -668,47 +740,31 @@ const Simulation: React.FC = () => {
             zIndex: 1,
           }}
         />
-          <div style={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-            zIndex: 200,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 12,
-            pointerEvents: 'auto',
-          }}>
+        
+        {/* Centered Play / Reset bar above sliders */}
+        <div style={{
+          position: 'fixed',
+          bottom: 120,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 210,
+          width: '360px',
+          maxWidth: '80%',
+          background: 'rgba(0,0,0,0.35)',
+          padding: '8px 12px',
+          borderRadius: 8,
+          color: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 12,
+          pointerEvents: 'auto'
+        }}>
           <IonButton onClick={() => { setRunning(r => !r); }}>
             {running ? 'Pause' : 'Play'}
           </IonButton>
           <IonButton onClick={resetSimulation}>Reset</IonButton>
-          <IonButton onClick={() => {
-            setAutoRotateEnabled(v => !v);
-            // immediately update controls if present
-            try { const c = simulationObjects.current?.controls; if (c) { const next = !autoRotateRef.current; c.autoRotate = next && !userInteractingRef.current; autoRotateRef.current = next; } } catch(e) {}
-          }}>
-            {autoRotateEnabled ? 'Auto-Rotate: On' : 'Auto-Rotate: Off'}
-          </IonButton>
-          <IonButton onClick={() => {
-            // focus camera on quad/model
-            try {
-              const objs = simulationObjects.current;
-              // @ts-ignore
-              const THREE = window.THREE;
-              if (!objs || !objs.controls || !objs.camera || !THREE) return;
-              let target = new THREE.Vector3(0,0,0);
-              if (objs.model && objs.model.position) target.copy(objs.model.position);
-              else if (objs.cube1) target.set(objs.cube1.position.x, objs.cube1.position.y, objs.cube1.position.z);
-              // set camera to a reasonable offset relative to the quad
-              const camOffset = new THREE.Vector3(4, 2, 0);
-              objs.camera.position.copy(target).add(camOffset);
-              objs.controls.target.copy(target);
-              objs.controls.update();
-            } catch (e) { console.error('focus camera error', e); }
-          }}>Focus Quad</IonButton>
-          <IonButton onClick={() => {
-            setFollowQuad(f => { const next = !f; followQuadRef.current = next; return next; });
-          }}>{followQuad ? 'Following: On' : 'Following: Off'}</IonButton>
+          <IonButton onClick={focusCamera}>Focus</IonButton>
         </div>
         {/* Speed slider - centered at bottom */}
         <div style={{
@@ -755,6 +811,17 @@ const Simulation: React.FC = () => {
           openPanel={openPanel}
           setOpenPanel={setOpenPanel}
           schedulePidSend={schedulePidSend}
+        />
+        <ParamsPanel
+          mass={mass}
+          setMass={setMass}
+          inertia={inertia}
+          setInertia={setInertia}
+          armLength={armLength}
+          setArmLength={setArmLength}
+          openPanel={openPanel}
+          setOpenPanel={setOpenPanel}
+          onApplyScene={applyParamsToScene}
         />
         {/* Tolerance slider - just above bottom */}
         <div style={{

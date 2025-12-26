@@ -75,3 +75,19 @@ export async function postWaypoints(payload: { waypoints: Array<{x:number,y:numb
     return null;
   }
 }
+
+// Send quad physical params to backend
+export async function postQuadParams(payload: { mass: number, inertia: number[], arm_length: number }): Promise<any> {
+  try {
+    const res = await fetch(`${API_URL}/params`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error(`postQuadParams failed ${res.status}`);
+    return res.json();
+  } catch (e) {
+    console.warn('postQuadParams error', e);
+    return null;
+  }
+}
