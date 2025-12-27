@@ -6,7 +6,7 @@ import { logoPaypal } from 'ionicons/icons';
 // try to read version from package.json at frontend package root
 // relative path from this file -> ../../../package.json
 // If JSON imports are not enabled in TS config, this will need adjustment.
-let appVersion = '0.0.0';
+let appVersion = '1.0.0';
 try {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	// @ts-ignore
@@ -26,7 +26,7 @@ const Landing: React.FC = () => {
 					   <div style={{position: 'absolute', left:0, top:0, right:0, bottom:0, backgroundColor: 'rgba(0,0,0,0.0)', zIndex:1, pointerEvents: 'none'}} />
 					   <div style={{position: 'relative', maxWidth: 800, margin: '0 auto', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', zIndex: 3, color: '#fff'}}>
 					<h1 style={{marginBottom: 8, color: '#fff'}}>THETAFLY</h1>
-					<p style={{color: 'rgba(255,255,255,0.9)', marginBottom: 20}}>Wingcopter simulator.</p>
+					<p style={{color: 'rgba(255,255,255,0.9)', marginBottom: 20}}>Wingcopter simulator</p>
 
 					<div style={{marginTop: 16, width: '100%'}}>
 						<div style={{display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap'}}>

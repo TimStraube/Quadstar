@@ -22,8 +22,8 @@ const ContactPage: React.FC = () => {
           <IonCardContent>
             <p>
               <span style={{ color: '#ffffff' }}>Tim Straube</span><br />
-              <a href="mailto:tim.straube@example.com" style={{ color: '#4da6ff' }}>tim.straube@example.com</a><br />
-              <a href="https://github.com/TimStraube" target="_blank" rel="noopener noreferrer" style={{ color: '#4da6ff' }}>github.com/TimStraube</a>
+              <a href="mailto:tileone02@posteo.de" style={{ color: '#4da6ff' }}>tileone02@posteo.de</a><br />
+              <a href="https://github.com/TimStraube/Thetafly" target="_blank" rel="noopener noreferrer" style={{ color: '#4da6ff' }}>github.com/TimStraube</a>
             </p>
           </IonCardContent>
         </IonCard>

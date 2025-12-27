@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
       </div>
 
       <div className="footer-copy">
-        <small>© {new Date().getFullYear()} Thetafly</small>
+        <small>{new Date().getFullYear()} Thetafly</small>
       </div>
     </>
   );
