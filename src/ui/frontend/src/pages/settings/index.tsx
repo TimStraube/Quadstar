@@ -11,6 +11,9 @@ const SettingsPage: React.FC = () => {
 	const [showGrid, setShowGrid] = useState<boolean>(() => {
 		try { const v = localStorage.getItem('sim.showGrid'); return v === null ? true : v === '1'; } catch(e){ return true; }
 	});
+	const [showMap, setShowMap] = useState<boolean>(() => {
+		try { const v = localStorage.getItem('sim.showMap'); return v === null ? false : v === '1'; } catch(e){ return false; }
+	});
 	// speed slider mapping matches Simulation's non-linear mapping
 	const minSpeed = 0.25;
 	const maxSpeed = 100;
@@ -33,16 +36,17 @@ const SettingsPage: React.FC = () => {
 		// no-op: keep local state initialized from localStorage
 	}, []);
 
-	const apply = (nextFollow: boolean, nextAuto: boolean, nextShowGrid: boolean, nextDefaultSliderVal: number) => {
+	const apply = (nextFollow: boolean, nextAuto: boolean, nextShowGrid: boolean, nextShowMap: boolean, nextDefaultSliderVal: number) => {
 		const actualSpeed = sliderToSpeed(nextDefaultSliderVal);
 		try {
 			localStorage.setItem('sim.followQuad', nextFollow ? '1' : '0');
 			localStorage.setItem('sim.autoRotate', nextAuto ? '1' : '0');
 			localStorage.setItem('sim.showGrid', nextShowGrid ? '1' : '0');
+			localStorage.setItem('sim.showMap', nextShowMap ? '1' : '0');
 			localStorage.setItem('sim.defaultSpeed', String(actualSpeed));
 		} catch(e) {}
 		// notify other parts of the app
-		try { window.dispatchEvent(new CustomEvent('settingsChanged', { detail: { follow: nextFollow, autoRotate: nextAuto, showGrid: nextShowGrid, defaultSpeed: actualSpeed } })); } catch(e) {}
+		try { window.dispatchEvent(new CustomEvent('settingsChanged', { detail: { follow: nextFollow, autoRotate: nextAuto, showGrid: nextShowGrid, showMap: nextShowMap, defaultSpeed: actualSpeed } })); } catch(e) {}
 	};
 
 	return (
@@ -51,15 +55,19 @@ const SettingsPage: React.FC = () => {
 				<div style={{padding:12}}>
 					<IonItem>
 						<IonLabel>Following (Kamera folgt dem Quad)</IonLabel>
-						<IonToggle checked={follow} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setFollow(v); apply(v, autoRotate, showGrid, defaultSliderVal); }} />
+						<IonToggle checked={follow} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setFollow(v); apply(v, autoRotate, showGrid, showMap, defaultSliderVal); }} />
 					</IonItem>
 					<IonItem>
 						<IonLabel>Auto-Rotate (Szenenrotation)</IonLabel>
-						<IonToggle checked={autoRotate} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setAutoRotate(v); apply(follow, v, showGrid, defaultSliderVal); }} />
+						<IonToggle checked={autoRotate} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setAutoRotate(v); apply(follow, v, showGrid, showMap, defaultSliderVal); }} />
 					</IonItem>
 					<IonItem>
 						<IonLabel>Gitter anzeigen</IonLabel>
-						<IonToggle checked={showGrid} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setShowGrid(v); apply(follow, autoRotate, v, defaultSliderVal); }} />
+						<IonToggle checked={showGrid} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setShowGrid(v); apply(follow, autoRotate, v, showMap, defaultSliderVal); }} />
+					</IonItem>
+					<IonItem>
+						<IonLabel>OpenStreetMap als Plane</IonLabel>
+						<IonToggle checked={showMap} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setShowMap(v); apply(follow, autoRotate, showGrid, v, defaultSliderVal); }} />
 					</IonItem>
 					<IonItem>
 						<IonLabel style={{width: '40%'}}>Startgeschwindigkeit</IonLabel>
@@ -75,7 +83,7 @@ const SettingsPage: React.FC = () => {
 						<div style={{marginLeft:8, minWidth:80, textAlign:'right'}}>{sliderToSpeed(defaultSliderVal).toFixed(2)}x</div>
 					</IonItem>
 					<div style={{marginTop:16}}>
-						<IonButton onClick={() => { apply(follow, autoRotate, showGrid, defaultSliderVal); window.location.href = '/simulation'; }} style={{marginLeft:8}}>Zurück zur Simulation</IonButton>
+						<IonButton onClick={() => { apply(follow, autoRotate, showGrid, showMap, defaultSliderVal); window.location.href = '/simulation'; }} style={{marginLeft:8}}>Zurück zur Simulation</IonButton>
 					</div>
 				</div>
 			</IonContent>

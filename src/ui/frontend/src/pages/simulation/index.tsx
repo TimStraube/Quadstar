@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import WaypointsPanel from './components/WaypointsPanel';
 import ControllerPanel from './components/ControllerPanel';
 import ParamsPanel from './components/ParamsPanel';
@@ -63,6 +67,9 @@ const Simulation: React.FC = () => {
   // show/hide grid in the scene
   const [showGrid, setShowGrid] = useState<boolean>(() => { try { const v = localStorage.getItem('sim.showGrid'); return v === null ? true : v === '1'; } catch(e){ return true; } });
   const showGridRef = useRef<boolean>(showGrid);
+  // show OpenStreetMap plane under the scene
+  const [showMap, setShowMap] = useState<boolean>(() => { try { const v = localStorage.getItem('sim.showMap'); return v === '1'; } catch(e){ return false; } });
+  const showMapRef = useRef<boolean>(showMap);
   // initialize settings from localStorage and listen for changes from settings page
   useEffect(() => {
     try {
@@ -98,6 +105,12 @@ const Simulation: React.FC = () => {
             const gp = simulationObjects.current?.groundPlane; if (gp) gp.visible = d.showGrid;
           } catch(e) {}
         }
+          if (typeof d.showMap === 'boolean') {
+            setShowMap(d.showMap); showMapRef.current = d.showMap;
+            try {
+              if (d.showMap) addMapPlane(); else removeMapPlane();
+            } catch(e) {}
+          }
         if (typeof d.defaultSpeed !== 'undefined') {
           const v = Number(d.defaultSpeed);
           if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
@@ -131,6 +144,9 @@ const Simulation: React.FC = () => {
         const v = Number(ds);
         if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
       }
+      try {
+        const sm = localStorage.getItem('sim.showMap'); if (sm !== null) { const m = sm === '1'; setShowMap(m); showMapRef.current = m; }
+      } catch(e) {}
       // Update controls immediately if present
       try { const c = simulationObjects.current?.controls; if (c) c.autoRotate = autoRotateRef.current && !userInteractingRef.current; } catch(e) {}
     } catch (e) {}
@@ -371,6 +387,116 @@ const Simulation: React.FC = () => {
       } catch (err) { /* ignore */ }
     }
   };
+
+  // Add an OpenStreetMap tile as a horizontal plane under the scene
+  const addMapPlane = (zoom = 6, x = 33, y = 22, size = 200) => {
+    try {
+      const objs = simulationObjects.current;
+      // @ts-ignore
+      const THREE = window.THREE;
+      if (!THREE || !objs || !objs.scene) return;
+      // if already exists, remove first
+      if (objs.mapPlane) {
+        try { objs.scene.remove(objs.mapPlane); } catch(e) {}
+        try { if (objs.mapPlane.geometry) objs.mapPlane.geometry.dispose(); } catch(e) {}
+        try { if (objs.mapPlane.material) objs.mapPlane.material.dispose(); } catch(e) {}
+        objs.mapPlane = null;
+      }
+      // Stitch multiple tiles into a single canvas to increase resolution and coverage.
+      const tiles = Math.max(1, Math.floor((size / 256)) || 3); // approximate tiles count by size (fallback 3)
+      const tileCount = Math.max(1, Math.min(7, tiles)); // clamp reasonable
+      const half = Math.floor(tileCount / 2);
+      const tileSize = 256;
+      const canvasSize = tileSize * tileCount;
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasSize; canvas.height = canvasSize;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.warn('Failed to create canvas 2D context for map stitching');
+        return;
+      }
+      let remaining = tileCount * tileCount;
+      const baseX = x, baseY = y;
+      for (let ix = -half; ix <= half; ix++) {
+        for (let iy = -half; iy <= half; iy++) {
+          const tx = baseX + ix;
+          const ty = baseY + iy;
+          const url = `https://a.tile.openstreetmap.org/${zoom}/${tx}/${ty}.png`;
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            try {
+              const dx = (ix + half) * tileSize;
+              const dy = (iy + half) * tileSize;
+              ctx.drawImage(img, dx, dy, tileSize, tileSize);
+            } catch(e) { console.warn('drawImage failed', e); }
+            remaining -= 1;
+            if (remaining === 0) {
+              try {
+                const tex = new THREE.CanvasTexture(canvas);
+                try { tex.encoding = THREE.sRGBEncoding; } catch(e) {}
+                try { tex.generateMipmaps = true; tex.minFilter = THREE.LinearMipMapLinearFilter; tex.magFilter = THREE.LinearFilter; } catch(e) {}
+                try {
+                  const maxAniso = (objs.renderer && objs.renderer.capabilities && objs.renderer.capabilities.getMaxAnisotropy) ? objs.renderer.capabilities.getMaxAnisotropy() : 4;
+                  tex.anisotropy = maxAniso || 1;
+                } catch(e) { tex.anisotropy = tex.anisotropy || 1; }
+                const geom = new THREE.PlaneGeometry(size, size);
+                const mat: any = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide });
+                try { mat.toneMapped = false; } catch(e) {}
+                const plane = new THREE.Mesh(geom, mat);
+                plane.name = 'osmPlane';
+                plane.userData.osm = { zoom, baseX, baseY, tileCount };
+                plane.rotation.x = -Math.PI / 2;
+                // place slightly lower so it's closer to ground but avoid z-fighting
+                plane.position.y = 0.05;
+                objs.scene.add(plane);
+                objs.mapPlane = plane;
+                try {
+                  const box = new THREE.BoxHelper(plane, 0xff0000);
+                  box.name = 'osmPlaneHelper';
+                  objs.scene.add(box);
+                  objs.mapPlaneHelper = box;
+                } catch(e) {}
+                try { console.log('stitched mapPlane bbox', new THREE.Box3().setFromObject(plane).toArray()); } catch(e) {}
+                try { console.log('camera pos', objs.camera.position, 'near/far', objs.camera.near, objs.camera.far); } catch(e) {}
+                try { if (objs.renderer && objs.scene && objs.camera) objs.renderer.render(objs.scene, objs.camera); } catch(e) {}
+              } catch(e) { console.warn('Failed to create CanvasTexture', e); }
+            }
+          };
+          img.onerror = (err) => {
+            console.warn('Failed to load tile', url, err);
+            remaining -= 1;
+            if (remaining === 0) {
+              // even if some tiles failed, create texture from whatever we have
+              try {
+                const tex = new THREE.CanvasTexture(canvas);
+                try { tex.encoding = THREE.sRGBEncoding; } catch(e) {}
+                try { tex.generateMipmaps = true; tex.minFilter = THREE.LinearMipMapLinearFilter; tex.magFilter = THREE.LinearFilter; } catch(e) {}
+                objs.mapPlane = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide }));
+                objs.mapPlane.rotation.x = -Math.PI/2; objs.mapPlane.position.y = 0.05; objs.scene.add(objs.mapPlane);
+                try { if (objs.renderer && objs.scene && objs.camera) objs.renderer.render(objs.scene, objs.camera); } catch(e) {}
+              } catch(e) { console.warn('Failed to create fallback CanvasTexture', e); }
+            }
+          };
+          img.src = url;
+        }
+      }
+    } catch (e) { console.warn('addMapPlane error', e); }
+  };
+
+  const removeMapPlane = () => {
+    try {
+      const objs = simulationObjects.current;
+      if (!objs || !objs.scene) return;
+      if (objs.mapPlane) {
+        try { objs.scene.remove(objs.mapPlane); } catch(e) {}
+        try { if (objs.mapPlane.geometry) objs.mapPlane.geometry.dispose(); } catch(e) {}
+        try { if (objs.mapPlane.material) objs.mapPlane.material.dispose(); } catch(e) {}
+        objs.mapPlane = null;
+        try { if (objs.renderer && objs.scene && objs.camera) objs.renderer.render(objs.scene, objs.camera); } catch(e) {}
+      }
+    } catch (e) { console.warn('removeMapPlane error', e); }
+  };
   const resetSimulation = () => {
     console.log('Reset pressed');
     setRunning(false);
@@ -406,36 +532,14 @@ const Simulation: React.FC = () => {
     setThreeLoaded(false);
     // Remove existing canvas only (don't remove script tags if other parts of app use them)
     document.querySelectorAll('canvas').forEach(c => c.remove());
-    // If already loaded, reuse
-    // @ts-ignore
-    if (typeof window !== 'undefined' && (window as any).THREE) {
-      setThreeLoaded(true);
-      setupScene();
-      return;
-    }
-    // Load Three.js dynamically
-    const threeScript = document.createElement('script');
-    threeScript.src = 'https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js';
-    threeScript.onload = () => {
-      // Load OrbitControls only if not present
-      // @ts-ignore
-      if ((window as any).THREE && !(window as any).THREE.OrbitControls) {
-        const controlsScript = document.createElement('script');
-        controlsScript.src = 'https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/controls/OrbitControls.js';
-        controlsScript.onload = () => {
-          setThreeLoaded(true);
-          setupScene();
-        };
-        document.head.appendChild(controlsScript);
-      } else {
-        setThreeLoaded(true);
-        setupScene();
-      }
-    };
-    document.head.appendChild(threeScript);
-    return () => {
-      document.querySelectorAll('canvas').forEach(c => c.remove());
-    };
+    try {
+      // ensure the bundled THREE and OrbitControls are available globally for legacy code
+      (window as any).THREE = THREE;
+      (window as any).THREE.OrbitControls = OrbitControls;
+    } catch(e) {}
+    setThreeLoaded(true);
+    setupScene();
+    return () => { document.querySelectorAll('canvas').forEach(c => c.remove()); };
     // eslint-disable-next-line
   }, [resetFlag]);
 
@@ -470,10 +574,7 @@ const Simulation: React.FC = () => {
     // Try to load an EXR environment map from public/models
     (async () => {
       try {
-        // dynamic import of EXRLoader
-        // @ts-ignore
-        const mod = await import('https://cdn.jsdelivr.net/npm/three@0.125.2/examples/jsm/loaders/EXRLoader.js');
-        const EXRLoader = mod.EXRLoader || (mod as any).default;
+        // Use bundled EXRLoader
         const exrLoader = new EXRLoader();
         exrLoader.load('/models/autumn_field_puresky_512.exr', (texture: any) => {
           try {
@@ -484,7 +585,6 @@ const Simulation: React.FC = () => {
             scene.background = envMap;
             texture.dispose();
             pmremGenerator.dispose();
-            // render once so background appears immediately
             try { renderer.render(scene, camera); } catch (e) {}
           } catch (e) {
             console.error('Failed to apply EXR as env map', e);
@@ -493,10 +593,10 @@ const Simulation: React.FC = () => {
           console.warn('Failed to load EXR environment', err);
         });
       } catch (err) {
-        console.warn('EXRLoader dynamic import failed', err);
+        console.warn('EXRLoader load failed', err);
       }
     })();
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.enableZoom = true;
@@ -567,6 +667,7 @@ const Simulation: React.FC = () => {
     gridHelper.position.y = 0.01;
     scene.add(gridHelper);
     try { gridHelper.visible = !!showGridRef.current; } catch(e) {}
+    try { if (showMapRef.current) addMapPlane(); } catch(e) {}
     try { groundPlane.visible = !!showGridRef.current; } catch(e) {}
     // Add simple lighting so GLTF models are visible
     try {
@@ -585,10 +686,7 @@ const Simulation: React.FC = () => {
     // If loading succeeds, replace the placeholder cubes with the model.
     (async () => {
       try {
-        // dynamic import of GLTFLoader (match Three.js version used above)
-        // @ts-ignore
-        const mod = await import('https://cdn.jsdelivr.net/npm/three@0.125.2/examples/jsm/loaders/GLTFLoader.js');
-        const GLTFLoader = mod.GLTFLoader || (mod as any).default;
+        // Use bundled GLTFLoader
         const loader = new GLTFLoader();
         loader.load('/models/model.glb', (gltf: any) => {
           try {
@@ -598,26 +696,21 @@ const Simulation: React.FC = () => {
               return;
             }
             model.traverse((o: any) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-            // Adjust scale/rotation if the model is too large/small (scale down ~4x)
             model.scale.set(0.25, 0.25, 0.25);
             model.rotation.set(0, 0, 0);
             model.position.set(0, 0, 0);
             model.name = 'quadModel';
             scene.add(model);
-            // mark model pickable
             model.userData.pickable = true;
             simulationObjects.current.model = model;
-            // remove placeholder geometry so the model is visible instead
             try { scene.remove(cube1); } catch (e) {}
             try { scene.remove(cube2); } catch (e) {}
             try { scene.remove(cube3); } catch (e) {}
-            // if we previously stored pickable array, replace with model
             try {
               if (simulationObjects.current && Array.isArray(simulationObjects.current.pickable)) {
                 simulationObjects.current.pickable = [model];
               }
             } catch(e){}
-            // render once so the loaded model appears immediately
             try { renderer.render(scene, camera); } catch (e) {}
           } catch (e) {
             console.error('Error when adding GLTF to scene', e);
@@ -626,7 +719,7 @@ const Simulation: React.FC = () => {
           console.error('Failed to load GLTF model /models/model.glb', err);
         });
       } catch (err) {
-        console.warn('GLTFLoader dynamic import failed', err);
+        console.warn('GLTFLoader load failed', err);
       }
     })();
     // prepare waypoint group and storage
@@ -676,12 +769,14 @@ const Simulation: React.FC = () => {
       waypointMeshes: Array(5).fill(null),
       waypointLine: null,
       waypointClosingLine: null,
+      mapPlane: null,
       pickable,
       raycaster,
       gridHelper,
       groundPlane,
       _onPointerDown: onPointerDown
     };
+    try { (window as any).getSimObjects = () => simulationObjects.current; } catch(e) {}
     // set initial quad visual positions and render once so scene is visible before Play
     try {
       const objs = simulationObjects.current;
@@ -878,6 +973,17 @@ const Simulation: React.FC = () => {
             }
           }
         } catch (e) { /* ignore follow errors */ }
+        // If showMap is enabled but mapPlane is missing, try to add it again (recover from resets)
+        try {
+          const objs = simulationObjects.current || {};
+          if (showMapRef.current && objs && !objs.mapPlane && !objs._addingMapPlane) {
+            objs._addingMapPlane = true;
+            console.log('mapPlane missing — attempting to addMapPlane()');
+            try { addMapPlane(); } catch(e) { console.warn('addMapPlane failed', e); }
+            // allow re-tries after 1s
+            setTimeout(() => { try { const o = simulationObjects.current; if (o) o._addingMapPlane = false; } catch(e){} }, 1000);
+          }
+        } catch(e) {}
         controls.update();
         renderer.render(scene, camera);
         animationRef.current = requestAnimationFrame(animate);
