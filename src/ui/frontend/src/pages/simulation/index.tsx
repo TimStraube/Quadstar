@@ -70,6 +70,10 @@ const Simulation: React.FC = () => {
   // show OpenStreetMap plane under the scene
   const [showMap, setShowMap] = useState<boolean>(() => { try { const v = localStorage.getItem('sim.showMap'); return v === '1'; } catch(e){ return false; } });
   const showMapRef = useRef<boolean>(showMap);
+  // waypoint visuals settings (colors, line width)
+  const wpNodeColorRef = useRef<string>('#007bff');
+  const wpLineColorRef = useRef<string>('#007bff');
+  const wpLineWidthRef = useRef<number>(2);
   // initialize settings from localStorage and listen for changes from settings page
   useEffect(() => {
     try {
@@ -90,6 +94,15 @@ const Simulation: React.FC = () => {
         const v = Number(ds);
         if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
       }
+      try {
+        const nc = localStorage.getItem('sim.wpNodeColor'); if (nc !== null) wpNodeColorRef.current = nc;
+      } catch(e) {}
+      try {
+        const lc = localStorage.getItem('sim.wpLineColor'); if (lc !== null) wpLineColorRef.current = lc;
+      } catch(e) {}
+      try {
+        const lw = localStorage.getItem('sim.wpLineWidth'); if (lw !== null) wpLineWidthRef.current = Number(lw);
+      } catch(e) {}
     } catch (e) {}
     const handler = (ev: any) => {
       try {
@@ -115,6 +128,15 @@ const Simulation: React.FC = () => {
           const v = Number(d.defaultSpeed);
           if (!Number.isNaN(v) && v > 0) { setSpeed(v); speedRef.current = v; try { setSliderVal(speedToSlider(v)); } catch(e) {} }
         }
+          if (typeof d.nodeColor === 'string') {
+            try { wpNodeColorRef.current = d.nodeColor; for (let i=0;i<(simulationObjects.current?.waypointMeshes?.length||0); i++) try { createOrUpdateWaypoint(i); } catch(e){} } catch(e){}
+          }
+          if (typeof d.lineColor === 'string') {
+            try { wpLineColorRef.current = d.lineColor; try { updateWaypointLine(); } catch(e){} } catch(e){}
+          }
+          if (typeof d.lineWidth === 'number') {
+            try { wpLineWidthRef.current = Number(d.lineWidth); try { updateWaypointLine(); } catch(e){} } catch(e){}
+          }
         // if controls exist, update them immediately
         try { const c = simulationObjects.current?.controls; if (c) c.autoRotate = autoRotateRef.current && !userInteractingRef.current; } catch(e) {}
       } catch(e){}
@@ -307,9 +329,11 @@ const Simulation: React.FC = () => {
     if (pts) {
       const isActive = (typeof activeWaypoint === 'number' && index === activeWaypoint);
       const radius = isActive ? 0.12 : 0.08;
-      const color = isActive ? 0xff3333 : 0xffaa00;
+      // Active waypoint remains red; inactive color configurable
+      const inactiveColor = wpNodeColorRef.current || '#007bff';
+      const color = isActive ? 0xff3333 : inactiveColor;
       const sphereGeo = new THREE.SphereGeometry(radius, 12, 12);
-      const sphereMat = new THREE.MeshBasicMaterial({color});
+      const sphereMat = new THREE.MeshBasicMaterial({ color });
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
       // mapping: input (x=north, y=east, z=altitude/up) -> scene pos: x = -east, y = alt, z = north
       sphere.position.set(-Number(pts.y), Number(pts.z), Number(pts.x));
@@ -363,22 +387,85 @@ const Simulation: React.FC = () => {
       }
     }
     if (points.length >= 2) {
-      const geom = new THREE.BufferGeometry().setFromPoints(points);
-      const mat = new THREE.LineBasicMaterial({color: 0xffaa00});
-      const line = new THREE.Line(geom, mat);
-      grp.add(line);
-      simulationObjects.current.waypointLine = line;
-      // draw closing line from last to first
-      try {
-        const last = points[points.length - 1];
-        const first = points[0];
-        const closingGeom = new THREE.BufferGeometry().setFromPoints([last, first]);
-        const closingMat = new THREE.LineBasicMaterial({color: 0xffaa00});
-        const closingLine = new THREE.Line(closingGeom, closingMat);
-        grp.add(closingLine);
-        simulationObjects.current.waypointClosingLine = closingLine;
-      } catch (exception) { 
-        console.error('failed to draw closing waypoint line', exception);
+      const lineColor = (wpLineColorRef && wpLineColorRef.current) ? wpLineColorRef.current : '#007bff';
+      const lineWidthPx = (wpLineWidthRef && wpLineWidthRef.current) ? wpLineWidthRef.current : 2;
+      // Some platforms ignore LineBasicMaterial.linewidth. For visible thick lines everywhere,
+      // build the line as a series of thin cylinders (mesh) whose radius is derived from the requested px width.
+      const useMeshLines = true; // always enable robust mesh-based thick lines
+      if (useMeshLines) {
+        // remove any previous mesh group
+        try {
+          if (simulationObjects.current.waypointLineMeshGroup) {
+            const oldGroup = simulationObjects.current.waypointLineMeshGroup;
+            try { grp.remove(oldGroup); } catch(e) {}
+            oldGroup.traverse((o: any) => {
+              try { if (o.geometry) o.geometry.dispose(); } catch(e) {}
+              try { if (o.material) o.material.dispose(); } catch(e) {}
+            });
+            simulationObjects.current.waypointLineMeshGroup = null;
+          }
+        } catch(e) {}
+
+        const meshGroup = new THREE.Group();
+        const radiusWorld = Math.max(0.01, lineWidthPx * 0.01); // heuristic: px->meters
+        for (let i = 0; i < points.length - 1; i++) {
+          const a = points[i];
+          const b = points[i+1];
+          const dir = new THREE.Vector3().subVectors(b, a);
+          const length = dir.length();
+          if (length <= 0) continue;
+          const midpoint = new THREE.Vector3().addVectors(a, b).multiplyScalar(0.5);
+          // cylinder aligned with Y axis; create then rotate
+          const cylGeo = new THREE.CylinderGeometry(radiusWorld, radiusWorld, length, 8);
+          const cylMat = new THREE.MeshBasicMaterial({ color: lineColor });
+          const cyl = new THREE.Mesh(cylGeo, cylMat);
+          // orient cylinder to match segment direction
+          cyl.position.copy(midpoint);
+          const up = new THREE.Vector3(0,1,0);
+          const quat = new THREE.Quaternion().setFromUnitVectors(up, dir.clone().normalize());
+          cyl.quaternion.copy(quat);
+          meshGroup.add(cyl);
+        }
+        // closing segment
+        try {
+          const last = points[points.length - 1];
+          const first = points[0];
+          const dir = new THREE.Vector3().subVectors(first, last);
+          const length = dir.length();
+          if (length > 0) {
+            const midpoint = new THREE.Vector3().addVectors(last, first).multiplyScalar(0.5);
+            const cylGeo = new THREE.CylinderGeometry(radiusWorld, radiusWorld, length, 8);
+            const cylMat = new THREE.MeshBasicMaterial({ color: lineColor });
+            const cyl = new THREE.Mesh(cylGeo, cylMat);
+            cyl.position.copy(midpoint);
+            const up = new THREE.Vector3(0,1,0);
+            const quat = new THREE.Quaternion().setFromUnitVectors(up, dir.clone().normalize());
+            cyl.quaternion.copy(quat);
+            meshGroup.add(cyl);
+          }
+        } catch(e) { /* ignore closing errors */ }
+        grp.add(meshGroup);
+        simulationObjects.current.waypointLineMeshGroup = meshGroup;
+        // no separate waypointLine/ClosingLine when using meshGroup
+        simulationObjects.current.waypointLine = null;
+        simulationObjects.current.waypointClosingLine = null;
+      } else {
+        // fallback to simple Line
+        const geom = new THREE.BufferGeometry().setFromPoints(points);
+        const mat = new THREE.LineBasicMaterial({ color: lineColor, linewidth: lineWidthPx });
+        const line = new THREE.Line(geom, mat);
+        grp.add(line);
+        simulationObjects.current.waypointLine = line;
+        // closing line
+        try {
+          const last = points[points.length - 1];
+          const first = points[0];
+          const closingGeom = new THREE.BufferGeometry().setFromPoints([last, first]);
+          const closingMat = new THREE.LineBasicMaterial({ color: lineColor, linewidth: lineWidthPx });
+          const closingLine = new THREE.Line(closingGeom, closingMat);
+          grp.add(closingLine);
+          simulationObjects.current.waypointClosingLine = closingLine;
+        } catch (exception) { console.error('failed to draw closing waypoint line', exception); }
       }
       // render scene once so lines appear even while paused
       try {
@@ -389,7 +476,7 @@ const Simulation: React.FC = () => {
   };
 
   // Add an OpenStreetMap tile as a horizontal plane under the scene
-  const addMapPlane = (zoom = 6, x = 33, y = 22, size = 200) => {
+  const addMapPlane = (zoom = 13, x = 4096, y = 2720, size = 200) => {
     try {
       const objs = simulationObjects.current;
       // @ts-ignore
@@ -402,9 +489,8 @@ const Simulation: React.FC = () => {
         try { if (objs.mapPlane.material) objs.mapPlane.material.dispose(); } catch(e) {}
         objs.mapPlane = null;
       }
-      // Stitch multiple tiles into a single canvas to increase resolution and coverage.
-      const tiles = Math.max(1, Math.floor((size / 256)) || 3); // approximate tiles count by size (fallback 3)
-      const tileCount = Math.max(1, Math.min(7, tiles)); // clamp reasonable
+      // Stitch multiple tiles (3x3) into a single canvas to increase resolution and coverage.
+      const tileCount = 3;
       const half = Math.floor(tileCount / 2);
       const tileSize = 256;
       const canvasSize = tileSize * tileCount;
@@ -431,9 +517,10 @@ const Simulation: React.FC = () => {
               ctx.drawImage(img, dx, dy, tileSize, tileSize);
             } catch(e) { console.warn('drawImage failed', e); }
             remaining -= 1;
-            if (remaining === 0) {
+              if (remaining === 0) {
               try {
                 const tex = new THREE.CanvasTexture(canvas);
+                tex.needsUpdate = true;
                 try { tex.encoding = THREE.sRGBEncoding; } catch(e) {}
                 try { tex.generateMipmaps = true; tex.minFilter = THREE.LinearMipMapLinearFilter; tex.magFilter = THREE.LinearFilter; } catch(e) {}
                 try {
@@ -552,6 +639,8 @@ const Simulation: React.FC = () => {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setClearColor(0x000000, 1);
+    // respect device pixel ratio for crisper textures
+    try { renderer.setPixelRatio(window.devicePixelRatio || 1); } catch(e) {}
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.style.width = '100vw';
     renderer.domElement.style.height = '100vh';
@@ -603,7 +692,8 @@ const Simulation: React.FC = () => {
     controls.autoRotate = false;
     // make autorotation faster and rotate to the right (negative = opposite direction)
     controls.autoRotateSpeed = -2; // faster, right-handed
-    controls.maxDistance = 10;
+    // allow the user to zoom out much further
+    controls.maxDistance = 200;
     controls.minDistance = 1;
     controls.screenSpacePanning = false;
     // Position camera at fixed distance CAMERA_DISTANCE with a small elevation
