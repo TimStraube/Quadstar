@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import VehiclesPanel from './components/VehiclesPanel';
 import WaypointsPanel from './components/WaypointsPanel';
 import ControllerPanel from './components/ControllerPanel';
 import ParamsPanel from './components/ParamsPanel';
@@ -55,6 +56,11 @@ const Simulation: React.FC = () => {
     Array.from({length:5}, () => ({x: (Math.random() * 6) - 3, y: (Math.random() * 6) - 3, z: (Math.random() * 3)}))
   );
   const [activeWaypoint, setActiveWaypoint] = useState<number | null>(null);
+  // vehicles: list of quadcopter systems that can be placed on the map
+  const [vehicles, setVehicles] = useState<Array<{name:string,x:number,y:number,z:number}>>(
+    Array.from({length:1}, () => ({ name: 'veh0', x: 0, y: 0, z: 0 }))
+  );
+  const [activeVehicle, setActiveVehicle] = useState<number | null>(null);
   // waypoint switching tolerance (meters) - user configurable 0..2
   const [wpTolerance, setWpTolerance] = useState<number>(0.2);
   // enable/disable automatic scene rotation
@@ -1217,6 +1223,12 @@ const Simulation: React.FC = () => {
             openPanel={openPanel}
             setOpenPanel={setOpenPanel}
             onApplyScene={applyParamsToScene}
+          />
+          <VehiclesPanel
+            vehicles={vehicles}
+            setVehicles={setVehicles}
+            openPanel={openPanel}
+            setOpenPanel={setOpenPanel}
           />
           <ControllerPanel
           velP={velP}
