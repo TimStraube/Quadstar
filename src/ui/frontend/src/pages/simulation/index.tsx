@@ -70,6 +70,7 @@ const Simulation: React.FC = () => {
   // follow mode: when true, camera will follow the quad (unless user interacts)
   const [followQuad, setFollowQuad] = useState<boolean>(false);
   const followQuadRef = useRef<boolean>(followQuad);
+  const followPrevPosRef = useRef<any>(null);
   // show/hide grid in the scene
   const [showGrid, setShowGrid] = useState<boolean>(() => { try { const v = localStorage.getItem('sim.showGrid'); return v === null ? true : v === '1'; } catch(e){ return true; } });
   const showGridRef = useRef<boolean>(showGrid);
@@ -481,6 +482,100 @@ const Simulation: React.FC = () => {
     }
   };
 
+  // --- Vehicle helpers ---
+  const createOrUpdateVehicle = (index: number) => {
+    if (!simulationObjects.current || !simulationObjects.current.scene) return;
+    // @ts-expect-error
+    const THREE = window.THREE;
+    if (!THREE) return;
+
+    const grp = simulationObjects.current.vehicleGroup;
+    if (!grp) return;
+
+    // ensure array exists
+    if (!Array.isArray(simulationObjects.current.vehicleMeshes)) simulationObjects.current.vehicleMeshes = [];
+
+    // remove existing mesh for this index
+    const existing = simulationObjects.current.vehicleMeshes[index];
+    if (existing) {
+      try { grp.remove(existing); } catch(e) {}
+      try { if (existing.geometry) existing.geometry.dispose(); } catch(e) {}
+      try { if (existing.material) existing.material.dispose(); } catch(e) {}
+      simulationObjects.current.vehicleMeshes[index] = null;
+    }
+
+    const v = vehicles[index];
+    if (!v) return;
+
+    // If a GLTF model was loaded into simulationObjects.current.model, clone it for each vehicle
+    try {
+      if (simulationObjects.current.model) {
+        const mdl = simulationObjects.current.model.clone(true);
+        mdl.name = `vehicle_${index}`;
+        mdl.userData.pickable = true;
+        // position mapping: input x=north, y=east, z=alt -> scene pos x=-east, y=alt, z=north
+        mdl.position.set(-Number(v.y), Number(v.z), Number(v.x));
+        grp.add(mdl);
+        simulationObjects.current.vehicleMeshes[index] = mdl;
+        // add to pickable list
+        try { simulationObjects.current.pickable = (simulationObjects.current.pickable || []).concat([mdl]); } catch(e) {}
+        return;
+      }
+    } catch(e) { console.warn('vehicle clone failed', e); }
+
+    // Fallback: create a simple placeholder quad (cross-shaped) so it's visible
+    try {
+      const body = new THREE.BoxGeometry(0.2, 0.05, 0.2);
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+      const bodyMesh = new THREE.Mesh(body, bodyMat);
+      bodyMesh.position.set(-Number(v.y), Number(v.z) + 0.05, Number(v.x));
+      bodyMesh.userData.pickable = true;
+
+      // add four small arms
+      const armGeo = new THREE.BoxGeometry(0.02, 0.02, 0.6);
+      const armMat = new THREE.MeshStandardMaterial({ color: 0x888888 });
+      const arm1 = new THREE.Mesh(armGeo, armMat);
+      arm1.rotation.set(0, 0, 0);
+      arm1.position.set(0, 0, 0);
+      bodyMesh.add(arm1);
+      const arm2 = arm1.clone(); arm2.rotation.set(0, Math.PI/2, 0); bodyMesh.add(arm2);
+
+      grp.add(bodyMesh);
+      simulationObjects.current.vehicleMeshes[index] = bodyMesh;
+      try { simulationObjects.current.pickable = (simulationObjects.current.pickable || []).concat([bodyMesh]); } catch(e) {}
+    } catch(e) { console.error('failed to create vehicle placeholder', e); }
+  };
+
+  // watch vehicles array and update scene meshes
+  useEffect(() => {
+    try {
+      const objs = simulationObjects.current;
+      if (!objs || !objs.scene) return;
+      // ensure vehicleGroup exists
+      if (!objs.vehicleGroup) {
+        objs.vehicleGroup = new (window as any).THREE.Group();
+        objs.scene.add(objs.vehicleGroup);
+      }
+      // cleanup extra meshes if vehicles were removed
+      if (!Array.isArray(objs.vehicleMeshes)) objs.vehicleMeshes = [];
+      for (let i = vehicles.length; i < objs.vehicleMeshes.length; i++) {
+        const ex = objs.vehicleMeshes[i];
+        if (ex) {
+          try { objs.vehicleGroup.remove(ex); } catch(e) {}
+          try { if (ex.geometry) ex.geometry.dispose(); } catch(e) {}
+          try { if (ex.material) ex.material.dispose(); } catch(e) {}
+        }
+      }
+      objs.vehicleMeshes.length = vehicles.length;
+
+      // create or update each vehicle mesh
+      vehicles.forEach((_, i) => {
+        try { createOrUpdateVehicle(i); } catch(e) { console.warn('createOrUpdateVehicle failed', e); }
+      });
+    } catch(e) { console.warn('vehicles effect error', e); }
+    // eslint-disable-next-line
+  }, [vehicles]);
+
   // Add an OpenStreetMap tile as a horizontal plane under the scene
   const addMapPlane = (zoom = 13, x = 4096, y = 2720, size = 200) => {
     try {
@@ -603,12 +698,47 @@ const Simulation: React.FC = () => {
       const THREE = (window as any).THREE;
       if (!objs || !objs.controls || !objs.camera || !THREE) return;
       let target = new THREE.Vector3(0,0,0);
-      if (objs.model && objs.model.position) target.copy(objs.model.position);
-      else if (objs.cube1) target.set(objs.cube1.position.x, objs.cube1.position.y, objs.cube1.position.z);
-      const camOffset = new THREE.Vector3(4, 2, 0);
-      objs.camera.position.copy(target).add(camOffset);
-      objs.controls.target.copy(target);
+      let refObj: any = null;
+      if (objs.model && objs.model.position) { target.copy(objs.model.position); refObj = objs.model; }
+      else if (objs.cube1) { target.set(objs.cube1.position.x, objs.cube1.position.y, objs.cube1.position.z); refObj = objs.cube1; }
+
+      // Compute a forward-facing camera position relative to the vehicle's orientation.
+      // Assume the vehicle's local +X axis is the forward direction for the simple placeholder/model used here.
+      const forwardLocal = new THREE.Vector3(1, 0, 0);
+      try {
+        const worldQuat = new THREE.Quaternion();
+        if (refObj) refObj.getWorldQuaternion(worldQuat);
+        forwardLocal.applyQuaternion(worldQuat).normalize();
+      } catch (e) {
+        // fallback: use world X axis
+      }
+
+      // Onboard view: place the camera at the vehicle (small eye offset) and look along its forward vector
+      const eyeHeight = 0.12; // small offset above vehicle center (meters)
+      const camPos = new THREE.Vector3().copy(target);
+      camPos.y += eyeHeight;
+      // look point far ahead along forward vector
+      const lookAtPoint = new THREE.Vector3().copy(target).add(forwardLocal.clone().multiplyScalar(10));
+
+      objs.camera.position.copy(camPos);
+      // Tell controls to target the forward look-at point so orientation matches
+      objs.controls.target.copy(lookAtPoint);
       objs.controls.update();
+      // Toggle follow mode: if already following, disable; otherwise enable and prime prev position
+      try {
+        if (followQuadRef.current) {
+          try { setFollowQuad(false); } catch(e) {}
+          followQuadRef.current = false;
+          followPrevPosRef.current = null;
+          try { if (objs.controls) objs.controls.enabled = true; } catch(e) {}
+        } else {
+          try { setFollowQuad(true); } catch(e) {}
+          followQuadRef.current = true;
+          // prime previous position so delta-follow starts smoothly
+          try { followPrevPosRef.current = target.clone(); } catch(e) { followPrevPosRef.current = null; }
+          try { if (objs.controls) objs.controls.enabled = true; } catch(e) {}
+        }
+      } catch(e) {}
     } catch (e) { console.error('focus camera error', e); }
   };
 
@@ -821,6 +951,9 @@ const Simulation: React.FC = () => {
     // prepare waypoint group and storage
     const waypointGroup = new THREE.Group();
     scene.add(waypointGroup);
+    // prepare vehicle group and storage (one mesh per vehicle)
+    const vehicleGroup = new THREE.Group();
+    scene.add(vehicleGroup);
 
     // raycaster for pointer interaction
     const raycaster = new THREE.Raycaster();
@@ -829,6 +962,8 @@ const Simulation: React.FC = () => {
     // pointer handler: when clicking on the quad/model, open params panel
     const onPointerDown = (ev: PointerEvent) => {
       try {
+        // allow pointer interactions while in follow mode so the user can look around;
+        // do not automatically disable follow here
         console.debug('pointerdown', ev.clientX, ev.clientY, 'target=', (ev.target as any)?.tagName || ev.target);
         const rect = renderer.domElement.getBoundingClientRect();
         mouse.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
@@ -862,7 +997,9 @@ const Simulation: React.FC = () => {
     simulationObjects.current = {
       scene, camera, renderer, controls, cube1, cube2, cube3,
       waypointGroup,
+      vehicleGroup,
       waypointMeshes: Array(5).fill(null),
+      vehicleMeshes: [],
       waypointLine: null,
       waypointClosingLine: null,
       mapPlane: null,
@@ -1053,21 +1190,50 @@ const Simulation: React.FC = () => {
         // Camera follow mode: smoothly follow the quad when enabled and user not interacting
         try {
           // ensure we use the latest follow flag
-          if (followQuadRef.current && !userInteractingRef.current) {
-            // @ts-ignore
-            const THREE = window.THREE;
-            if (THREE && (model || cube1)) {
-              const target = new THREE.Vector3();
-              if (model && model.position) target.copy(model.position);
-              else target.set(cube1.position.x, cube1.position.y, cube1.position.z);
-              // desired camera offset relative to target
-              const camOffset = new THREE.Vector3(4, 2, 0);
-              const desired = new THREE.Vector3().copy(target).add(camOffset);
-              // smooth lerp the camera and controls.target
-              camera.position.lerp(desired, 0.16);
-              controls.target.lerp(target, 0.18);
-            }
-          }
+              if (followQuadRef.current && !userInteractingRef.current) {
+                // @ts-ignore
+                const THREE = window.THREE;
+                if (THREE && (model || cube1)) {
+                  const target = new THREE.Vector3();
+                  const refObj: any = model ? model : cube1;
+                  if (model && model.position) target.copy(model.position);
+                  else target.set(cube1.position.x, cube1.position.y, cube1.position.z);
+
+                  // Follow by translating camera/target by the quad's movement delta so the camera
+                  // stays attached to the vehicle while retaining the user's current rotation.
+                  if (followQuadRef.current) {
+                    try {
+                      // compute current vehicle world position
+                      const forwardLocal = new THREE.Vector3(1, 0, 0); // unused here but kept for future
+                      const current = new THREE.Vector3();
+                      if (model && model.position) current.copy(model.position);
+                      else current.set(cube1.position.x, cube1.position.y, cube1.position.z);
+
+                      if (!followPrevPosRef.current) followPrevPosRef.current = current.clone();
+                      const prev = followPrevPosRef.current;
+                      const delta = new THREE.Vector3().subVectors(current, prev);
+                      // move camera and controls.target by the delta so they follow the vehicle
+                      if (delta.lengthSq() > 0) {
+                        camera.position.add(delta);
+                        controls.target.add(delta);
+                      }
+                      // maintain a small eye offset above the vehicle
+                      try {
+                        const eyeHeight = 0.12;
+                        const desiredY = current.y + eyeHeight;
+                        if (Math.abs(camera.position.y - desiredY) > 1e-3) camera.position.y = desiredY;
+                      } catch(e) {}
+                      followPrevPosRef.current = current.clone();
+                    } catch(e) { /* ignore follow errors */ }
+                    // ensure user can still orbit/look around
+                    try { if (controls && !controls.enabled) controls.enabled = true; } catch(e) {}
+                    } else {
+                      // not following: ensure controls are enabled so the user can orbit
+                      try { if (controls && !controls.enabled) controls.enabled = true; } catch(e) {}
+                      followPrevPosRef.current = null;
+                    }
+                  }
+                }
         } catch (e) { /* ignore follow errors */ }
         // If showMap is enabled but mapPlane is missing, try to add it again (recover from resets)
         try {
