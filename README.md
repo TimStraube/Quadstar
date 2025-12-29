@@ -2,7 +2,7 @@
 
 ## Description
 
-Thetafly is a project which includes python classes for simulating a quadcopter system. 
+Thetafly is a project which includes python classes for simulating a quadcopter system. The simulation software is in a prototype stage with a lot of bugs still to be fixed and furture deep testing required.
 With the help of the functionality a quadcopter prototyp has beeing build, mainly for fun and research purposes. The hardware is mostly finished but a lot of firmware still has to be written before flight testing can begin.
 
 ![screenshot](docs/images/0001.jpeg)
