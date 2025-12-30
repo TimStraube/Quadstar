@@ -21,7 +21,15 @@ const VehiclesPanel: React.FC<Props> = ({ vehicles, setVehicles, openPanel, setO
     const raw = (localVehicles[index] && localVehicles[index][axis]) ? localVehicles[index][axis] : '';
     const trimmed = raw.trim();
     if (trimmed === '') {
-      setLocalVehicles(l => { const c = [...l]; c[index] = c[index].map((s, k) => String([vehicles[index].name, vehicles[index].x, vehicles[index].y, vehicles[index].z][k].toFixed ? (Number([vehicles[index].x, vehicles[index].y, vehicles[index].z][k]).toFixed(2)) : [vehicles[index].name][0])); return c; });
+      setLocalVehicles(l => {
+        const c = [...l];
+        c[index] = c[index].map((s, k) => {
+          const arr = [vehicles[index].name, vehicles[index].x, vehicles[index].y, vehicles[index].z];
+          const val = arr[k];
+          return String(typeof val === 'number' ? (val as number).toFixed(2) : val);
+        });
+        return c;
+      });
       return;
     }
     if (axis === 0) {
@@ -33,7 +41,15 @@ const VehiclesPanel: React.FC<Props> = ({ vehicles, setVehicles, openPanel, setO
     }
     const parsed = Number(trimmed);
     if (!isFinite(parsed)) {
-      setLocalVehicles(l => { const c = [...l]; c[index] = c[index].map((s, k) => String([vehicles[index].name, vehicles[index].x, vehicles[index].y, vehicles[index].z][k].toFixed ? (Number([vehicles[index].x, vehicles[index].y, vehicles[index].z][k]).toFixed(2)) : [vehicles[index].name][0])); return c; });
+      setLocalVehicles(l => {
+        const c = [...l];
+        c[index] = c[index].map((s, k) => {
+          const arr = [vehicles[index].name, vehicles[index].x, vehicles[index].y, vehicles[index].z];
+          const val = arr[k];
+          return String(typeof val === 'number' ? (val as number).toFixed(2) : val);
+        });
+        return c;
+      });
       return;
     }
     const copy = [...vehicles];
@@ -45,12 +61,20 @@ const VehiclesPanel: React.FC<Props> = ({ vehicles, setVehicles, openPanel, setO
       copy[index] = { name: copy[index].name, x: copy[index].x, y: copy[index].y, z: parseFloat(v.toFixed(2)) };
     }
     setVehicles(copy);
-    setLocalVehicles(l => { const c = [...l]; c[index] = c[index].map((s, k) => String([copy[index].name, copy[index].x, copy[index].y, copy[index].z][k].toFixed ? ([copy[index].name, copy[index].x.toFixed(2), copy[index].y.toFixed(2), copy[index].z.toFixed(2)][k]) : [copy[index].name][0])); return c; });
+    setLocalVehicles(l => {
+      const c = [...l];
+      c[index] = c[index].map((s, k) => {
+        const arr = [copy[index].name, copy[index].x, copy[index].y, copy[index].z];
+        const val = arr[k];
+        return String(typeof val === 'number' ? (val as number).toFixed(2) : val);
+      });
+      return c;
+    });
   };
 
   return (
     <div className="panel-root">
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6, cursor:'pointer'}} onClick={() => setOpenPanel(op => op === 'vehicles' ? null : 'vehicles')}>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6, cursor:'pointer'}} onClick={() => setOpenPanel(openPanel === 'vehicles' ? null : 'vehicles')}>
         <div style={{display:'flex', gap:8, alignItems:'center'}}>
           <div style={{fontWeight:700}}>VEHICLES</div>
         </div>

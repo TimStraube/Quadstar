@@ -56,7 +56,7 @@ const WaypointsPanel: React.FC<Props> = ({ waypoints, setWaypoints, wpTolerance,
 
   return (
     <div className="panel-root">
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6, cursor:'pointer'}} onClick={() => setOpenPanel(op => op === 'waypoints' ? null : 'waypoints')}>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6, cursor:'pointer'}} onClick={() => setOpenPanel(openPanel === 'waypoints' ? null : 'waypoints')}>
         <div style={{display:'flex', gap:8, alignItems:'center'}}>
           <div style={{fontWeight:700}}>WAYPOINTS</div>
         </div>

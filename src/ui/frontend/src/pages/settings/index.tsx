@@ -64,19 +64,19 @@ const SettingsPage: React.FC = () => {
 				<div style={{padding:12}}>
 					<IonItem>
 						<IonLabel>Following (Kamera folgt dem Quad)</IonLabel>
-						<IonToggle checked={follow} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setFollow(v); apply(v, autoRotate, showGrid, showMap, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
+						<IonToggle checked={follow} onIonChange={e => { const v = Boolean((e.detail as any)?.checked); setFollow(v); apply(v, autoRotate, showGrid, showMap, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
 					</IonItem>
 					<IonItem>
 						<IonLabel>Auto-Rotate (Szenenrotation)</IonLabel>
-						<IonToggle checked={autoRotate} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setAutoRotate(v); apply(follow, v, showGrid, showMap, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
+						<IonToggle checked={autoRotate} onIonChange={e => { const v = Boolean((e.detail as any)?.checked); setAutoRotate(v); apply(follow, v, showGrid, showMap, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
 					</IonItem>
 					<IonItem>
 						<IonLabel>Gitter anzeigen</IonLabel>
-						<IonToggle checked={showGrid} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setShowGrid(v); apply(follow, autoRotate, v, showMap, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
+						<IonToggle checked={showGrid} onIonChange={e => { const v = Boolean((e.detail as any)?.checked); setShowGrid(v); apply(follow, autoRotate, v, showMap, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
 					</IonItem>
 					<IonItem>
 						<IonLabel>OpenStreetMap als Plane</IonLabel>
-						<IonToggle checked={showMap} onIonChange={e=>{ const v = Boolean((e.target as HTMLInputElement).checked); setShowMap(v); apply(follow, autoRotate, showGrid, v, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
+						<IonToggle checked={showMap} onIonChange={e => { const v = Boolean((e.detail as any)?.checked); setShowMap(v); apply(follow, autoRotate, showGrid, v, defaultSliderVal, wpNodeColor, wpLineColor, wpLineWidth); }} />
 					</IonItem>
 					<IonItem>
 						<IonLabel>Knotenfarbe (Waypoints)</IonLabel>

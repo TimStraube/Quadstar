@@ -49,7 +49,7 @@ const ConnectionCard: React.FC<{
             expand="block"
             color={joystickConnected ? "danger" : "success"}
             className="toggle-btn"
-            onClick={setJoystickConnected}
+            onClick={() => setJoystickConnected(true)}
             style={{ flex: 1 }}
           >
             {joystickConnected ? "Trennen" : "Verbinden"}

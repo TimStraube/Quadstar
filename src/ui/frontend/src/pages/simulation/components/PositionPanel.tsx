@@ -78,7 +78,7 @@ const PositionPanel: React.FC<Props> = ({ singlePos, setSinglePos, simulationObj
 
   return (
     <div className="panel-root">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => setOpenPanel(op => op === 'position' ? null : 'position')}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => setOpenPanel(openPanel === 'position' ? null : 'position')}>
         <div style={{ fontWeight: 700 }}>POSITION</div>
         <div className="panel-toggle" aria-hidden>{isOpen ? '▾' : '▸'}</div>
       </div>
@@ -97,7 +97,7 @@ const PositionPanel: React.FC<Props> = ({ singlePos, setSinglePos, simulationObj
                 const raw = local.north.trim();
                 if (raw !== '') {
                   const num = Number(raw);
-                  if (!Number.isNaN(num)) setSinglePos(p => ({ ...p, north: num }));
+                  if (!Number.isNaN(num)) setSinglePos({ ...singlePos, north: num });
                 }
                 setLocal(l => ({ ...l, north: raw }));
               }}
@@ -115,7 +115,7 @@ const PositionPanel: React.FC<Props> = ({ singlePos, setSinglePos, simulationObj
                 const raw = local.east.trim();
                 if (raw !== '') {
                   const num = Number(raw);
-                  if (!Number.isNaN(num)) setSinglePos(p => ({ ...p, east: num }));
+                  if (!Number.isNaN(num)) setSinglePos({ ...singlePos, east: num });
                 }
                 setLocal(l => ({ ...l, east: raw }));
               }}
@@ -134,7 +134,7 @@ const PositionPanel: React.FC<Props> = ({ singlePos, setSinglePos, simulationObj
                 const raw = local.alt.trim();
                 if (raw !== '') {
                   const num = Number(raw);
-                  if (!Number.isNaN(num)) setSinglePos(p => ({ ...p, alt: Math.max(0, num) }));
+                  if (!Number.isNaN(num)) setSinglePos({ ...singlePos, alt: Math.max(0, num) });
                 }
                 setLocal(l => ({ ...l, alt: raw }));
               }}
@@ -143,7 +143,7 @@ const PositionPanel: React.FC<Props> = ({ singlePos, setSinglePos, simulationObj
             />
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
-            <IonButton onClick={onSetPosition}>Set Quad Position</IonButton>
+            <IonButton onClick={() => onSetPosition && onSetPosition()}>Set Quad Position</IonButton>
           </div>
         </div>
       )}

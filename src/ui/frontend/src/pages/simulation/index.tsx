@@ -276,11 +276,11 @@ const Simulation: React.FC = () => {
     pidDebounceRef.current = window.setTimeout(() => {
       // sanitize payload: prevent zero/negative gains
       const minGain = 1e-3;
-      const sanitize = (obj) => {
-        const out = {};
+      const sanitize = (obj: Record<string, unknown>) => {
+        const out: Record<string, unknown> = {};
         for (const k of Object.keys(obj)) {
-          const v = obj[k];
-          if (Array.isArray(v)) out[k] = v.map(x => Math.max(Number(x) || 0, minGain));
+          const v = (obj as any)[k];
+          if (Array.isArray(v)) out[k] = (v as any[]).map(x => Math.max(Number(x) || 0, minGain));
           else if (typeof v === 'number') out[k] = Math.max(v, minGain);
           else out[k] = v;
         }
@@ -1028,7 +1028,7 @@ const Simulation: React.FC = () => {
     if (!running || !threeLoaded) return;
     let t = 0, norden = 0, osten = 0, unten = 0;
     let rollen = 0, nicken = 0, gieren = 0;
-    // altitude (positive up) derived from backend 'down' (positive down)
+    // altitude (positive up) derived from backend 'down' (positive downwards)
     let altitude = 0;
     let stop = false;
     pollingRef.current = true;
