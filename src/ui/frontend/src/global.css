@@ -23,6 +23,8 @@
 	--input-border: rgba(255,255,255,0.15);
 	--input-padding: 6px;
 	--input-radius: 4px;
+	/* Ensure Ionic components that use the --ion-font-family var show the same font */
+	--ion-font-family: 'Orbitron', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* Responsive: on small screens hide side panels and only show minimal controls */
@@ -60,6 +62,11 @@ html, body, #root, ion-app, ion-content {
 	/* softer general text color to avoid full-white everywhere */
 	color: #ddd !important;
 	font-family: 'Orbitron', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Fallback to ensure Ion components using shadow DOM inherit the page font when possible */
+ion-button, ion-item, ion-label, ion-text, ion-card, ion-card-title {
+	font-family: var(--ion-font-family) !important;
 }
 
 /* Transparent input used across panels */
